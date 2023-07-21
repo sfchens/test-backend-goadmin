@@ -131,8 +131,45 @@ definitions:
       updated_at:
         type: string
     type: object
-  model.SysDept:
+  model.SysSwitch:
     properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      key:
+        type: string
+      name:
+        type: string
+      operator:
+        type: string
+      remark:
+        type: string
+      status:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  response.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+      redirect_url:
+        type: string
+      trace_id:
+        type: string
+    type: object
+  sys_model.DeptTreeListItem:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/sys_model.DeptTreeListItem'
+        type: array
       created_at:
         type: string
       email:
@@ -154,75 +191,63 @@ definitions:
       updated_at:
         type: string
     type: object
-  model.SysSwitch:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      operator:
-        type: string
-      remark:
-        type: string
-      status:
-        type: integer
-      type_key:
-        type: string
-      updated_at:
-        type: string
-    type: object
-  response.Response:
-    properties:
-      code:
-        type: integer
-      data: {}
-      msg:
-        type: string
-      redirect_url:
-        type: string
-      trace_id:
-        type: string
-    type: object
   sys_model.MenuListItem:
     properties:
-      api_url:
-        type: string
       children:
         items:
           $ref: '#/definitions/sys_model.MenuListItem'
         type: array
+      component:
+        description: 组件
+        type: string
       created_at:
+        description: 创建时间
+        type: string
+      deleted_at:
+        description: 删除时间
         type: string
       icon:
+        description: 图标
         type: string
       id:
+        description: ID
         type: integer
       is_frame:
+        description: 是否框架，1
         type: integer
-      is_show:
-        type: integer
+      menu_name:
+        description: 菜单名称
+        type: string
       menu_type:
-        type: integer
+        description: 菜单类型，M目录 C菜单，F按钮
+        type: string
       operator:
+        description: 操作人
         type: string
       parent_id:
-        type: integer
+        description: 父级
+        type: string
+      parent_ids:
+        description: 父级类型
+        type: string
       path:
+        description: 前端路径
+        type: string
+      permission:
+        description: 权限标识
         type: string
       sort:
+        description: 排序
         type: integer
       title:
-        type: string
-      unique_auth:
-        type: string
-      unique_name:
+        description: 标题
         type: string
       updated_at:
+        description: 最后更新时间
         type: string
+      visible:
+        description: 是否启用，1启用
+        type: integer
     type: object
   sys_model.TokenInfoOut:
     properties:
@@ -357,16 +382,29 @@ definitions:
     type: object
   sys_request.ConfigAddReq:
     properties:
-      config:
+      config: {}
+      is_open:
+        type: integer
+      key:
         type: string
       name:
         type: string
-      type:
+      remark:
         type: string
+      type:
+        type: integer
     required:
     - config
+    - key
     - name
     - type
+    type: object
+  sys_request.ConfigDeleteReq:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
     type: object
   sys_request.ConfigEditReq:
     properties:
@@ -374,19 +412,26 @@ definitions:
         type: string
       id:
         type: integer
+      is_open:
+        type: integer
       name:
         type: string
+      remark:
+        type: string
+      type:
+        type: integer
     required:
     - config
     - id
     - name
+    - type
     type: object
   sys_request.ConfigGetOneReq:
     properties:
       id:
         type: integer
-    required:
-    - id
+      key:
+        type: string
     type: object
   sys_request.ConfigGetOneRes:
     properties:
@@ -395,18 +440,29 @@ definitions:
         type: string
       id:
         type: integer
+      is_open:
+        type: integer
+      key:
+        type: string
       name:
         type: string
       operator:
         type: string
-      type:
+      remark:
         type: string
+      type:
+        type: integer
       updated_at:
         type: string
     type: object
   sys_request.ConfigListReq:
     properties:
+      key:
+        type: string
       name:
+        type: string
+      order:
+        default: id ASC
         type: string
       page:
         default: 1
@@ -448,7 +504,6 @@ definitions:
     required:
     - leader
     - name
-    - parent_id
     - status
     type: object
   sys_request.DeptDeleteReq:
@@ -456,9 +511,12 @@ definitions:
       id:
         type: integer
     type: object
-  sys_request.DeptListReq:
+  sys_request.DeptTreeListReq:
     properties:
       name:
+        type: string
+      order:
+        default: id ASC
         type: string
       page:
         default: 1
@@ -467,14 +525,13 @@ definitions:
         default: 20
         type: integer
       status:
-        default: -1
         type: integer
     type: object
-  sys_request.DeptListRes:
+  sys_request.DeptTreeListRes:
     properties:
       list:
         items:
-          $ref: '#/definitions/model.SysDept'
+          $ref: '#/definitions/sys_model.DeptTreeListItem'
         type: array
       total:
         type: integer
@@ -503,8 +560,6 @@ definitions:
     type: object
   sys_request.MenuAddOrEditReq:
     properties:
-      api_url:
-        type: string
       icon:
         type: string
       id:
@@ -563,19 +618,25 @@ definitions:
     properties:
       id:
         type: integer
+      key:
+        type: string
       name:
         type: string
       remark:
         type: string
       status:
         type: integer
-      type_key:
-        type: string
     required:
+    - key
     - name
-    - remark
     - status
-    - type_key
+    type: object
+  sys_request.SwitchDeleteReq:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
     type: object
   sys_request.SwitchListRes:
     properties:
@@ -881,6 +942,28 @@ paths:
       summary: 添加配置
       tags:
       - 配置管理
+  /api/v1/sys/config/delete:
+    post:
+      consumes:
+      - application/json
+      description: 设置状态
+      parameters:
+      - description: 请求参数
+        in: body
+        name: raw
+        required: true
+        schema:
+          $ref: '#/definitions/sys_request.ConfigEditReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 设置状态
+      tags:
+      - 配置管理
   /api/v1/sys/config/edit:
     post:
       consumes:
@@ -1023,18 +1106,18 @@ paths:
       summary: 编辑部门
       tags:
       - 部门管理
-  /api/v1/sys/dept/list:
+  /api/v1/sys/dept/get_one:
     get:
       consumes:
       - application/json
-      description: 部门列表
+      description: 一条部门信息
       parameters:
       - description: 请求参数
         in: body
         name: raw
         required: true
         schema:
-          $ref: '#/definitions/sys_request.DeptListReq'
+          $ref: '#/definitions/sys_request.DeptTreeListReq'
       produces:
       - application/json
       responses:
@@ -1045,9 +1128,36 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/sys_request.DeptListRes'
+                  $ref: '#/definitions/sys_request.DeptTreeListRes'
               type: object
-      summary: 部门列表
+      summary: 一条部门信息
+      tags:
+      - 部门管理
+  /api/v1/sys/dept/list:
+    get:
+      consumes:
+      - application/json
+      description: 部门tree列表
+      parameters:
+      - description: 请求参数
+        in: body
+        name: raw
+        required: true
+        schema:
+          $ref: '#/definitions/sys_request.DeptTreeListReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sys_request.DeptTreeListRes'
+              type: object
+      summary: 部门tree列表
       tags:
       - 部门管理
   /api/v1/sys/login:
@@ -1077,6 +1187,28 @@ paths:
       summary: 登录
       tags:
       - 管理员登录管理
+  /api/v1/sys/login_info:
+    get:
+      consumes:
+      - application/json
+      description: 登录信息
+      parameters:
+      - description: 请求参数
+        in: body
+        name: raw
+        required: true
+        schema:
+          $ref: '#/definitions/sys_request.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 登录信息
+      tags:
+      - 管理员登录管理
   /api/v1/sys/logout:
     post:
       consumes:
@@ -1098,7 +1230,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: 退出
       tags:
-      - 管理员退出管理
+      - 管理员登录管理
   /api/v1/sys/menu/add:
     post:
       consumes:
@@ -1143,7 +1275,7 @@ paths:
       summary: 编辑菜单
       tags:
       - 菜单管理
-  /api/v1/sys/menu/list:
+  /api/v1/sys/menu/tree_list:
     get:
       consumes:
       - application/json
@@ -1170,6 +1302,33 @@ paths:
       summary: 菜单列表
       tags:
       - 菜单管理
+  /api/v1/sys/menu/tree_role_list:
+    get:
+      consumes:
+      - application/json
+      description: 权限菜单
+      parameters:
+      - description: 请求参数
+        in: body
+        name: raw
+        required: true
+        schema:
+          $ref: '#/definitions/sys_request.MenuListReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sys_request.MenuListRes'
+              type: object
+      summary: 权限菜单
+      tags:
+      - 菜单管理
   /api/v1/sys/switch/add:
     post:
       consumes:
@@ -1190,6 +1349,28 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: 添加开关配置
+      tags:
+      - 开关管理
+  /api/v1/sys/switch/delete:
+    post:
+      consumes:
+      - application/json
+      description: 删除开关
+      parameters:
+      - description: 请求参数
+        in: body
+        name: raw
+        required: true
+        schema:
+          $ref: '#/definitions/sys_request.SwitchDeleteReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 删除开关
       tags:
       - 开关管理
   /api/v1/sys/switch/edit:
@@ -1239,6 +1420,28 @@ paths:
                   $ref: '#/definitions/sys_request.SwitchListRes'
               type: object
       summary: 开关配置列表
+      tags:
+      - 开关管理
+  /api/v1/sys/switch/set_status:
+    post:
+      consumes:
+      - application/json
+      description: 设置状态
+      parameters:
+      - description: 请求参数
+        in: body
+        name: raw
+        required: true
+        schema:
+          $ref: '#/definitions/sys_request.SwitchDeleteReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 设置状态
       tags:
       - 开关管理
   /api/v1/upload/add_picture:
@@ -1340,6 +1543,10 @@ paths:
                 data:
                   $ref: '#/definitions/common_request.UploadVideoRes'
               type: object
+      security:
+      - apiKey: []
+      - apiKey2: []
+      - apiKey3: []
       summary: 上传视频
       tags:
       - 上传管理

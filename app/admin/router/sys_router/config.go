@@ -14,6 +14,8 @@ func registerConfigRouter(r *gin.RouterGroup) {
 	{
 		r1.POST("/add", api.Add)
 		r1.POST("/edit", api.Edit)
+		r1.POST("/delete", api.Delete)
+		r1.POST("/set_status", api.SetStatus)
 		r1.GET("/list", api.List)
 		r1.GET("/get_one", api.GetOne)
 	}

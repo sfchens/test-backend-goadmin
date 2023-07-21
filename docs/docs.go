@@ -487,6 +487,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/sys/config/delete": {
+            "post": {
+                "description": "设置状态",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "配置管理"
+                ],
+                "summary": "设置状态",
+                "parameters": [
+                    {
+                        "description": "请求参数",
+                        "name": "raw",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sys_request.ConfigEditReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/sys/config/edit": {
             "post": {
                 "description": "编辑配置",
@@ -715,9 +749,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/dept/list": {
+        "/api/v1/sys/dept/get_one": {
             "get": {
-                "description": "部门列表",
+                "description": "一条部门信息",
                 "consumes": [
                     "application/json"
                 ],
@@ -727,7 +761,7 @@ const docTemplate = `{
                 "tags": [
                     "部门管理"
                 ],
-                "summary": "部门列表",
+                "summary": "一条部门信息",
                 "parameters": [
                     {
                         "description": "请求参数",
@@ -735,7 +769,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.DeptListReq"
+                            "$ref": "#/definitions/sys_request.DeptTreeListReq"
                         }
                     }
                 ],
@@ -751,7 +785,53 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sys_request.DeptListRes"
+                                            "$ref": "#/definitions/sys_request.DeptTreeListRes"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/sys/dept/list": {
+            "get": {
+                "description": "部门tree列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "部门管理"
+                ],
+                "summary": "部门tree列表",
+                "parameters": [
+                    {
+                        "description": "请求参数",
+                        "name": "raw",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sys_request.DeptTreeListReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/sys_request.DeptTreeListRes"
                                         }
                                     }
                                 }
@@ -807,6 +887,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/sys/login_info": {
+            "get": {
+                "description": "登录信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "管理员登录管理"
+                ],
+                "summary": "登录信息",
+                "parameters": [
+                    {
+                        "description": "请求参数",
+                        "name": "raw",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sys_request.LoginReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/sys/logout": {
             "post": {
                 "description": "退出",
@@ -817,7 +931,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "管理员退出管理"
+                    "管理员登录管理"
                 ],
                 "summary": "退出",
                 "parameters": [
@@ -909,7 +1023,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/menu/list": {
+        "/api/v1/sys/menu/tree_list": {
             "get": {
                 "description": "菜单列表",
                 "consumes": [
@@ -922,6 +1036,52 @@ const docTemplate = `{
                     "菜单管理"
                 ],
                 "summary": "菜单列表",
+                "parameters": [
+                    {
+                        "description": "请求参数",
+                        "name": "raw",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sys_request.MenuListReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/sys_request.MenuListRes"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/sys/menu/tree_role_list": {
+            "get": {
+                "description": "权限菜单",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "菜单管理"
+                ],
+                "summary": "权限菜单",
                 "parameters": [
                     {
                         "description": "请求参数",
@@ -976,6 +1136,40 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/sys_request.SwitchAddOrEditReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/sys/switch/delete": {
+            "post": {
+                "description": "删除开关",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "开关管理"
+                ],
+                "summary": "删除开关",
+                "parameters": [
+                    {
+                        "description": "请求参数",
+                        "name": "raw",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sys_request.SwitchDeleteReq"
                         }
                     }
                 ],
@@ -1064,6 +1258,40 @@ const docTemplate = `{
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/sys/switch/set_status": {
+            "post": {
+                "description": "设置状态",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "开关管理"
+                ],
+                "summary": "设置状态",
+                "parameters": [
+                    {
+                        "description": "请求参数",
+                        "name": "raw",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sys_request.SwitchDeleteReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -1214,6 +1442,17 @@ const docTemplate = `{
         },
         "/api/v1/upload/video": {
             "post": {
+                "security": [
+                    {
+                        "apiKey": []
+                    },
+                    {
+                        "apiKey2": []
+                    },
+                    {
+                        "apiKey3": []
+                    }
+                ],
                 "description": "上传视频",
                 "consumes": [
                     "application/json"
@@ -1487,9 +1726,65 @@ const docTemplate = `{
                 }
             }
         },
-        "model.SysDept": {
+        "model.SysSwitch": {
             "type": "object",
             "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "operator": {
+                    "type": "string"
+                },
+                "remark": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "msg": {
+                    "type": "string"
+                },
+                "redirect_url": {
+                    "type": "string"
+                },
+                "trace_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "sys_model.DeptTreeListItem": {
+            "type": "object",
+            "properties": {
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/sys_model.DeptTreeListItem"
+                    }
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -1522,109 +1817,82 @@ const docTemplate = `{
                 }
             }
         },
-        "model.SysSwitch": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "operator": {
-                    "type": "string"
-                },
-                "remark": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "integer"
-                },
-                "type_key": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "response.Response": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "data": {},
-                "msg": {
-                    "type": "string"
-                },
-                "redirect_url": {
-                    "type": "string"
-                },
-                "trace_id": {
-                    "type": "string"
-                }
-            }
-        },
         "sys_model.MenuListItem": {
             "type": "object",
             "properties": {
-                "api_url": {
-                    "type": "string"
-                },
                 "children": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/sys_model.MenuListItem"
                     }
                 },
+                "component": {
+                    "description": "组件",
+                    "type": "string"
+                },
                 "created_at": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "删除时间",
                     "type": "string"
                 },
                 "icon": {
+                    "description": "图标",
                     "type": "string"
                 },
                 "id": {
+                    "description": "ID",
                     "type": "integer"
                 },
                 "is_frame": {
+                    "description": "是否框架，1",
                     "type": "integer"
                 },
-                "is_show": {
-                    "type": "integer"
+                "menu_name": {
+                    "description": "菜单名称",
+                    "type": "string"
                 },
                 "menu_type": {
-                    "type": "integer"
+                    "description": "菜单类型，M目录 C菜单，F按钮",
+                    "type": "string"
                 },
                 "operator": {
+                    "description": "操作人",
                     "type": "string"
                 },
                 "parent_id": {
-                    "type": "integer"
+                    "description": "父级",
+                    "type": "string"
+                },
+                "parent_ids": {
+                    "description": "父级类型",
+                    "type": "string"
                 },
                 "path": {
+                    "description": "前端路径",
+                    "type": "string"
+                },
+                "permission": {
+                    "description": "权限标识",
                     "type": "string"
                 },
                 "sort": {
+                    "description": "排序",
                     "type": "integer"
                 },
                 "title": {
-                    "type": "string"
-                },
-                "unique_auth": {
-                    "type": "string"
-                },
-                "unique_name": {
+                    "description": "标题",
                     "type": "string"
                 },
                 "updated_at": {
+                    "description": "最后更新时间",
                     "type": "string"
+                },
+                "visible": {
+                    "description": "是否启用，1启用",
+                    "type": "integer"
                 }
             }
         },
@@ -1829,18 +2097,37 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "config",
+                "key",
                 "name",
                 "type"
             ],
             "properties": {
-                "config": {
+                "config": {},
+                "is_open": {
+                    "type": "integer"
+                },
+                "key": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
-                "type": {
+                "remark": {
                     "type": "string"
+                },
+                "type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "sys_request.ConfigDeleteReq": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -1849,7 +2136,8 @@ const docTemplate = `{
             "required": [
                 "config",
                 "id",
-                "name"
+                "name",
+                "type"
             ],
             "properties": {
                 "config": {
@@ -1858,19 +2146,28 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "is_open": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
+                },
+                "remark": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "integer"
                 }
             }
         },
         "sys_request.ConfigGetOneReq": {
             "type": "object",
-            "required": [
-                "id"
-            ],
             "properties": {
                 "id": {
                     "type": "integer"
+                },
+                "key": {
+                    "type": "string"
                 }
             }
         },
@@ -1884,14 +2181,23 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "is_open": {
+                    "type": "integer"
+                },
+                "key": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 },
                 "operator": {
                     "type": "string"
                 },
-                "type": {
+                "remark": {
                     "type": "string"
+                },
+                "type": {
+                    "type": "integer"
                 },
                 "updated_at": {
                     "type": "string"
@@ -1901,8 +2207,15 @@ const docTemplate = `{
         "sys_request.ConfigListReq": {
             "type": "object",
             "properties": {
+                "key": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
+                },
+                "order": {
+                    "type": "string",
+                    "default": "id ASC"
                 },
                 "page": {
                     "type": "integer",
@@ -1936,7 +2249,6 @@ const docTemplate = `{
             "required": [
                 "leader",
                 "name",
-                "parent_id",
                 "status"
             ],
             "properties": {
@@ -1975,11 +2287,15 @@ const docTemplate = `{
                 }
             }
         },
-        "sys_request.DeptListReq": {
+        "sys_request.DeptTreeListReq": {
             "type": "object",
             "properties": {
                 "name": {
                     "type": "string"
+                },
+                "order": {
+                    "type": "string",
+                    "default": "id ASC"
                 },
                 "page": {
                     "type": "integer",
@@ -1990,18 +2306,17 @@ const docTemplate = `{
                     "default": 20
                 },
                 "status": {
-                    "type": "integer",
-                    "default": -1
+                    "type": "integer"
                 }
             }
         },
-        "sys_request.DeptListRes": {
+        "sys_request.DeptTreeListRes": {
             "type": "object",
             "properties": {
                 "list": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.SysDept"
+                        "$ref": "#/definitions/sys_model.DeptTreeListItem"
                     }
                 },
                 "total": {
@@ -2050,9 +2365,6 @@ const docTemplate = `{
                 "title"
             ],
             "properties": {
-                "api_url": {
-                    "type": "string"
-                },
                 "icon": {
                     "type": "string"
                 },
@@ -2130,14 +2442,16 @@ const docTemplate = `{
         "sys_request.SwitchAddOrEditReq": {
             "type": "object",
             "required": [
+                "key",
                 "name",
-                "remark",
-                "status",
-                "type_key"
+                "status"
             ],
             "properties": {
                 "id": {
                     "type": "integer"
+                },
+                "key": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
@@ -2147,9 +2461,17 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "integer"
-                },
-                "type_key": {
-                    "type": "string"
+                }
+            }
+        },
+        "sys_request.SwitchDeleteReq": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },

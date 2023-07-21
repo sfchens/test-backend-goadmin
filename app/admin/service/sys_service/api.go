@@ -7,6 +7,7 @@ import (
 	"csf/library/db"
 	"csf/library/global"
 	"csf/utils"
+	"fmt"
 	"github.com/bitly/go-simplejson"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -36,7 +37,7 @@ func (s *sSysApiService) List(input sys_request.ApiListReq) (out sys_request.Api
 		return
 	}
 
-	err = model1.Offset((page - 1) * pageSize).Limit(pageSize).Scan(&out.List).Error
+	err = model1.Offset((page - 1) * pageSize).Limit(pageSize).Order("id DESC").Scan(&out.List).Error
 	if err != nil {
 		return
 	}
@@ -55,18 +56,18 @@ func (s *sSysApiService) GetQuery(input sys_request.ApiListReq) *gorm.DB {
 	model1 := db.GetDb().Model(model.SysApi{})
 
 	if tag != "" {
-		model1.Where("tag like '%?%'", tag)
+		model1.Where(fmt.Sprintf("tags like '%%%v%%'", tag))
 	}
 
 	if title != "" {
-		model1.Where("title like '%?%'", title)
+		model1.Where(fmt.Sprintf("title like '%%%v%%'", title))
 	}
 
 	if path != "" {
-		model1.Where("path like '%?%'", path)
+		model1.Where(fmt.Sprintf("path like '%%%v%%'", path))
 	}
 	if method != "" {
-		model1.Where("methos = ?", strings.ToUpper(method))
+		model1.Where("method = ?", strings.ToUpper(method))
 	}
 	return model1
 }
@@ -100,13 +101,13 @@ func (s *sSysApiService) Refresh() (err error) {
 			UpdateAll: true,
 		}).Create(&sysApiModel).Error
 		if err != nil {
-			break
+			//break
 		}
 	}
 	return
 }
 
-func (s *sSysApiService) Edit(input sys_request.ApiEditReq) (err error) {
+func (s *sSysApiService) AddOrEdit(input sys_request.ApiEditReq) (err error) {
 	var (
 		id     = input.Id
 		tags   = input.Tags
@@ -115,19 +116,85 @@ func (s *sSysApiService) Edit(input sys_request.ApiEditReq) (err error) {
 
 		sysApiModel model.SysApi
 	)
-
-	err = db.GetDb().Find(&sysApiModel, id).Error
-	if err != nil {
-		return
+	fmt.Printf("input: %+v\n", input)
+	if id > 0 {
+		err = db.GetDb().Find(&sysApiModel, id).Error
+		if err != nil {
+			return
+		}
 	}
 
 	sysApiModel.Tags = tags
 	sysApiModel.Title = title
 	sysApiModel.Method = method
 	sysApiModel.Operator = utils.GetUserName(s.ctx)
-	err = db.GetDb().Save(&sysApiModel).Error
+
+	if sysApiModel.ID > 0 {
+		err = db.GetDb().Save(&sysApiModel).Error
+	} else {
+		sysApiModel.Path = input.Path
+		sysApiModel.Handle = input.Handle
+		err = db.GetDb().Create(&sysApiModel).Error
+	}
 	if err != nil {
 		return
+	}
+	return
+}
+
+func (s *sSysApiService) GetTag(input sys_request.ApiGetTagReq) (out sys_request.ApiGetTagRes, err error) {
+	var (
+		page     = input.Page
+		pageSize = input.PageSize
+		tag      = input.Tag
+	)
+
+	model := db.GetDb().Model(model.SysApi{}).Group("tags").Select("tags")
+	if tag != "" {
+		model.Where("tags like %?%", tag)
+	}
+	err = model.Count(&out.Total).Error
+	if err != nil {
+		return
+	}
+
+	err = model.Offset((page - 1) * pageSize).Limit(pageSize).Scan(&out.List).Error
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (s *sSysApiService) DeleteMulti(input sys_request.ApiDeleteMultiReq) (err error) {
+
+	var (
+		ids = input.Ids
+
+		idsStr          []string
+		sysApiModel     model.SysApi
+		sysApiModelList []model.SysApi
+	)
+	for _, v := range ids {
+		idsStr = append(idsStr, fmt.Sprintf("%v", v))
+	}
+	err = db.GetDb().Model(sysApiModel).
+		Where(fmt.Sprintf("id in (%v)", strings.Join(idsStr, ","))).
+		Scan(&sysApiModelList).Error
+	if err != nil {
+		return
+	}
+
+	tx := db.GetDb().Begin()
+	for _, v := range sysApiModelList {
+		err = tx.Delete(&sysApiModel, v.ID).Error
+		if err != nil {
+			break
+		}
+	}
+	if err == nil {
+		tx.Commit()
+	} else {
+		tx.Rollback()
 	}
 	return
 }

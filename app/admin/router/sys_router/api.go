@@ -13,5 +13,7 @@ func registerApiRouter(r *gin.RouterGroup) {
 		r1.GET("/list", apis.List)
 		r1.POST("/refresh", apis.Refresh)
 		r1.POST("/edit", apis.Edit)
+		r1.POST("/delete_multi", apis.DeleteMulti)
+		r1.GET("/get_tag", apis.GetTag)
 	}
 }

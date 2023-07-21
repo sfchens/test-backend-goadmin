@@ -85,7 +85,64 @@ func (c *cSysApi) Edit(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSysApiService(ctx).Edit(req)
+	err = sys_service.NewSysApiService(ctx).AddOrEdit(req)
+	if err != nil {
+		response.SuccessWithData(ctx, err.Error())
+		return
+	}
+	response.Success(ctx)
+}
+
+// GetTag  接口分类
+// @Summary 接口分类
+// @Description 接口分类
+// @Tags 接口管理
+// @Accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
+// @Router /api/v1/sys/api/get_tag [get]
+func (c *cSysApi) GetTag(ctx *gin.Context) {
+	var (
+		err error
+
+		req sys_request.ApiGetTagReq
+		res sys_request.ApiGetTagRes
+	)
+
+	err = utils.BindParams(ctx, &req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	res, err = sys_service.NewSysApiService(ctx).GetTag(req)
+	if err != nil {
+		response.SuccessWithData(ctx, err.Error())
+		return
+	}
+	response.SuccessWithData(ctx, res)
+}
+
+// DeleteMulti  接口分类
+// @Summary 接口分类
+// @Description 接口分类
+// @Tags 接口管理
+// @Accept application/json
+// @Produce application/json
+// @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
+// @Router /api/v1/sys/api/delete_multi [get]
+func (c *cSysApi) DeleteMulti(ctx *gin.Context) {
+	var (
+		err error
+
+		req sys_request.ApiDeleteMultiReq
+	)
+
+	err = ctx.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	err = sys_service.NewSysApiService(ctx).DeleteMulti(req)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
 		return

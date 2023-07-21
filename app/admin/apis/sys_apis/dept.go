@@ -36,7 +36,7 @@ func (c *cSysDeptApi) Add(ctx *gin.Context) {
 		return
 	}
 	fmt.Printf("req:  %+v\n", req)
-	err = sys_service.NewSysDeptService(ctx).Add(req)
+	err = sys_service.NewSysDeptService(ctx).AddOrEdit(req)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
 		return
@@ -101,20 +101,20 @@ func (c *cSysDeptApi) Delete(ctx *gin.Context) {
 	response.Success(ctx)
 }
 
-// List  部门列表
-// @Summary 部门列表
-// @Description 部门列表
+// TreeList  部门tree列表
+// @Summary 部门tree列表
+// @Description 部门tree列表
 // @Tags 部门管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys_request.DeptListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys_request.DeptListRes}  "code错误码 msg操作信息 data返回信息"
+// @Param raw body     sys_request.DeptTreeListReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_request.DeptTreeListRes}  "code错误码 msg操作信息 data返回信息"
 // @Router /api/v1/sys/dept/list [get]
-func (c *cSysDeptApi) List(ctx *gin.Context) {
+func (c *cSysDeptApi) TreeList(ctx *gin.Context) {
 	var (
 		err error
-		req sys_request.DeptListReq
-		res sys_request.DeptListRes
+		req sys_request.DeptTreeListReq
+		res sys_request.DeptTreeListRes
 	)
 
 	err = utils.BindParams(ctx, &req)
@@ -123,11 +123,70 @@ func (c *cSysDeptApi) List(ctx *gin.Context) {
 		return
 	}
 
-	res, err = sys_service.NewSysDeptService(ctx).List(req)
+	res, err = sys_service.NewSysDeptService(ctx).TreeList(req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
 	response.SuccessWithData(ctx, res)
+}
+
+// GetOne  一条部门信息
+// @Summary 一条部门信息
+// @Description 一条部门信息
+// @Tags 部门管理
+// @Accept application/json
+// @Produce application/json
+// @Param raw body     sys_request.DeptTreeListReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_request.DeptTreeListRes}  "code错误码 msg操作信息 data返回信息"
+// @Router /api/v1/sys/dept/get_one [get]
+func (c *cSysDeptApi) GetOne(ctx *gin.Context) {
+	var (
+		err error
+		req sys_request.DeptGetOneReq
+		res sys_request.DeptGetOneRes
+	)
+
+	err = utils.BindParams(ctx, &req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+
+	res, err = sys_service.NewSysDeptService(ctx).GetOne(req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	response.SuccessWithData(ctx, res)
+}
+
+// DeleteMulti  批量删除
+// @Summary 批量删除
+// @Description 批量删除
+// @Tags 部门管理
+// @Accept application/json
+// @Produce application/json
+// @Param raw body     sys_request.DeptTreeListReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_request.DeptTreeListRes}  "code错误码 msg操作信息 data返回信息"
+// @Router /api/v1/sys/dept/delete_multi [post]
+func (c *cSysDeptApi) DeleteMulti(ctx *gin.Context) {
+	var (
+		err error
+		req sys_request.DeptDeleteMultiReq
+	)
+
+	err = utils.BindParams(ctx, &req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+
+	err = sys_service.NewSysDeptService(ctx).DeleteMulti(req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	response.Success(ctx)
 }

@@ -4,6 +4,7 @@ import (
 	"csf/app/admin/request/sys_request"
 	"csf/app/admin/service/sys_service"
 	"csf/common/mysql/model"
+	"csf/library/global"
 	"csf/library/response"
 	"csf/utils"
 	"github.com/gin-gonic/gin"
@@ -149,6 +150,7 @@ func (c *cSysAdminApi) GetAdminInfo(ctx *gin.Context) {
 	}
 
 	utils.StructToStruct(adminModel, &adminInfo)
-	adminInfo.Roles = []string{"*"}
+	adminInfo.Roles = global.Permissions
+	adminInfo.Permissions = global.Permissions
 	response.SuccessWithData(ctx, adminInfo)
 }

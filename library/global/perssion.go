@@ -1,0 +1,25 @@
+package global
+
+var Permissions = []string{
+	"admin:sysConfig:edit",
+	"admin:sysConfig:delete",
+	"admin:sysConfig:add",
+	"admin:sysConfig:export",
+	"admin:sysConfig:setStatus",
+	"admin:sysDict:add",
+	"admin:sysDict:edit",
+	"admin:sysDict:delete",
+	"admin:sysDict:export",
+	"admin:sysDict:setStatus",
+	"admin:sysDept:add",
+	"admin:sysDept:edit",
+	"admin:sysDept:delete",
+	"admin:sysDept:export",
+	"admin:sysDept:deleteMulti",
+	"admin:sysApi:list",
+	"admin:sysApi:edit",
+	"admin:sysApi:add",
+	"admin:sysApi:export",
+	"admin:sysApi:deleteMulti",
+	"admin:sysApi:refresh",
+}

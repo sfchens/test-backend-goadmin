@@ -2,6 +2,7 @@ package utils
 
 import (
 	"reflect"
+	"time"
 )
 
 func StructToStruct(sourceStruct interface{}, targetStruct interface{}) {
@@ -20,8 +21,16 @@ func StructToStruct(sourceStruct interface{}, targetStruct interface{}) {
 		}
 		targetVal := targetV.Field(i)
 		if targetVal.Type() != sourceVal.Type() {
-			continue
+			if sourceVal.Type().String() != "time.Time" {
+				continue
+			}
+
+			if sourceVal.Type() == reflect.TypeOf(time.Time{}) {
+				timeValue := sourceVal.Interface().(time.Time)
+				sourceVal = reflect.ValueOf(timeValue.Format(TIME_FORMAT))
+			}
 		}
+
 		targetVal.Set(sourceVal)
 	}
 }

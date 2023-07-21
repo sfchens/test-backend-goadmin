@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"strings"
 )
 
 type sSysConfig struct {
@@ -25,6 +26,7 @@ func (s *sSysConfig) List(input sys_request.ConfigListReq) (out sys_request.Conf
 	var (
 		page     = input.Page
 		pageSize = input.PageSize
+		order    = input.Order
 
 		sysConfigList []model.SysConfig
 	)
@@ -34,14 +36,20 @@ func (s *sSysConfig) List(input sys_request.ConfigListReq) (out sys_request.Conf
 	if err != nil {
 		return
 	}
-	err = model.Offset((page - 1) * pageSize).Limit(pageSize).Order("id ASC").Scan(&sysConfigList).Error
+	err = model.Offset((page - 1) * pageSize).Limit(pageSize).Order(order).Scan(&sysConfigList).Error
 	if err != nil {
 		return
 	}
 	for _, item := range sysConfigList {
 		var itemTmp sys_request.ConfigGetOneRes
 		utils.StructToStruct(item, &itemTmp)
-		itemTmp.Config, _ = s.DealJson(item.Key, item.Config)
+		var config interface{}
+		if item.Type == 2 {
+			config, _ = s.DealJson(item.Key, item.Config)
+		} else {
+			config = item.Config
+		}
+		itemTmp.Config = config
 		out.List = append(out.List, itemTmp)
 	}
 	return
@@ -50,7 +58,8 @@ func (s *sSysConfig) List(input sys_request.ConfigListReq) (out sys_request.Conf
 func (s *sSysConfig) GetQuery(input sys_request.ConfigListReq) *gorm.DB {
 	var (
 		name  = input.Name
-		types = input.Types
+		types = input.Type1
+		key   = input.Key
 
 		sysConfigModel model.SysConfig
 	)
@@ -62,7 +71,11 @@ func (s *sSysConfig) GetQuery(input sys_request.ConfigListReq) *gorm.DB {
 	}
 
 	if types != "" {
-		model.Where("types = ?", types)
+		model.Where("type = ?", types)
+	}
+
+	if key != "" {
+		model.Where(fmt.Sprintf("`key` like '%%%v%%'", key))
 	}
 	return model
 }
@@ -72,11 +85,17 @@ func (s *sSysConfig) Add(input sys_request.ConfigAddReq) (err error) {
 		name           = input.Name
 		config         = input.Config
 		key            = input.Key
+		types          = input.Type // 1value, 2需要转json格式
+		remark         = input.Remark
+		isOpen         = input.IsOpen
 		sysConfigModel model.SysConfig
 	)
-	if !json.Valid([]byte(config)) {
-		err = errors.New("配置数据格式异常")
-		return
+	//if !json.Valid([]byte(config)) {
+	//	err = errors.New("配置数据格式异常")
+	//	return
+	//}
+	if types == 1 {
+
 	}
 	var counts int64
 	err = db.GetDb().Model(sysConfigModel).Where("id=?", key).Count(&counts).Error
@@ -87,8 +106,11 @@ func (s *sSysConfig) Add(input sys_request.ConfigAddReq) (err error) {
 		err = errors.New("该类型已存在")
 		return
 	}
+	sysConfigModel.Type = types
+	sysConfigModel.Remark = remark
+	sysConfigModel.IsOpen = uint(isOpen)
 	sysConfigModel.Name = name
-	sysConfigModel.Config = config
+	sysConfigModel.Config = fmt.Sprintf("%v", config)
 	sysConfigModel.Key = key
 	sysConfigModel.Operator = utils.GetUserName(s.ctx)
 	err = db.GetDb().Create(&sysConfigModel).Error
@@ -103,9 +125,11 @@ func (s *sSysConfig) Edit(input sys_request.ConfigEditReq) (err error) {
 		id     = input.Id
 		name   = input.Name
 		config = input.Config
+		type1  = input.Type
+		isOpen = input.IsOpen
+		remark = input.Remark
 
 		sysConfigModel model.SysConfig
-		isUpdate       bool
 	)
 
 	if !json.Valid([]byte(config)) {
@@ -117,21 +141,18 @@ func (s *sSysConfig) Edit(input sys_request.ConfigEditReq) (err error) {
 	if err != nil {
 		return
 	}
-
-	if name != "" {
-		sysConfigModel.Name = name
-		isUpdate = true
-	}
-
-	if config != "" {
-		sysConfigModel.Config = config
-		isUpdate = true
-	}
-	if !isUpdate {
+	if sysConfigModel.ID <= 0 {
+		err = errors.New("参数异常")
 		return
 	}
+	sysConfigModel.Name = name
+	sysConfigModel.Config = config
+	sysConfigModel.Type = type1
+	sysConfigModel.IsOpen = uint(isOpen)
+	sysConfigModel.Remark = remark
+
 	sysConfigModel.Operator = utils.GetUserName(s.ctx)
-	err = db.GetDb().Save(&sysConfigModel).Error
+	_ = db.GetDb().Save(&sysConfigModel).Error
 	if err != nil {
 		return
 	}
@@ -176,6 +197,71 @@ func (s *sSysConfig) DealJson(key string, dataJson string) (data interface{}, er
 		err = errors.New("类型异常")
 		return
 	}
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (s *sSysConfig) Delete(input sys_request.ConfigDeleteReq) (err error) {
+	var (
+		ids            = input.Ids
+		idsStr         []string
+		sysConfigList  []model.SysConfig
+		sysConfigModel model.SysConfig
+	)
+
+	for _, v := range ids {
+		idsStr = append(idsStr, fmt.Sprintf("%v", v))
+	}
+
+	err = db.GetDb().Model(sysConfigModel).
+		Where(fmt.Sprintf("id in (%v)", strings.Join(idsStr, ","))).
+		Scan(&sysConfigList).Error
+	if err != nil {
+		return
+	}
+
+	tx := db.GetDb().Begin()
+	for _, v := range sysConfigList {
+		if v.IsOpen == 1 {
+			err = errors.New(fmt.Sprintf("配置ID： %v 正在使用", v.ID))
+			break
+		}
+
+		err = db.GetDb().Delete(&sysConfigModel, v.ID).Error
+		if err != nil {
+			break
+		}
+	}
+	if err == nil {
+		tx.Commit()
+	} else {
+		tx.Rollback()
+	}
+	return
+}
+
+func (s *sSysConfig) SetStatus(input sys_request.ConfigSetStatusReq) (err error) {
+	var (
+		id     = input.Id
+		isOpen = input.IsOpen
+
+		sysConfigModel model.SysConfig
+	)
+
+	err = db.GetDb().Find(&sysConfigModel, id).Error
+	if err != nil {
+		return
+	}
+
+	if sysConfigModel.IsOpen == uint(isOpen) {
+		err = errors.New("状态异常，刷新后重试")
+		return
+	}
+	sysConfigModel.IsOpen = uint(isOpen)
+	sysConfigModel.Operator = utils.GetUserName(s.ctx)
+	err = db.GetDb().Save(&sysConfigModel).Error
 	if err != nil {
 		return
 	}

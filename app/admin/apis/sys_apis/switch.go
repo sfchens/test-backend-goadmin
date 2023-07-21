@@ -81,5 +81,63 @@ func (c *cSwitchApi) List(ctx *gin.Context) {
 		return
 	}
 	res, err = sys_service.NewSwitchService(ctx).List(req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
 	response.SuccessWithData(ctx, res)
+}
+
+// Delete  删除开关
+// @Summary 删除开关
+// @Description 删除开关
+// @Tags 开关管理
+// @Accept application/json
+// @Produce application/json
+// @Param raw body     sys_request.SwitchDeleteReq true "请求参数"
+// @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
+// @Router /api/v1/sys/switch/delete [post]
+func (c *cSwitchApi) Delete(ctx *gin.Context) {
+	var (
+		err error
+		req sys_request.SwitchDeleteReq
+	)
+	err = ctx.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	err = sys_service.NewSwitchService(ctx).Delete(req.Ids)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	response.Success(ctx)
+}
+
+// SetStatus  设置状态
+// @Summary 设置状态
+// @Description 设置状态
+// @Tags 开关管理
+// @Accept application/json
+// @Produce application/json
+// @Param raw body     sys_request.SwitchDeleteReq true "请求参数"
+// @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
+// @Router /api/v1/sys/switch/set_status [post]
+func (c *cSwitchApi) SetStatus(ctx *gin.Context) {
+	var (
+		err error
+		req sys_request.SwitchSetStatusReq
+	)
+	err = utils.BindParams(ctx, &req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	err = sys_service.NewSwitchService(ctx).SetStatus(req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	response.Success(ctx)
 }

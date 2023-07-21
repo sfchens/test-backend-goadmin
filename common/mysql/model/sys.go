@@ -20,13 +20,16 @@ type SysAdmin struct {
 }
 
 type SysConfig struct {
-	ID        uint   `gorm:"column:id; primary_key; auto_increment;" json:"id"`
-	Name      string `gorm:"column:name; type:varchar(32); not null; default:'';" json:"name"`
-	Key       string `gorm:"column:key; type:char(15); not null; default:'0';" json:"key"`
-	Config    string `gorm:"column:config; type:text;" json:"config"`
-	Operator  string `gorm:"column:operator; type:varchar(32); not null; default:'';" json:"operator"`
-	CreatedAt string `gorm:"column:created_at; type:datetime; not null; default:current_timestamp;" json:"created_at"`
-	UpdatedAt string `gorm:"column:updated_at; type:datetime; default:current_timestamp on update current_timestamp;" json:"updated_at"`
+	ID        uint      `gorm:"column:id;primary_key" json:"id" comment:"ID"`
+	Name      string    `gorm:"column:name" json:"name" comment:"名称"`
+	Key       string    `gorm:"column:key" json:"key" comment:"0json配置1基础配置2商城配置3用户配置"`
+	Config    string    `gorm:"column:config" json:"config" comment:"配置"`
+	IsOpen    uint      `gorm:"column:is_open" json:"is_open" comment:"是否开启"`
+	Remark    string    `gorm:"column:remark" json:"remark" comment:"备注"`
+	Type      int       `gorm:"column:type" json:"type" comment:"1，value值，2json值"`
+	Operator  string    `gorm:"column:operator" json:"operator" comment:"操作人"`
+	CreatedAt time.Time `gorm:"column:created_at" json:"created_at" comment:"创建时间"`
+	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at" comment:"更新时间"`
 }
 
 type SysUser struct {
@@ -68,24 +71,24 @@ type SysMenu struct {
 }
 
 type SysDept struct {
-	ID        int    `gorm:"column:id;primary_key;auto_increment" json:"id"`
-	ParentId  int    `gorm:"column:parent_id" json:"parent_id"`
-	Name      string `gorm:"column:name" json:"name"`
-	Leader    string `gorm:"column:leader" json:"leader"`
-	Sort      int    `gorm:"column:sort" json:"sort"`
-	Phone     string `gorm:"column:phone" json:"phone"`
-	Email     string `gorm:"column:email" json:"email"`
-	Status    int8   `gorm:"column:status" json:"status"`
-	Operator  string `gorm:"column:operator;not null;default:''" json:"-"`
-	CreatedAt string `gorm:"column:created_at" json:"created_at"`
-	UpdatedAt string `gorm:"column:updated_at" json:"updated_at"`
-	DeletedAt string `gorm:"column:deleted_at" json:"-"`
+	ID        int       `gorm:"column:id;primary_key;auto_increment" json:"id"`
+	ParentId  int       `gorm:"column:parent_id" json:"parent_id"`
+	Name      string    `gorm:"column:name" json:"name"`
+	Leader    string    `gorm:"column:leader" json:"leader"`
+	Sort      int       `gorm:"column:sort" json:"sort"`
+	Phone     string    `gorm:"column:phone" json:"phone"`
+	Email     string    `gorm:"column:email" json:"email"`
+	Status    int8      `gorm:"column:status" json:"status"`
+	Operator  string    `gorm:"column:operator;not null;default:''" json:"-"`
+	CreatedAt time.Time `gorm:"column:created_at" json:"created_at"`
+	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at"`
+	DeletedAt time.Time `gorm:"column:deleted_at" json:"-"`
 }
 
 type SysSwitch struct {
 	ID        uint      `gorm:"primary_key" json:"id"`
 	Name      string    `gorm:"column:name" json:"name"`
-	TypeKey   string    `gorm:"column:type_key" json:"type_key"`
+	Key       string    `gorm:"column:key" json:"key"`
 	Status    int       `gorm:"column:status" json:"status"`
 	Remark    string    `gorm:"column:remark" json:"remark"`
 	Operator  string    `gorm:"column:operator" json:"operator"`
