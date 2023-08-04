@@ -14,6 +14,7 @@ func init() {
 		registerDeptRouter,
 		registerSwitchRouter,
 		registerApiRouter,
+		registerRoleRouter,
 	)
 
 }

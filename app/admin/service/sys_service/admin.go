@@ -7,6 +7,7 @@ import (
 	"csf/library/my_jwt"
 	"csf/utils"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -26,10 +27,15 @@ func (s *sSysAdmin) Add(input sys_request.AdminAddReq) (err error) {
 		password = input.Password
 		phone    = input.Phone
 		email    = input.Email
+		remark   = input.Remark
+		sex      = input.Sex
+		deptId   = input.DeptId
+		roleIds  = input.RoleIds
+		status   = input.Status
 
 		sysAdminModel model.SysAdmin
 	)
-
+	fmt.Printf("roleIds:  %+v\n", roleIds)
 	var counts int64
 	err = db.GetDb().Model(sysAdminModel).Where("username=?", username).Count(&counts).Error
 	if err != nil {
@@ -70,6 +76,10 @@ func (s *sSysAdmin) Add(input sys_request.AdminAddReq) (err error) {
 	}
 
 	// admin表
+	sysAdminModel.Remark = remark
+	sysAdminModel.Sex = sex
+	sysAdminModel.DeptID = deptId
+	sysAdminModel.Status = status
 	sysAdminModel.Username = username
 	sysAdminModel.Realname = realname
 	sysAdminModel.Password = utils.BcryptHash(password)
@@ -175,7 +185,7 @@ func (s *sSysAdmin) SetStatus(input sys_request.AdminSetStatusReq) (err error) {
 	if err != nil {
 		return
 	}
-	if status == sysAdminModel.Status {
+	if int(status) == sysAdminModel.Status {
 		return
 	}
 	sysAdminModel.Operator = utils.GetUserName(s.ctx)
@@ -192,14 +202,19 @@ func (s *sSysAdmin) List(input sys_request.AdminListReq) (out sys_request.AdminL
 		pageSize = input.PageSize
 	)
 
-	model := s.GetQuery(input)
-	err = model.Count(&out.Total).Error
+	model1 := s.GetQuery(input)
+	err = model1.Count(&out.Total).Error
 	if err != nil {
 		return
 	}
-	err = model.Offset((page - 1) * pageSize).Limit(pageSize).Scan(&out.List).Error
+	err = model1.Offset((page - 1) * pageSize).Limit(pageSize).Scan(&out.List).Error
 	if err != nil {
 		return
+	}
+	for key, item := range out.List {
+		var deptInfo model.SysDept
+		db.GetDb().Where("id = ?", item.DeptID).Find(&deptInfo, item.DeptID)
+		out.List[key].DeptInfo = deptInfo
 	}
 	return
 }

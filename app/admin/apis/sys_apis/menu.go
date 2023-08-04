@@ -44,6 +44,36 @@ func (c *cSysMenuApi) TreeList(ctx *gin.Context) {
 	response.SuccessWithData(ctx, res)
 }
 
+// TreeListAll  菜单列表
+// @Summary 菜单列表
+// @Description 菜单列表
+// @Tags 菜单管理
+// @Accept application/json
+// @Produce application/json
+// @Param raw body     sys_request.MenuListReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_request.MenuListRes} "code错误码 msg操作信息 data返回信息"
+// @Router /api/v1/sys/menu/tree_list_all [get]
+func (c *cSysMenuApi) TreeListAll(ctx *gin.Context) {
+
+	var (
+		err error
+		req sys_request.MenuListReq
+		res sys_request.MenuListRes
+	)
+	err = utils.BindParams(ctx, &req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+
+	res, err = sys_service.NewSysMenuService(ctx).TreeListAll(req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	response.SuccessWithData(ctx, res)
+}
+
 // TreeRoleList  权限菜单
 // @Summary 权限菜单
 // @Description 权限菜单

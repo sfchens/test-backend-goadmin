@@ -12,6 +12,7 @@ func registerMenuRouter(r *gin.RouterGroup) {
 	{
 		r1.GET("/tree_list", apis.TreeList)
 		r1.GET("/tree_role_list", apis.TreeRoleList)
+		r1.GET("/tree_list_all", apis.TreeListAll)
 		r1.POST("/add", apis.Add)
 		r1.POST("/edit", apis.Edit)
 	}

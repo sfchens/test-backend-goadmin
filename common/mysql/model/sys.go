@@ -1,22 +1,27 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type SysAdmin struct {
-	ID         uint   `gorm:"column:id;primary_key;auto_increment" json:"id"`
-	Username   string `gorm:"column:username;type:varchar(16);not null;default:''" json:"username"`
-	Realname   string `gorm:"column:realname;type:varchar(16);not null;default:''" json:"realname"`
-	Email      string `gorm:"column:email;type:varchar(32);not null;default:''" json:"email"`
-	Phone      string `gorm:"column:phone;type:char(11);default:null" json:"phone"`
-	HeadPic    string `gorm:"column:head_pic;type:text;not null" json:"head_pic"`
-	Password   string `gorm:"column:password;type:varchar(100);not null;default:''" json:"password"`
-	LastIP     string `gorm:"column:last_ip;type:varchar(16);not null;default:''" json:"last_ip"`
-	LastTime   uint   `gorm:"column:last_time;type:int(10);unsigned;not null;default:0" json:"last_time"`
-	LoginCount uint   `gorm:"column:login_count;type:int(10);unsigned;not null;default:0" json:"login_count"`
-	Status     uint8  `gorm:"column:status;type:tinyint(3);unsigned;not null;default:1" json:"status"`
-	Operator   string `gorm:"column:operator;type:varchar(32);not null;default:''" json:"operator"`
-	CreatedAt  string `gorm:"column:created_at;not null;default:current_timestamp" json:"created_at"`
-	UpdatedAt  string `gorm:"column:updated_at;default:current_timestamp;on update current_timestamp" json:"updated_at"`
+	ID         uint      `gorm:"column:id;primaryKey" json:"id"`                                // ID
+	Username   string    `gorm:"column:username;size:16;not null" json:"username"`              // 用户名
+	Realname   string    `gorm:"column:realname;size:16;not null" json:"realname"`              // 真实姓名
+	Email      string    `gorm:"column:email;size:32;not null" json:"email"`                    // 邮箱
+	Phone      string    `gorm:"column:phone;size:11" json:"phone,omitempty"`                   // 电话
+	HeadPic    string    `gorm:"column:head_pic;type:text;not null" json:"head_pic"`            // 头像
+	Password   string    `gorm:"column:password;size:100;not null" json:"password,omitempty"`   // 密码
+	LastIP     string    `gorm:"column:last_ip;size:16;not null" json:"last_ip"`                // 最后登录IP
+	LastTime   int       `gorm:"column:last_time;default:0" json:"last_time"`                   // 最后登录时间
+	LoginCount int       `gorm:"column:login_count;default:0" json:"login_count"`               // 登录次数
+	Status     int       `gorm:"column:status;default:1" json:"status"`                         // 状态
+	Operator   string    `gorm:"column:operator;size:32;not null" json:"operator"`              // 操作人
+	CreatedAt  time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"created_at"` // 创建时间
+	UpdatedAt  time.Time `gorm:"column:updated_at;default:CURRENT_TIMESTAMP" json:"updated_at"` // 更新时间
+	DeptID     int       `gorm:"column:dept_id;default:0" json:"dept_id"`                       // 部门ID
+	Sex        int       `gorm:"column:sex;default:1" json:"sex"`                               // 性别
+	Remark     string    `gorm:"column:remark;size:100;not null" json:"remark"`                 // 备注
 }
 
 type SysConfig struct {
@@ -56,11 +61,12 @@ type SysMenu struct {
 	Title      string     `gorm:"column:title" json:"title"`                                                                 // 标题
 	Icon       string     `gorm:"column:icon" json:"icon"`                                                                   // 图标
 	Path       string     `gorm:"column:path" json:"path"`                                                                   // 前端路径
-	ParentId   string     `gorm:"column:parent_id" json:"parent_id"`                                                         // 父级
+	ParentId   int        `gorm:"column:parent_id" json:"parent_id"`                                                         // 父级
 	ParentIds  string     `gorm:"column:parent_ids" json:"parent_ids"`                                                       // 父级类型
 	MenuType   string     `gorm:"column:menu_type" json:"menu_type"`                                                         // 菜单类型，M目录 C菜单，F按钮
 	Permission string     `gorm:"column:permission" json:"permission"`                                                       // 权限标识
 	Component  string     `gorm:"column:component" json:"component"`                                                         // 组件
+	ApisId     string     `gorm:"column:apis_id" json:"apis_id"`                                                             // 组件
 	Sort       int        `gorm:"column:sort" json:"sort"`                                                                   // 排序
 	Visible    int        `gorm:"column:visible" json:"visible"`                                                             // 是否启用，1启用
 	IsFrame    int        `gorm:"column:is_frame" json:"is_frame"`                                                           // 是否框架，1
@@ -68,6 +74,11 @@ type SysMenu struct {
 	CreatedAt  time.Time  `gorm:"DEFAULT:current_timestamp;column:created_at" json:"created_at"`                             // 创建时间
 	UpdatedAt  time.Time  `gorm:"DEFAULT:current_timestamp ON UPDATE current_timestamp;column:updated_at" json:"updated_at"` // 最后更新时间
 	DeletedAt  *time.Time `gorm:"column:deleted_at" json:"deleted_at"`                                                       // 删除时间
+}
+
+type SysMenuApiRule struct {
+	SysMenuID uint64 `gorm:"column:sys_menu_id;uniqueIndex:menu_id_api_id_key" json:"sys_menu_id" comment:"菜单ID"`
+	SysApiID  uint64 `gorm:"column:sys_api_id;uniqueIndex:menu_id_api_id_key" json:"sys_api_id" comment:"api id"`
 }
 
 type SysDept struct {
@@ -108,4 +119,22 @@ type SysApi struct {
 	CreatedAt time.Time  `gorm:"column:created_at" json:"created_at"`
 	UpdatedAt time.Time  `gorm:"column:updated_at" json:"updated_at"`
 	DeletedAt *time.Time `gorm:"column:deleted_at" json:"deleted_at"`
+}
+
+type SysRole struct {
+	ID        int64     `gorm:"column:id;primaryKey;autoIncrement" json:"id" comment:"表主键"`
+	Name      string    `gorm:"column:name;size:128" json:"name" comment:"名称"`
+	Status    int       `gorm:"column:status;type:tinyint" json:"status" comment:"状态"`
+	Key       string    `gorm:"column:key;size:128" json:"key" comment:"权限标识"`
+	Sort      int64     `gorm:"column:sort" json:"sort" comment:"排序"`
+	MenuIds   string    `gorm:"column:menu_ids" json:"menu_ids" comment:"菜单ID"`
+	Remark    string    `gorm:"column:remark;size:255" json:"remark" comment:"备注"`
+	CreatedAt time.Time `gorm:"column:created_at" json:"created_at" comment:"创建时间"`
+	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at" comment:"最后更新时间"`
+	DeletedAt time.Time `gorm:"column:deleted_at" json:"deleted_at" comment:"删除时间"`
+}
+
+type SysRoleMenu struct {
+	RoleID int64 `gorm:"column:role_id;primaryKey" json:"role_id" comment:"角色ID"`
+	MenuID int64 `gorm:"column:menu_id;primaryKey" json:"menu_id" comment:"菜单ID"`
 }

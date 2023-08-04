@@ -130,8 +130,10 @@ func (s *sSysDeptService) Delete(input sys_request.DeptDeleteReq) (err error) {
 	defer func() {
 		if err != nil {
 			tran.Rollback()
+		} else {
+			tran.Commit()
 		}
-		tran.Commit()
+
 	}()
 
 	idTmp := []string{fmt.Sprintf("%d", id)}
@@ -214,12 +216,12 @@ func (s *sSysDeptService) TreeList(input sys_request.DeptTreeListReq) (out sys_r
 		return
 	}
 	out.List = s.TreeListItem(sysMenuListTmp)
-	fmt.Printf("sysMenuListTmpL:  %+v\n", sysMenuListTmp)
 	return
 }
 
 func (s *sSysDeptService) TreeListItem(list []sys_model.DeptTreeListItem) (out []sys_model.DeptTreeListItem) {
 	for _, v := range list {
+		v.Label = v.Name
 		model := db.GetDb().Model(model.SysDept{}).Preload("Children").Where("parent_id = ?", v.ID)
 		model.Order("sort desc").Scan(&v.Children)
 		if len(v.Children) > 0 {
@@ -232,8 +234,7 @@ func (s *sSysDeptService) TreeListItem(list []sys_model.DeptTreeListItem) (out [
 
 func (s *sSysDeptService) GetOne(input sys_request.DeptGetOneReq) (out sys_request.DeptGetOneRes, err error) {
 	var (
-		id = input.Id
-
+		id           = input.Id
 		sysDeptModel model.SysDept
 	)
 
@@ -270,5 +271,3 @@ func (s *sSysDeptService) DeleteMulti(input sys_request.DeptDeleteMultiReq) (err
 
 	return
 }
-
-

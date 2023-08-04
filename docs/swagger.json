@@ -95,7 +95,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "视频管理"
+                    "直播视频管理"
                 ],
                 "summary": "新增视频",
                 "responses": {
@@ -118,7 +118,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "视频管理"
+                    "直播视频管理"
                 ],
                 "summary": "编辑视频",
                 "responses": {
@@ -349,6 +349,29 @@
                 }
             }
         },
+        "/api/v1/sys/api/delete_multi": {
+            "get": {
+                "description": "接口分类",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "接口管理"
+                ],
+                "summary": "接口分类",
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/sys/api/edit": {
             "post": {
                 "description": "编辑接口",
@@ -362,6 +385,29 @@
                     "接口管理"
                 ],
                 "summary": "编辑接口",
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/sys/api/get_tag": {
+            "get": {
+                "description": "接口分类",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "接口管理"
+                ],
+                "summary": "接口分类",
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -703,6 +749,52 @@
                 }
             }
         },
+        "/api/v1/sys/dept/delete_multi": {
+            "post": {
+                "description": "批量删除",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "部门管理"
+                ],
+                "summary": "批量删除",
+                "parameters": [
+                    {
+                        "description": "请求参数",
+                        "name": "raw",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sys_request.DeptTreeListReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/sys_request.DeptTreeListRes"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/sys/dept/edit": {
             "post": {
                 "description": "编辑部门",
@@ -1012,6 +1104,52 @@
             }
         },
         "/api/v1/sys/menu/tree_list": {
+            "get": {
+                "description": "菜单列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "菜单管理"
+                ],
+                "summary": "菜单列表",
+                "parameters": [
+                    {
+                        "description": "请求参数",
+                        "name": "raw",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sys_request.MenuListReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/sys_request.MenuListRes"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/sys/menu/tree_list_all": {
             "get": {
                 "description": "菜单列表",
                 "consumes": [
@@ -1430,17 +1568,6 @@
         },
         "/api/v1/upload/video": {
             "post": {
-                "security": [
-                    {
-                        "apiKey": []
-                    },
-                    {
-                        "apiKey2": []
-                    },
-                    {
-                        "apiKey3": []
-                    }
-                ],
                 "description": "上传视频",
                 "consumes": [
                     "application/json"
@@ -1852,7 +1979,7 @@
                 },
                 "parent_id": {
                     "description": "父级",
-                    "type": "string"
+                    "type": "integer"
                 },
                 "parent_ids": {
                     "description": "父级类型",
@@ -2293,6 +2420,9 @@
                     "type": "integer",
                     "default": 20
                 },
+                "parent_id": {
+                    "type": "integer"
+                },
                 "status": {
                     "type": "integer"
                 }
@@ -2348,11 +2478,15 @@
         "sys_request.MenuAddOrEditReq": {
             "type": "object",
             "required": [
+                "menu_name",
                 "menu_type",
-                "path",
+                "parent_id",
                 "title"
             ],
             "properties": {
+                "component": {
+                    "type": "string"
+                },
                 "icon": {
                     "type": "string"
                 },
@@ -2363,33 +2497,32 @@
                     "type": "integer"
                 },
                 "is_show": {
-                    "type": "integer",
-                    "default": 1
-                },
-                "menu_type": {
                     "type": "integer"
                 },
-                "parent_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                "menu_name": {
+                    "type": "string"
+                },
+                "menu_type": {
+                    "type": "string"
+                },
+                "parent_id": {
+                    "type": "integer"
                 },
                 "path": {
                     "type": "string"
                 },
+                "permission": {
+                    "type": "string"
+                },
                 "sort": {
                     "type": "integer",
-                    "default": 99
+                    "default": 1
                 },
                 "title": {
                     "type": "string"
                 },
-                "unique_auth": {
-                    "type": "string"
-                },
-                "unique_name": {
-                    "type": "string"
+                "visible": {
+                    "type": "integer"
                 }
             }
         },

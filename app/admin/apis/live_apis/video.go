@@ -5,7 +5,6 @@ import (
 	"csf/app/admin/service/live_service"
 	"csf/library/response"
 	"csf/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,7 +17,7 @@ func NewVideoApi() *cVideoApi {
 // Add  新增视频
 // @Summary 新增视频
 // @Description 新增视频
-// @Tags 视频管理
+// @Tags 直播视频管理
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
@@ -28,7 +27,6 @@ func (c *cVideoApi) Add(ctx *gin.Context) {
 		err error
 		req live_request.VideoAddOrEditReq
 	)
-	fmt.Printf("2323")
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -47,7 +45,7 @@ func (c *cVideoApi) Add(ctx *gin.Context) {
 // Edit  编辑视频
 // @Summary 编辑视频
 // @Description 编辑视频
-// @Tags 视频管理
+// @Tags 直播视频管理
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"

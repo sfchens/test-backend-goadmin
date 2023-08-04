@@ -226,7 +226,7 @@ definitions:
         type: string
       parent_id:
         description: 父级
-        type: string
+        type: integer
       parent_ids:
         description: 父级类型
         type: string
@@ -524,6 +524,8 @@ definitions:
       page_size:
         default: 20
         type: integer
+      parent_id:
+        type: integer
       status:
         type: integer
     type: object
@@ -560,6 +562,8 @@ definitions:
     type: object
   sys_request.MenuAddOrEditReq:
     properties:
+      component:
+        type: string
       icon:
         type: string
       id:
@@ -567,28 +571,28 @@ definitions:
       is_frame:
         type: integer
       is_show:
-        default: 1
         type: integer
+      menu_name:
+        type: string
       menu_type:
+        type: string
+      parent_id:
         type: integer
-      parent_ids:
-        items:
-          type: string
-        type: array
       path:
         type: string
+      permission:
+        type: string
       sort:
-        default: 99
+        default: 1
         type: integer
       title:
         type: string
-      unique_auth:
-        type: string
-      unique_name:
-        type: string
+      visible:
+        type: integer
     required:
+    - menu_name
     - menu_type
-    - path
+    - parent_id
     - title
     type: object
   sys_request.MenuListReq:
@@ -714,7 +718,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: 新增视频
       tags:
-      - 视频管理
+      - 直播视频管理
   /api/v1/live/video/edit:
     post:
       consumes:
@@ -729,7 +733,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: 编辑视频
       tags:
-      - 视频管理
+      - 直播视频管理
   /api/v1/live/video/list:
     get:
       consumes:
@@ -863,6 +867,21 @@ paths:
       summary: 设置状态
       tags:
       - 管理员管理
+  /api/v1/sys/api/delete_multi:
+    get:
+      consumes:
+      - application/json
+      description: 接口分类
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 接口分类
+      tags:
+      - 接口管理
   /api/v1/sys/api/edit:
     post:
       consumes:
@@ -876,6 +895,21 @@ paths:
           schema:
             $ref: '#/definitions/response.Response'
       summary: 编辑接口
+      tags:
+      - 接口管理
+  /api/v1/sys/api/get_tag:
+    get:
+      consumes:
+      - application/json
+      description: 接口分类
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 接口分类
       tags:
       - 接口管理
   /api/v1/sys/api/list:
@@ -1084,6 +1118,33 @@ paths:
       summary: 删除部门
       tags:
       - 部门管理
+  /api/v1/sys/dept/delete_multi:
+    post:
+      consumes:
+      - application/json
+      description: 批量删除
+      parameters:
+      - description: 请求参数
+        in: body
+        name: raw
+        required: true
+        schema:
+          $ref: '#/definitions/sys_request.DeptTreeListReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sys_request.DeptTreeListRes'
+              type: object
+      summary: 批量删除
+      tags:
+      - 部门管理
   /api/v1/sys/dept/edit:
     post:
       consumes:
@@ -1276,6 +1337,33 @@ paths:
       tags:
       - 菜单管理
   /api/v1/sys/menu/tree_list:
+    get:
+      consumes:
+      - application/json
+      description: 菜单列表
+      parameters:
+      - description: 请求参数
+        in: body
+        name: raw
+        required: true
+        schema:
+          $ref: '#/definitions/sys_request.MenuListReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sys_request.MenuListRes'
+              type: object
+      summary: 菜单列表
+      tags:
+      - 菜单管理
+  /api/v1/sys/menu/tree_list_all:
     get:
       consumes:
       - application/json
@@ -1543,10 +1631,6 @@ paths:
                 data:
                   $ref: '#/definitions/common_request.UploadVideoRes'
               type: object
-      security:
-      - apiKey: []
-      - apiKey2: []
-      - apiKey3: []
       summary: 上传视频
       tags:
       - 上传管理

@@ -6,6 +6,7 @@ import (
 	"csf/library/global"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"strconv"
 	"strings"
 )
 
@@ -129,5 +130,21 @@ func GetAuthorization(ctx *gin.Context) (token string) {
 		return
 	}
 	token = parts[1]
+	return
+}
+
+func IntToStringArray(intArr []int) (parentIdStr []string) {
+	for _, val := range intArr {
+		res := strconv.Itoa(val)
+		parentIdStr = append(parentIdStr, res)
+	}
+	return
+}
+
+func StringToIntArray(stringArr []string) (intArr []int) {
+	for _, val := range stringArr {
+		i, _ := strconv.Atoi(val)
+		intArr = append(intArr, i)
+	}
 	return
 }
