@@ -1,21 +1,20 @@
 package sys_request
 
 type ConfigAddReq struct {
-	Key    string      `json:"key" form:"key" validate:"required" msg:"required:类型必填" description:"配置类型"`
-	Name   string      `json:"name" form:"name" validate:"required" msg:"required:名称必填" description:"名称"`
-	Config interface{} `json:"config" form:"config" validate:"required" msg:"required:配置必填" description:"配置名称"`
-	Type   int         `json:"type" form:"type" validate:"required" msg:"required:类型必填" description:"类型1value值2json"`
-	IsOpen int         `json:"is_open" form:"is_open"  description:"是否开启"`
-	Remark string      `json:"remark" form:"remark" description:"备注"`
+	Key    string `json:"key" form:"key" validate:"required" msg:"required:类型必填" description:"配置类型"`
+	Name   string `json:"name" form:"name" validate:"required" msg:"required:名称必填" description:"名称"`
+	Config string `json:"config" form:"config" validate:"required" msg:"required:配置必填" description:"配置名称"`
+	IsOpen int    `json:"is_open" form:"is_open"  description:"是否开启"`
+	Remark string `json:"remark" form:"remark" description:"备注"`
 }
 
 type ConfigEditReq struct {
-	Id     int    `json:"id" form:"id" validate:"required" msg:"required:参数异常" description:"ID"`
-	Name   string `json:"name" form:"name" validate:"required" msg:"required:名称必填" description:"名称"`
-	Config string `json:"config" form:"config" validate:"required" msg:"required:配置必填" description:"配置名称"`
-	Type   int    `json:"type" form:"type" validate:"required" msg:"required:类型必填" description:"类型1value值2json"`
-	IsOpen int    `json:"is_open" form:"is_open"  description:"是否开启"`
-	Remark string `json:"remark" form:"remark" description:"备注"`
+	Id     int               `json:"id" form:"id" validate:"required" msg:"required:参数异常" description:"ID"`
+	Key    string            `json:"key" form:"key" validate:"required" msg:"required:键不为空" description:"名称"`
+	Name   string            `json:"name" form:"name" validate:"required" msg:"required:名称必填" description:"名称"`
+	Config map[string]string `json:"config" form:"config" validate:"required" msg:"required:配置必填" description:"配置名称"`
+	IsOpen int               `json:"is_open" form:"is_open"  description:"是否开启"`
+	Remark string            `json:"remark" form:"remark" description:"备注"`
 }
 
 type ConfigGetOneReq struct {
@@ -30,7 +29,6 @@ type ConfigGetOneRes struct {
 	Config    interface{} `json:"config" form:"配置" comment:"配置"`
 	IsOpen    uint        `json:"is_open" form:"is_open" comment:"是否开启"`
 	Remark    string      `json:"remark" form:"remark" comment:"备注"`
-	Type      int         `json:"type" form:"type" comment:"1，value值，2json值"`
 	Operator  string      ` json:"operator"  form:"operator" comment:"操作人"`
 	CreatedAt string      `json:"created_at" form:"created_at" comment:"创建时间"`
 	UpdatedAt string      `json:"updated_at" form:"updated_at" comment:"更新时间"`
@@ -41,7 +39,7 @@ type ConfigListReq struct {
 	PageSize int    `json:"page_size" form:"page_size"  default:"20" description:"页数"`
 	Name     string `json:"name" form:"name"  description:"名称"`
 	Key      string `json:"key" form:"key"  description:"名称"`
-	Type1    string `json:"type" form:"type" description:"配置类型"`
+	KeyName  string `json:"key_name" form:"key_name"  description:"名称"`
 	Order    string `json:"order" form:"order" default:"id ASC" description:"排序"`
 }
 

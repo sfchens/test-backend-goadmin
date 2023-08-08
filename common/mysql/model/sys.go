@@ -17,6 +17,7 @@ type SysAdmin struct {
 	LoginCount int       `gorm:"column:login_count;default:0" json:"login_count"`               // 登录次数
 	Status     int       `gorm:"column:status;default:1" json:"status"`                         // 状态
 	Operator   string    `gorm:"column:operator;size:32;not null" json:"operator"`              // 操作人
+	RoleIds    string    `gorm:"column:role_ids;size:255;not null" json:"operator"`             // 操作人
 	CreatedAt  time.Time `gorm:"column:created_at;default:CURRENT_TIMESTAMP" json:"created_at"` // 创建时间
 	UpdatedAt  time.Time `gorm:"column:updated_at;default:CURRENT_TIMESTAMP" json:"updated_at"` // 更新时间
 	DeptID     int       `gorm:"column:dept_id;default:0" json:"dept_id"`                       // 部门ID
@@ -31,7 +32,6 @@ type SysConfig struct {
 	Config    string    `gorm:"column:config" json:"config" comment:"配置"`
 	IsOpen    uint      `gorm:"column:is_open" json:"is_open" comment:"是否开启"`
 	Remark    string    `gorm:"column:remark" json:"remark" comment:"备注"`
-	Type      int       `gorm:"column:type" json:"type" comment:"1，value值，2json值"`
 	Operator  string    `gorm:"column:operator" json:"operator" comment:"操作人"`
 	CreatedAt time.Time `gorm:"column:created_at" json:"created_at" comment:"创建时间"`
 	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at" comment:"更新时间"`

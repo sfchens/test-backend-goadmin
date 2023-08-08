@@ -81,6 +81,7 @@ func (s *sSysRoleService) AddOrEdit(input sys_request.RoleAddOrEditReq) (err err
 	if key != "superAdmin" {
 		err = s.SaveRoleMenu(tx, int(sysRoleModel.ID), menuIds)
 	}
+
 	return
 }
 

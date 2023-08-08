@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"strings"
 )
 
 type sSysAdmin struct {
@@ -20,8 +21,46 @@ func NewSysAdminService(ctx *gin.Context) *sSysAdmin {
 	return &sSysAdmin{ctx: ctx}
 }
 
-func (s *sSysAdmin) Add(input sys_request.AdminAddReq) (err error) {
+func (s *sSysAdmin) Add(input sys_request.AdminAddOrEditReq) (err error) {
 	var (
+		id            = input.Id
+		sysAdminModel model.SysAdmin
+	)
+	sysAdminModel, err = s.DealAddOrEdit(input)
+	if err != nil {
+		return
+	}
+
+	if id > 0 {
+		// 事务更新数据
+		err = db.GetDb().Transaction(func(tx *gorm.DB) (err error) {
+			err = tx.Save(&sysAdminModel).Error
+			if err != nil {
+				return
+			}
+			return
+		})
+	} else {
+		// 事务更新数据
+		err = db.GetDb().Transaction(func(tx *gorm.DB) (err error) {
+			err = tx.Create(&sysAdminModel).Error
+			if err != nil {
+				return
+			}
+			return
+		})
+	}
+
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (s *sSysAdmin) DealAddOrEdit(input sys_request.AdminAddOrEditReq) (sysAdminModel model.SysAdmin, err error) {
+	var (
+		id       = input.Id
 		username = input.Username
 		realname = input.Realname
 		password = input.Password
@@ -30,39 +69,55 @@ func (s *sSysAdmin) Add(input sys_request.AdminAddReq) (err error) {
 		remark   = input.Remark
 		sex      = input.Sex
 		deptId   = input.DeptId
-		roleIds  = input.RoleIds
 		status   = input.Status
-
-		sysAdminModel model.SysAdmin
+		roleIds  = input.RoleIds
 	)
-	fmt.Printf("roleIds:  %+v\n", roleIds)
-	var counts int64
-	err = db.GetDb().Model(sysAdminModel).Where("username=?", username).Count(&counts).Error
-	if err != nil {
-		return
+
+	if id > 0 {
+		err = db.GetDb().Model(sysAdminModel).Find(&sysAdminModel, id).Error
+		if err != nil {
+			return
+		}
 	}
+
+	var counts int64
+	exitsModel := db.GetDb().Model(sysAdminModel).Where("username=?", username)
+	if id > 0 {
+		exitsModel.Where("id != ?", id)
+	}
+	err = exitsModel.Count(&counts).Error
 	if counts > 0 {
 		err = errors.New("该账号已存在")
 		return
 	}
 
 	if phone != "" {
+		phoneExistModel := db.GetDb().Model(sysAdminModel).Where("phone = ?", phone)
+		if id > 0 {
+			phoneExistModel.Where("id != ?", id)
+		}
+
 		var phoneExistCount int64
-		err = db.GetDb().Model(sysAdminModel).Where("phone = ?", phone).Count(&phoneExistCount).Error
+		err = phoneExistModel.Count(&phoneExistCount).Error
 		if err != nil {
 			return
 		}
-
 		if phoneExistCount > 0 {
 			err = errors.New("该号码已被绑定")
 			return
 		}
+
 		sysAdminModel.Phone = phone
 	}
 
 	if email != "" {
+		emailExistModel := db.GetDb().Model(sysAdminModel).Where("email = ?", email)
+		if id > 0 {
+			emailExistModel.Where("id != ?", id)
+		}
+
 		var emailExistCount int64
-		err = db.GetDb().Model(sysAdminModel).Where("email = ?", email).Count(&emailExistCount).Error
+		err = emailExistModel.Count(&emailExistCount).Error
 		if err != nil {
 			return
 		}
@@ -71,89 +126,6 @@ func (s *sSysAdmin) Add(input sys_request.AdminAddReq) (err error) {
 			err = errors.New("该邮箱已被绑定")
 			return
 		}
-
-		sysAdminModel.Email = email
-	}
-
-	// admin表
-	sysAdminModel.Remark = remark
-	sysAdminModel.Sex = sex
-	sysAdminModel.DeptID = deptId
-	sysAdminModel.Status = status
-	sysAdminModel.Username = username
-	sysAdminModel.Realname = realname
-	sysAdminModel.Password = utils.BcryptHash(password)
-
-	// 事务更新数据
-	err = db.GetDb().Transaction(func(tx *gorm.DB) (err error) {
-		err = tx.Create(&sysAdminModel).Error
-		if err != nil {
-			return
-		}
-		return
-	})
-	if err != nil {
-		return
-	}
-
-	return
-}
-
-func (s *sSysAdmin) Edit(input sys_request.AdminEditReq) (err error) {
-	var (
-		id       = input.Id
-		realname = input.Realname
-		email    = input.Email
-		password = input.Password
-		phone    = input.Phone
-
-		sysAdminModel model.SysAdmin
-	)
-
-	err = db.GetDb().First(&sysAdminModel, id).Error
-	if err != nil {
-		return
-	}
-
-	if sysAdminModel.ID <= 0 {
-		err = errors.New("管理员不存在")
-		return
-	}
-
-	if phone != "" {
-		var phoneExistCount int64
-		err = db.GetDb().Model(sysAdminModel).Where("phone = ?", phone).Where("id != ?", id).Count(&phoneExistCount).Error
-		if err != nil {
-			return
-		}
-
-		if phoneExistCount > 0 {
-			err = errors.New("该号码已被绑定")
-			return
-		}
-		sysAdminModel.Phone = phone
-	}
-
-	if email != "" {
-		var emailExistCount int64
-		err = db.GetDb().Model(sysAdminModel).Where("email = ?", email).Where("id != ?", id).Count(&emailExistCount).Error
-		if err != nil {
-			return
-		}
-
-		if emailExistCount > 0 {
-			err = errors.New("该邮箱已被绑定")
-			return
-		}
-
-		sysAdminModel.Email = email
-	}
-
-	if realname != "" {
-		sysAdminModel.Realname = realname
-	}
-
-	if email != "" {
 		sysAdminModel.Email = email
 	}
 
@@ -161,15 +133,15 @@ func (s *sSysAdmin) Edit(input sys_request.AdminEditReq) (err error) {
 		sysAdminModel.Password = utils.BcryptHash(password)
 	}
 
-	// 事务更新数据
-	_ = db.GetDb().Transaction(func(tx *gorm.DB) (err error) {
-		err = tx.Save(&sysAdminModel).Error
-		if err != nil {
-			return
-		}
-		return
-	})
-
+	roleIdsNew := utils.IntToStringArray(roleIds)
+	// admin表
+	sysAdminModel.Remark = remark
+	sysAdminModel.Sex = sex
+	sysAdminModel.DeptID = deptId
+	sysAdminModel.Status = status
+	sysAdminModel.Username = username
+	sysAdminModel.Realname = realname
+	sysAdminModel.RoleIds = strings.Join(roleIdsNew, ",")
 	return
 }
 
@@ -188,6 +160,7 @@ func (s *sSysAdmin) SetStatus(input sys_request.AdminSetStatusReq) (err error) {
 	if int(status) == sysAdminModel.Status {
 		return
 	}
+	sysAdminModel.Status = int(status)
 	sysAdminModel.Operator = utils.GetUserName(s.ctx)
 	err = db.GetDb().Save(&sysAdminModel).Error
 	if err != nil {
@@ -200,6 +173,8 @@ func (s *sSysAdmin) List(input sys_request.AdminListReq) (out sys_request.AdminL
 	var (
 		page     = input.Page
 		pageSize = input.PageSize
+
+		sysAdminList []model.SysAdmin
 	)
 
 	model1 := s.GetQuery(input)
@@ -207,14 +182,29 @@ func (s *sSysAdmin) List(input sys_request.AdminListReq) (out sys_request.AdminL
 	if err != nil {
 		return
 	}
-	err = model1.Offset((page - 1) * pageSize).Limit(pageSize).Scan(&out.List).Error
+	err = model1.Offset((page - 1) * pageSize).Limit(pageSize).Scan(&sysAdminList).Error
 	if err != nil {
 		return
 	}
-	for key, item := range out.List {
+	for _, item := range sysAdminList {
 		var deptInfo model.SysDept
 		db.GetDb().Where("id = ?", item.DeptID).Find(&deptInfo, item.DeptID)
-		out.List[key].DeptInfo = deptInfo
+
+		var tmp sys_request.AdminListItem
+		utils.StructToStruct(item, &tmp)
+		tmp.DeptInfo = deptInfo
+		tmp.RoleIds = utils.StringToIntArray(strings.Split(item.RoleIds, ","))
+
+		// 权限
+		var roleList []model.SysRole
+		db.GetDb().Model(model.SysRole{}).Where("id in (?)", tmp.RoleIds).Scan(&roleList)
+
+		var textRole []string
+		for _, val := range roleList {
+			textRole = append(textRole, fmt.Sprintf(" %v ", val.Name))
+		}
+		tmp.RoleIdsText = strings.Join(textRole, ",")
+		out.List = append(out.List, tmp)
 	}
 	return
 }
@@ -225,16 +215,17 @@ func (s *sSysAdmin) GetQuery(input sys_request.AdminListReq) *gorm.DB {
 		realname = input.Realname
 		email    = input.Email
 		phone    = input.Phone
+		status   = input.Status
 
 		sysAdminModel model.SysAdmin
 	)
 
 	model := db.GetDb().Model(sysAdminModel)
 	if username != "" {
-		model.Where("username like '%?%'", username)
+		model.Where(fmt.Sprintf("username like '%%%v%%'", username))
 	}
 	if realname != "" {
-		model.Where("username like '%?%'", realname)
+		model.Where(fmt.Sprintf("realname like '%%%v%%'", realname))
 	}
 
 	if email != "" {
@@ -245,6 +236,9 @@ func (s *sSysAdmin) GetQuery(input sys_request.AdminListReq) *gorm.DB {
 		model.Where("phone = ?", phone)
 	}
 
+	if status != -1 {
+		model.Where("status = ?", status)
+	}
 	return model
 }
 
@@ -271,6 +265,79 @@ func (s *sSysAdmin) GetAdminInfo() (adminModel model.SysAdmin, err error) {
 		err = errors.New("账号状态异常")
 		return
 	}
-	//fmt.Printf("adminModel:  %+v\n", adminModel)
+	return
+}
+
+func (s *sSysAdmin) ResetPwd(input sys_request.AdminResetPwdReq) (err error) {
+	var (
+		id = input.Id
+
+		sysAdmin model.SysAdmin
+	)
+
+	err = db.GetDb().Model(sysAdmin).Find(&sysAdmin, id).Error
+	if err != nil {
+		return
+	}
+
+	sysAdmin.Password = utils.BcryptHash("123456")
+	err = db.GetDb().Save(&sysAdmin).Error
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (s *sSysAdmin) DeleteBatch(input sys_request.AdminDeleteBatchReq) (err error) {
+	var (
+		ids = input.Ids
+
+		sysAdminList []model.SysAdmin
+	)
+
+	tx := db.GetDb().Begin()
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
+
+	err = tx.Model(model.SysAdmin{}).Where("id in (?)", strings.Join(utils.IntToStringArray(ids), ",")).Scan(&sysAdminList).Error
+	if err != nil {
+		return
+	}
+	for _, item := range sysAdminList {
+		err = db.GetDb().Where("id =?", item.ID).Delete(&model.SysAdmin{}).Error
+		if err != nil {
+			break
+		}
+	}
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (s *sSysAdmin) SetRole(input sys_request.AdminSetRoleReq) (err error) {
+
+	var (
+		id      = input.Id
+		roleIds = input.RoleIds
+
+		sysAdminModel model.SysAdmin
+	)
+
+	err = db.GetDb().Model(sysAdminModel).Find(&sysAdminModel, id).Error
+	if err != nil {
+		return
+	}
+
+	sysAdminModel.RoleIds = strings.Join(utils.IntToStringArray(roleIds), ",")
+	err = db.GetDb().Save(&sysAdminModel).Error
+	if err != nil {
+		return
+	}
 	return
 }

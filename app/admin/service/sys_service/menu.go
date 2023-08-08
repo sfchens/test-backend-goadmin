@@ -111,7 +111,7 @@ func (s *sSysMenuService) GetApisByMenuId(ids []int) (out sys_model.GetApisByMen
 	idsArr := s.IntToStringArray(ids)
 	idsStr := strings.Join(idsArr, ",")
 
-	err = db.GetDb().Where(fmt.Sprintf("id in (%v)", idsStr)).Scan(&out.ApisList).Error
+	err = db.GetDb().Model(model.SysApi{}).Where(fmt.Sprintf("id in (%v)", idsStr)).Scan(&out.ApisList).Error
 	if err != nil {
 		return
 	}
@@ -177,6 +177,13 @@ func (s *sSysMenuService) Add(input sys_request.MenuAddOrEditReq) (err error) {
 		return
 	}
 	tx := db.GetDb().Begin()
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
 
 	if id > 0 {
 		err = tx.Model(model.SysMenu{}).Where("id =?", id).Save(&sysMenuModel).Error
@@ -184,7 +191,6 @@ func (s *sSysMenuService) Add(input sys_request.MenuAddOrEditReq) (err error) {
 		err = tx.Model(model.SysMenu{}).Create(&sysMenuModel).Error
 	}
 	if err != nil {
-		tx.Rollback()
 		return
 	}
 
@@ -194,18 +200,14 @@ func (s *sSysMenuService) Add(input sys_request.MenuAddOrEditReq) (err error) {
 	sysMenuModel.ParentIds = strings.Join(s.IntToStringArray(parentIds), ",")
 	err = tx.Save(&sysMenuModel).Error
 	if err != nil {
-		tx.Rollback()
 		return
 	}
 
 	// 保存apiRule
 	err = s.saveApiRule(sysMenuModel.Id, input.ApisId)
 	if err != nil {
-		tx.Rollback()
 		return
 	}
-
-	tx.Commit()
 	return
 }
 

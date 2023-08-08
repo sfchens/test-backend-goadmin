@@ -44,11 +44,7 @@ func (s *sSysConfig) List(input sys_request.ConfigListReq) (out sys_request.Conf
 		var itemTmp sys_request.ConfigGetOneRes
 		utils.StructToStruct(item, &itemTmp)
 		var config interface{}
-		if item.Type == 2 {
-			config, _ = s.DealJson(item.Key, item.Config)
-		} else {
-			config = item.Config
-		}
+		config, _ = s.DealJson(item.Key, item.Config)
 		itemTmp.Config = config
 		out.List = append(out.List, itemTmp)
 	}
@@ -57,9 +53,9 @@ func (s *sSysConfig) List(input sys_request.ConfigListReq) (out sys_request.Conf
 
 func (s *sSysConfig) GetQuery(input sys_request.ConfigListReq) *gorm.DB {
 	var (
-		name  = input.Name
-		types = input.Type1
-		key   = input.Key
+		name    = input.Name
+		key     = input.Key
+		keyName = input.KeyName
 
 		sysConfigModel model.SysConfig
 	)
@@ -70,12 +66,11 @@ func (s *sSysConfig) GetQuery(input sys_request.ConfigListReq) *gorm.DB {
 		model.Where(fmt.Sprintf("name like '%%%v%%'", name))
 	}
 
-	if types != "" {
-		model.Where("type = ?", types)
-	}
-
 	if key != "" {
 		model.Where(fmt.Sprintf("`key` like '%%%v%%'", key))
+	}
+	if keyName != "" {
+		model.Where(fmt.Sprintf("`config` like '%%%v%%'", keyName))
 	}
 	return model
 }
@@ -85,18 +80,15 @@ func (s *sSysConfig) Add(input sys_request.ConfigAddReq) (err error) {
 		name           = input.Name
 		config         = input.Config
 		key            = input.Key
-		types          = input.Type // 1value, 2需要转json格式
 		remark         = input.Remark
 		isOpen         = input.IsOpen
 		sysConfigModel model.SysConfig
 	)
-	//if !json.Valid([]byte(config)) {
-	//	err = errors.New("配置数据格式异常")
-	//	return
-	//}
-	if types == 1 {
-
+	if !json.Valid([]byte(config)) {
+		err = errors.New("配置数据格式异常")
+		return
 	}
+
 	var counts int64
 	err = db.GetDb().Model(sysConfigModel).Where("id=?", key).Count(&counts).Error
 	if err != nil {
@@ -106,11 +98,10 @@ func (s *sSysConfig) Add(input sys_request.ConfigAddReq) (err error) {
 		err = errors.New("该类型已存在")
 		return
 	}
-	sysConfigModel.Type = types
 	sysConfigModel.Remark = remark
 	sysConfigModel.IsOpen = uint(isOpen)
 	sysConfigModel.Name = name
-	sysConfigModel.Config = fmt.Sprintf("%v", config)
+	sysConfigModel.Config = config
 	sysConfigModel.Key = key
 	sysConfigModel.Operator = utils.GetUserName(s.ctx)
 	err = db.GetDb().Create(&sysConfigModel).Error
@@ -124,16 +115,16 @@ func (s *sSysConfig) Edit(input sys_request.ConfigEditReq) (err error) {
 	var (
 		id     = input.Id
 		name   = input.Name
+		key    = input.Key
 		config = input.Config
-		type1  = input.Type
 		isOpen = input.IsOpen
 		remark = input.Remark
 
 		sysConfigModel model.SysConfig
 	)
 
-	if !json.Valid([]byte(config)) {
-		err = errors.New("配置数据格式异常")
+	err = s.CheckConfig(key, config)
+	if err != nil {
 		return
 	}
 
@@ -145,9 +136,10 @@ func (s *sSysConfig) Edit(input sys_request.ConfigEditReq) (err error) {
 		err = errors.New("参数异常")
 		return
 	}
+	configTmp, _ := json.Marshal(config)
+	sysConfigModel.Key = key
 	sysConfigModel.Name = name
-	sysConfigModel.Config = config
-	sysConfigModel.Type = type1
+	sysConfigModel.Config = string(configTmp)
 	sysConfigModel.IsOpen = uint(isOpen)
 	sysConfigModel.Remark = remark
 
@@ -157,6 +149,21 @@ func (s *sSysConfig) Edit(input sys_request.ConfigEditReq) (err error) {
 		return
 	}
 
+	return
+}
+
+func (s *sSysConfig) CheckConfig(key string, config map[string]string) (err error) {
+	switch key {
+	case "BASE_CONFIG":
+		if config["sys_app_logo"] == "" {
+			err = errors.New("系统logo不为空")
+		}
+		if config["sys_app_name"] == "" {
+			err = errors.New("网站名称不为空")
+		}
+	default:
+		err = errors.New("参数异常")
+	}
 	return
 }
 

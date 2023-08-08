@@ -6,7 +6,6 @@ import (
 	"csf/app/admin/service/sys_service"
 	"csf/library/response"
 	"csf/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -33,7 +32,6 @@ func (c cSysConfigApi) List(ctx *gin.Context) {
 		res sys_request.ConfigListRes
 	)
 	err = utils.BindParams(ctx, &req)
-	fmt.Printf("req:  %+v\n", req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return

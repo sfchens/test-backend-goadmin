@@ -51,13 +51,13 @@ func (c *cSysAdminApi) List(ctx *gin.Context) {
 // @Tags 管理员管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys_request.AdminAddReq true "请求参数"
+// @Param raw body     sys_request.AdminAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /api/v1/sys/admin/add [post]
 func (c *cSysAdminApi) Add(ctx *gin.Context) {
 	var (
 		err error
-		req sys_request.AdminAddReq
+		req sys_request.AdminAddOrEditReq
 	)
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
@@ -65,35 +65,6 @@ func (c *cSysAdminApi) Add(ctx *gin.Context) {
 		return
 	}
 	err = sys_service.NewSysAdminService(ctx).Add(req)
-	if err != nil {
-		response.FailWithMessage(ctx, err.Error())
-		return
-	}
-	response.Success(ctx)
-}
-
-// Edit  编辑管理员
-// @Summary 编辑管理员
-// @Description 编辑管理员
-// @Tags 管理员管理
-// @Accept application/json
-// @Produce application/json
-// @Param raw body     sys_request.AdminEditReq true "请求参数"
-// @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/admin/edit [post]
-func (c *cSysAdminApi) Edit(ctx *gin.Context) {
-
-	var (
-		err error
-		req sys_request.AdminEditReq
-	)
-
-	err = utils.BindParams(ctx, &req)
-	if err != nil {
-		response.FailWithMessage(ctx, err.Error())
-		return
-	}
-	err = sys_service.NewSysAdminService(ctx).Edit(req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -153,4 +124,83 @@ func (c *cSysAdminApi) GetAdminInfo(ctx *gin.Context) {
 	adminInfo.Roles = global.Permissions
 	adminInfo.Permissions = global.Permissions
 	response.SuccessWithData(ctx, adminInfo)
+}
+
+// ResetPwd  重置密码
+// @Summary 重置密码
+// @Description 重置密码
+// @Tags 管理员管理
+// @Accept application/json
+// @Produce application/json
+// @Param raw body     sys_request.AdminResetPwd true "请求参数"
+// @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
+// @Router /api/v1/sys/admin/reset_pwd [post]
+func (c *cSysAdminApi) ResetPwd(ctx *gin.Context) {
+	var (
+		err error
+
+		req sys_request.AdminResetPwdReq
+	)
+
+	err = utils.BindParams(ctx, &req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	err = sys_service.NewSysAdminService(ctx).ResetPwd(req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	response.Success(ctx)
+}
+
+// DeleteBatch  批量删除
+// @Summary 批量删除
+// @Description 批量删除
+// @Tags 管理员管理
+// @Accept application/json
+// @Produce application/json
+// @Param raw body     sys_request.AdminDeleteBatchReq true "请求参数"
+// @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
+// @Router /api/v1/sys/admin/delete_batch [post]
+func (c *cSysAdminApi) DeleteBatch(ctx *gin.Context) {
+	var (
+		err error
+
+		req sys_request.AdminDeleteBatchReq
+	)
+
+	err = utils.BindParams(ctx, &req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	err = sys_service.NewSysAdminService(ctx).DeleteBatch(req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	response.Success(ctx)
+}
+
+func (c *cSysAdminApi) SetRole(ctx *gin.Context) {
+	var (
+		err error
+
+		req sys_request.AdminSetRoleReq
+	)
+
+	err = utils.BindParams(ctx, &req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+
+	err = sys_service.NewSysAdminService(ctx).SetRole(req)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
+	response.Success(ctx)
 }
