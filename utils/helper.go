@@ -2,11 +2,10 @@ package utils
 
 import (
 	"csf/common/mysql/model"
-	"csf/library/custom_session"
+	"csf/library/easy_session"
 	"csf/library/global"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
-	"strconv"
 	"strings"
 )
 
@@ -51,7 +50,7 @@ func GetUserId(ctx *gin.Context) (id uint) {
 
 // GetAdminInfo 获取管理员登录信息
 func GetAdminInfo(ctx *gin.Context) (data model.SysAdmin) {
-	loginKey := custom_session.NewCustomSession(ctx).Get(global.LoginTypeKey)
+	loginKey := easy_session.NewCustomSession(ctx).Get(global.LoginTypeKey)
 	key, ok := loginKey.(string)
 	if !ok {
 		return
@@ -60,7 +59,7 @@ func GetAdminInfo(ctx *gin.Context) (data model.SysAdmin) {
 		return
 	}
 
-	adminInfoTmp := custom_session.NewCustomSession(ctx).Get(global.UserInfoKey)
+	adminInfoTmp := easy_session.NewCustomSession(ctx).Get(global.UserInfoKey)
 	val, ok := adminInfoTmp.(string)
 	if !ok {
 		return
@@ -71,7 +70,7 @@ func GetAdminInfo(ctx *gin.Context) (data model.SysAdmin) {
 
 // GetFrontInfo 前端用户登录信息
 func GetFrontInfo(ctx *gin.Context) (data model.SysUser) {
-	loginKey := custom_session.NewCustomSession(ctx).Get(global.LoginTypeKey)
+	loginKey := easy_session.NewCustomSession(ctx).Get(global.LoginTypeKey)
 	key, ok := loginKey.(string)
 	if !ok {
 		return
@@ -81,7 +80,7 @@ func GetFrontInfo(ctx *gin.Context) (data model.SysUser) {
 		return
 	}
 
-	adminInfoTmp := custom_session.NewCustomSession(ctx).Get(global.UserInfoKey)
+	adminInfoTmp := easy_session.NewCustomSession(ctx).Get(global.UserInfoKey)
 	val, ok := adminInfoTmp.(model.SysUser)
 	if !ok {
 		return
@@ -92,7 +91,7 @@ func GetFrontInfo(ctx *gin.Context) (data model.SysUser) {
 
 // GetUserInfo 前后端信息合并
 func GetUserInfo(ctx *gin.Context) (userInfo UserInfo) {
-	loginKeyTmp := custom_session.NewCustomSession(ctx).Get(global.LoginTypeKey)
+	loginKeyTmp := easy_session.NewCustomSession(ctx).Get(global.LoginTypeKey)
 	loginKey, ok := loginKeyTmp.(string)
 	if !ok {
 		return
@@ -130,21 +129,5 @@ func GetAuthorization(ctx *gin.Context) (token string) {
 		return
 	}
 	token = parts[1]
-	return
-}
-
-func IntToStringArray(intArr []int) (parentIdStr []string) {
-	for _, val := range intArr {
-		res := strconv.Itoa(val)
-		parentIdStr = append(parentIdStr, res)
-	}
-	return
-}
-
-func StringToIntArray(stringArr []string) (intArr []int) {
-	for _, val := range stringArr {
-		i, _ := strconv.Atoi(val)
-		intArr = append(intArr, i)
-	}
 	return
 }

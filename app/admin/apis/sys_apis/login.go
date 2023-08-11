@@ -5,10 +5,9 @@ import (
 	"csf/app/admin/request/sys_request"
 	"csf/app/admin/service/common_service"
 	"csf/app/admin/service/sys_service"
+	"csf/library/easy_config"
 	"csf/library/response"
-	"csf/library/viper"
 	"csf/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -39,7 +38,7 @@ func (c cSysLoginApi) Login(ctx *gin.Context) {
 		return
 	}
 
-	if viper.NewViper.Get("app.mode") != "dev" && !common_service.NewComCaptchaService(ctx).Verify(req.CaptChaId, req.Captcha, true) {
+	if easy_config.Viper.Get("app.mode") != "dev" && !common_service.NewComCaptchaService(ctx).Verify(req.CaptChaId, req.Captcha, true) {
 		response.FailWithMessage(ctx, "验证码验证失败")
 		return
 	}
@@ -87,7 +86,6 @@ func (c cSysLoginApi) LoginInfo(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 	}
 	utils.StructToStruct(out, &res)
-	fmt.Printf("res: %+v\n", res)
 	response.SuccessWithData(ctx, res)
 }
 

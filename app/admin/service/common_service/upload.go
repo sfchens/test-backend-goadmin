@@ -3,7 +3,7 @@ package common_service
 import (
 	"csf/app/admin/request/common_request"
 	"csf/common/mysql/model"
-	"csf/library/db"
+	"csf/library/easy_db"
 	"csf/utils"
 	"errors"
 	"fmt"
@@ -34,7 +34,7 @@ func (s *sUploadService) AddPicture(input common_request.UploadAddPictureReq) (o
 
 	utils.StructToStruct(uploadPictureRes, &uploadPicture)
 	uploadPicture.Type = 1
-	err = db.GetDb().Create(uploadPicture).Error
+	err = easy_db.GetDb().Create(uploadPicture).Error
 	if err != nil {
 		return
 	}

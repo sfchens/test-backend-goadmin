@@ -5,6 +5,7 @@ import (
 	"csf/app/admin/service/sys_service"
 	"csf/library/response"
 	"csf/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,6 +30,7 @@ func (c *cSysApi) List(ctx *gin.Context) {
 		req sys_request.ApiListReq
 		res sys_request.ApiListRes
 	)
+
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -40,7 +42,6 @@ func (c *cSysApi) List(ctx *gin.Context) {
 		response.SuccessWithData(ctx, err.Error())
 		return
 	}
-
 	response.SuccessWithData(ctx, res)
 }
 
@@ -82,9 +83,11 @@ func (c *cSysApi) Edit(ctx *gin.Context) {
 
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
+		fmt.Printf("err.Error():  %+v\n", err.Error())
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+
 	err = sys_service.NewSysApiService(ctx).AddOrEdit(req)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())

@@ -4,10 +4,10 @@ import (
 	"csf/app/admin/model/sys_model"
 	"csf/app/admin/request/sys_request"
 	"csf/common/mysql/model"
-	"csf/library/custom_session"
-	"csf/library/db"
+	"csf/library/easy_auth"
+	"csf/library/easy_db"
+	"csf/library/easy_session"
 	"csf/library/global"
-	"csf/library/my_jwt"
 	"csf/utils"
 	"encoding/json"
 	"errors"
@@ -29,7 +29,7 @@ func (s *SysLogin) Login(input sys_model.LoginInput) (out sys_request.LoginRes, 
 
 		adminInfoModel model.SysAdmin
 	)
-	err = db.GetDb().Where("username=?", username).Find(&adminInfoModel).Error
+	err = easy_db.GetDb().Where("username=?", username).Find(&adminInfoModel).Error
 	if err != nil {
 		return
 	}
@@ -58,12 +58,12 @@ func (s *SysLogin) Login(input sys_model.LoginInput) (out sys_request.LoginRes, 
 	}
 
 	// 保存session
-	err = custom_session.NewCustomSession(s.ctx).Set(global.LoginTypeKey, global.LoginTypeAdmin)
+	err = easy_session.NewCustomSession(s.ctx).Set(global.LoginTypeKey, global.LoginTypeAdmin)
 	if err != nil {
 		return
 	}
 	jsonStr, _ := json.Marshal(adminInfoModel)
-	err = custom_session.NewCustomSession(s.ctx).Set(global.UserInfoKey, string(jsonStr))
+	err = easy_session.NewCustomSession(s.ctx).Set(global.UserInfoKey, string(jsonStr))
 	if err != nil {
 		return
 	}
@@ -72,14 +72,14 @@ func (s *SysLogin) Login(input sys_model.LoginInput) (out sys_request.LoginRes, 
 
 func (s *SysLogin) CreateToken(input model.SysAdmin) (tokenInfoOUt sys_model.TokenInfoOut, err error) {
 	var token string
-	baseClaims := my_jwt.BaseClaims{
+	baseClaims := easy_auth.BaseClaims{
 		Id:       int(input.ID),
 		Username: input.Username,
 		Email:    input.Email,
 		Password: input.Password,
 	}
-	myBaseClaims := my_jwt.NewJWT().CreateClaims(baseClaims)
-	token, err = my_jwt.NewJWT().CreateToken(myBaseClaims)
+	myBaseClaims := easy_auth.NewJWT().CreateClaims(baseClaims)
+	token, err = easy_auth.NewJWT().CreateToken(myBaseClaims)
 	if err != nil {
 		return
 	}
@@ -92,11 +92,11 @@ func (s *SysLogin) CreateToken(input model.SysAdmin) (tokenInfoOUt sys_model.Tok
 }
 
 func (s *SysLogin) Logout() (err error) {
-	err = custom_session.NewCustomSession(s.ctx).Delete(global.LoginTypeKey)
+	err = easy_session.NewCustomSession(s.ctx).Delete(global.LoginTypeKey)
 	if err != nil {
 		return
 	}
-	err = custom_session.NewCustomSession(s.ctx).Delete(global.UserInfoKey)
+	err = easy_session.NewCustomSession(s.ctx).Delete(global.UserInfoKey)
 	if err != nil {
 		return
 	}

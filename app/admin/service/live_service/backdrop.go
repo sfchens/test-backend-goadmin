@@ -3,7 +3,7 @@ package live_service
 import (
 	"csf/app/admin/request/live_request"
 	"csf/common/mysql/model"
-	"csf/library/db"
+	"csf/library/easy_db"
 	"csf/utils"
 	"errors"
 	"github.com/gin-gonic/gin"
@@ -34,7 +34,7 @@ func (s *sBackdropService) AddOrEdit(input live_request.BackdropAddOrEditReq) (e
 	)
 
 	if id > 0 {
-		err = db.GetDb().Find(&liveBackdropModel, id).Error
+		err = easy_db.GetDb().Find(&liveBackdropModel, id).Error
 		if err != nil {
 			return
 		}
@@ -51,9 +51,9 @@ func (s *sBackdropService) AddOrEdit(input live_request.BackdropAddOrEditReq) (e
 	liveBackdropModel.Operator = utils.GetUserName(s.ctx)
 
 	if id > 0 {
-		err = db.GetDb().Save(&liveBackdropModel).Error
+		err = easy_db.GetDb().Save(&liveBackdropModel).Error
 	} else {
-		err = db.GetDb().Create(&liveBackdropModel).Error
+		err = easy_db.GetDb().Create(&liveBackdropModel).Error
 	}
 	if err != nil {
 		return
@@ -88,7 +88,7 @@ func (s *sBackdropService) GetQuery(input live_request.BackdropListReq) *gorm.DB
 		types  = input.Type
 	)
 
-	model := db.GetDb().Model(model.LiveBackdrop{})
+	model := easy_db.GetDb().Model(model.LiveBackdrop{})
 
 	if name != "" {
 		model.Where("name like '%?%'", name)

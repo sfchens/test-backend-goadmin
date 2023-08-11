@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"csf/app/admin/request/sys_request"
 	"csf/common/mysql/model"
-	"csf/library/db"
+	"csf/library/easy_db"
 	"csf/library/global"
 	"csf/utils"
 	"fmt"
@@ -53,7 +53,7 @@ func (s *sSysApiService) GetQuery(input sys_request.ApiListReq) *gorm.DB {
 		method = input.Method
 	)
 
-	model1 := db.GetDb().Model(model.SysApi{})
+	model1 := easy_db.GetDb().Model(model.SysApi{})
 
 	if tag != "" {
 		model1.Where(fmt.Sprintf("tags like '%%%v%%'", tag))
@@ -97,7 +97,7 @@ func (s *sSysApiService) Refresh() (err error) {
 		sysApiModel.Tags = strings.Join(tags, ",")
 		sysApiModel.Operator = global.OperatorSystem
 
-		err = db.GetDb().Clauses(clause.OnConflict{
+		err = easy_db.GetDb().Clauses(clause.OnConflict{
 			UpdateAll: true,
 		}).Create(&sysApiModel).Error
 		if err != nil {
@@ -116,9 +116,9 @@ func (s *sSysApiService) AddOrEdit(input sys_request.ApiEditReq) (err error) {
 
 		sysApiModel model.SysApi
 	)
-	fmt.Printf("input: %+v\n", input)
+
 	if id > 0 {
-		err = db.GetDb().Find(&sysApiModel, id).Error
+		err = easy_db.GetDb().Find(&sysApiModel, id).Error
 		if err != nil {
 			return
 		}
@@ -130,11 +130,11 @@ func (s *sSysApiService) AddOrEdit(input sys_request.ApiEditReq) (err error) {
 	sysApiModel.Operator = utils.GetUserName(s.ctx)
 
 	if sysApiModel.ID > 0 {
-		err = db.GetDb().Save(&sysApiModel).Error
+		err = easy_db.GetDb().Save(&sysApiModel).Error
 	} else {
 		sysApiModel.Path = input.Path
 		sysApiModel.Handle = input.Handle
-		err = db.GetDb().Create(&sysApiModel).Error
+		err = easy_db.GetDb().Create(&sysApiModel).Error
 	}
 	if err != nil {
 		return
@@ -149,7 +149,7 @@ func (s *sSysApiService) GetTag(input sys_request.ApiGetTagReq) (out sys_request
 		tag      = input.Tag
 	)
 
-	model := db.GetDb().Model(model.SysApi{}).Group("tags").Select("tags")
+	model := easy_db.GetDb().Model(model.SysApi{}).Group("tags").Select("tags")
 	if tag != "" {
 		model.Where("tags like %?%", tag)
 	}
@@ -177,14 +177,14 @@ func (s *sSysApiService) DeleteMulti(input sys_request.ApiDeleteMultiReq) (err e
 	for _, v := range ids {
 		idsStr = append(idsStr, fmt.Sprintf("%v", v))
 	}
-	err = db.GetDb().Model(sysApiModel).
+	err = easy_db.GetDb().Model(sysApiModel).
 		Where(fmt.Sprintf("id in (%v)", strings.Join(idsStr, ","))).
 		Scan(&sysApiModelList).Error
 	if err != nil {
 		return
 	}
 
-	tx := db.GetDb().Begin()
+	tx := easy_db.GetDb().Begin()
 	for _, v := range sysApiModelList {
 		err = tx.Delete(&sysApiModel, v.ID).Error
 		if err != nil {

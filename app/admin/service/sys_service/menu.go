@@ -4,7 +4,7 @@ import (
 	"csf/app/admin/model/sys_model"
 	"csf/app/admin/request/sys_request"
 	"csf/common/mysql/model"
-	"csf/library/db"
+	"csf/library/easy_db"
 	"csf/utils"
 	"errors"
 	"fmt"
@@ -88,7 +88,7 @@ func (s *sSysMenuService) DealTreeList(data []sys_model.MenuListItem) (res []sys
 			}
 			tmpV.ApisId = apiIds
 			var apiList []model.SysApi
-			db.GetDb().Model(model.SysApi{}).Where(fmt.Sprintf("id in (%v)", item.ApisId)).Scan(&apiList)
+			easy_db.GetDb().Model(model.SysApi{}).Where(fmt.Sprintf("id in (%v)", item.ApisId)).Scan(&apiList)
 			tmpV.SysApis = apiList
 		} else {
 			out, _ := s.GetApisByMenuId([]int{item.Id})
@@ -111,7 +111,7 @@ func (s *sSysMenuService) GetApisByMenuId(ids []int) (out sys_model.GetApisByMen
 	idsArr := s.IntToStringArray(ids)
 	idsStr := strings.Join(idsArr, ",")
 
-	err = db.GetDb().Model(model.SysApi{}).Where(fmt.Sprintf("id in (%v)", idsStr)).Scan(&out.ApisList).Error
+	err = easy_db.GetDb().Model(model.SysApi{}).Where(fmt.Sprintf("id in (%v)", idsStr)).Scan(&out.ApisList).Error
 	if err != nil {
 		return
 	}
@@ -130,7 +130,7 @@ func (s *sSysMenuService) GetQuery(input sys_request.MenuListReq) *gorm.DB {
 		sysMenu model.SysMenu
 	)
 
-	model := db.GetDb().Model(sysMenu)
+	model := easy_db.GetDb().Model(sysMenu)
 
 	if title != "" {
 		model.Where("title like '%?%'", title)
@@ -146,7 +146,7 @@ func (s *sSysMenuService) GetQuery(input sys_request.MenuListReq) *gorm.DB {
 
 func (s *sSysMenuService) GetMenuItem(list []sys_model.MenuListItem, isAll bool) (res []sys_model.MenuListItem) {
 	for _, v := range list {
-		model1 := db.GetDb().Model(model.SysMenu{}).Preload("Children").Where("menu_type != ?", "F").Where("parent_id = ?", v.Id)
+		model1 := easy_db.GetDb().Model(model.SysMenu{}).Preload("Children").Where("menu_type != ?", "F").Where("parent_id = ?", v.Id)
 		model1.Order("sort ASC").Scan(&v.Children)
 
 		if len(v.Children) > 0 {
@@ -154,7 +154,7 @@ func (s *sSysMenuService) GetMenuItem(list []sys_model.MenuListItem, isAll bool)
 		}
 		if !isAll {
 			var apis []sys_model.MenuListItem
-			db.GetDb().Model(model.SysMenu{}).Preload("Children").
+			easy_db.GetDb().Model(model.SysMenu{}).Preload("Children").
 				Where("menu_type = ?", "F").
 				Where("parent_id = ?", v.Id).Order("sort ASC").Scan(&apis)
 			if len(apis) > 0 {
@@ -176,7 +176,7 @@ func (s *sSysMenuService) Add(input sys_request.MenuAddOrEditReq) (err error) {
 	if err != nil {
 		return
 	}
-	tx := db.GetDb().Begin()
+	tx := easy_db.GetDb().Begin()
 	defer func() {
 		if err != nil {
 			tx.Rollback()
@@ -228,7 +228,7 @@ func (s *sSysMenuService) DealAddOrEdit(input sys_request.MenuAddOrEditReq) (sys
 	)
 
 	if id > 0 {
-		err = db.GetDb().First(&sysMenuModel, id).Error
+		err = easy_db.GetDb().First(&sysMenuModel, id).Error
 		if err != nil {
 			return
 		}
@@ -312,7 +312,7 @@ func (s *sSysMenuService) Edit(input sys_request.MenuAddOrEditReq) (err error) {
 	if err != nil {
 		return
 	}
-	err = db.GetDb().Updates(&sysMenuModel).Error
+	err = easy_db.GetDb().Updates(&sysMenuModel).Error
 	if err != nil {
 		return
 	}
@@ -321,7 +321,7 @@ func (s *sSysMenuService) Edit(input sys_request.MenuAddOrEditReq) (err error) {
 
 func (s *sSysMenuService) GetParentId(parentId int) (parentIds []int, err error) {
 	var tmp model.SysMenu
-	err = db.GetDb().Model(tmp).Where("id = ?", parentId).Scan(&tmp).Error
+	err = easy_db.GetDb().Model(tmp).Where("id = ?", parentId).Scan(&tmp).Error
 	if err != nil {
 		return
 	}
@@ -355,7 +355,7 @@ func (s *sSysMenuService) saveApiRule(menuId int, apis []int) (err error) {
 		sysMenuApiRuleModel model.SysMenuApiRule
 	)
 	apisStr = s.IntToStringArray(apis)
-	err = db.GetDb().Model(model.SysApi{}).Where(fmt.Sprintf("id in (%v)", strings.Join(apisStr, ","))).Scan(&sysApiList).Error
+	err = easy_db.GetDb().Model(model.SysApi{}).Where(fmt.Sprintf("id in (%v)", strings.Join(apisStr, ","))).Scan(&sysApiList).Error
 	if err != nil {
 		return
 	}
@@ -373,7 +373,7 @@ func (s *sSysMenuService) saveApiRule(menuId int, apis []int) (err error) {
 		}
 		sysMenuApiRuleModel.SysApiID = item.ID
 		sysMenuApiRuleModel.SysMenuID = uint64(menuId)
-		err = db.GetDb().Clauses(clause.OnConflict{
+		err = easy_db.GetDb().Clauses(clause.OnConflict{
 			UpdateAll: true,
 		}).Create(&sysMenuApiRuleModel).Error
 		if err != nil {

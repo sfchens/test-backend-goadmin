@@ -1,0 +1,14 @@
+.idea/
+
+.DS_Store
+
+# Editor directories and files
+.idea
+.vscode
+
+logs/
+
+.air.toml
+air.exe
+/tmp
+configs/config.yaml

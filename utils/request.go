@@ -1,9 +1,11 @@
 package utils
 
 import (
-	"csf/library/my_validator"
+	"csf/library/easy_config"
+	"csf/library/easy_validator"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"reflect"
 	"regexp"
@@ -36,7 +38,7 @@ func BindParams(ctx *gin.Context, data interface{}) (err error) {
 			return
 		}
 		// 校验参数是否合法
-		err = my_validator.MyValidator().Validate(data)
+		err = easy_validator.EasyValidator().Validate(data)
 		if err != nil {
 			return
 		}
@@ -65,5 +67,68 @@ func SetDefault(i interface{}) (err error) {
 		}
 	}
 	_, err = json.Marshal(i)
+	return
+}
+
+func GetRequestParams(ctx *gin.Context) (params map[string]interface{}, err error) {
+	params = make(map[string]interface{})
+	method := ctx.Request.Method
+	switch method {
+	case "POST":
+		contentType := ctx.Request.Header.Get("Content-Type")
+		if regexp.MustCompile("application/json").MatchString(contentType) {
+			fmt.Printf("222: %+v\n", ctx.Request.Form)
+
+		} else {
+			err = ctx.Request.ParseMultipartForm(32 << 20)
+			if err != nil {
+				return
+			}
+			// 获取所有formdata的数据
+			for key, values := range ctx.Request.Form {
+				if len(values) == 1 {
+					params[key] = values[0]
+				} else {
+					params[key] = values
+				}
+			}
+		}
+
+	default:
+
+		// 获取请求参数
+		for key, values := range ctx.Request.URL.Query() {
+			if len(values) == 1 {
+				params[key] = values[0]
+			} else {
+				params[key] = values
+			}
+		}
+	}
+
+	return
+}
+
+func GetCurl(ctx *gin.Context) (reqUrl string) {
+	path := ctx.Request.URL.Path
+	query := ctx.Request.URL.RawQuery
+	method := ctx.Request.Method
+
+	params, _ := GetRequestParams(ctx)
+
+	url := fmt.Sprintf("%v:%d%v",
+		easy_config.Viper.GetString("app.baseUrl"),
+		easy_config.Viper.GetInt("app.port"),
+		path,
+	)
+
+	switch method {
+	case "GET":
+		url = fmt.Sprintf("'%v?%v'", url, query)
+	case "POST":
+		url = fmt.Sprintf("'%v' -H 'Content-Type: application/json' -d '%v'", url, ToJson(params))
+	}
+	reqUrl = fmt.Sprintf("curl -X %v %v", method, url)
+
 	return
 }

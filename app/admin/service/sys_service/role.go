@@ -3,7 +3,7 @@ package sys_service
 import (
 	"csf/app/admin/request/sys_request"
 	"csf/common/mysql/model"
-	"csf/library/db"
+	"csf/library/easy_db"
 	"csf/utils"
 	"errors"
 	"fmt"
@@ -34,13 +34,13 @@ func (s *sSysRoleService) AddOrEdit(input sys_request.RoleAddOrEditReq) (err err
 		sysRoleModel model.SysRole
 	)
 	var exitCount int64
-	exitsModel := db.GetDb().Model(sysRoleModel)
+	exitsModel := easy_db.GetDb().Model(sysRoleModel)
 
 	if id > 0 {
 
 		exitsModel.Where("id != ?", id)
 
-		err = db.GetDb().Model(sysRoleModel).Find(&sysRoleModel, id).Error
+		err = easy_db.GetDb().Model(sysRoleModel).Find(&sysRoleModel, id).Error
 		if err != nil {
 			return
 		}
@@ -56,7 +56,7 @@ func (s *sSysRoleService) AddOrEdit(input sys_request.RoleAddOrEditReq) (err err
 		return
 	}
 
-	tx := db.GetDb().Begin()
+	tx := easy_db.GetDb().Begin()
 	defer func() {
 		if err != nil {
 			tx.Rollback()
@@ -149,7 +149,7 @@ func (s *sSysRoleService) GetQuery(input sys_request.RoleListReq) *gorm.DB {
 
 		sysRoleModel model.SysRole
 	)
-	model := db.GetDb().Model(sysRoleModel)
+	model := easy_db.GetDb().Model(sysRoleModel)
 	if name != "" {
 		model.Where(fmt.Sprintf("name like '%%%v%%'", name))
 	}
@@ -196,12 +196,12 @@ func (s *sSysRoleService) Delete(input sys_request.RoleDeleteReq) (err error) {
 		sysRoleMenuModel model.SysRoleMenu
 	)
 
-	err = db.GetDb().First(&sysRoleModel, id).Error
+	err = easy_db.GetDb().First(&sysRoleModel, id).Error
 	if err != nil {
 		return
 	}
 
-	tx := db.GetDb().Begin()
+	tx := easy_db.GetDb().Begin()
 	defer func() {
 		if err != nil {
 			tx.Rollback()

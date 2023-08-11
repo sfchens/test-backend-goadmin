@@ -2,10 +2,11 @@ package api
 
 import (
 	"csf/app/admin/router"
-	"csf/library/db"
+	"csf/library/easy_config"
+	"csf/library/easy_db"
+	"csf/library/easy_logger"
+	"csf/library/easy_validator"
 	"csf/library/global"
-	"csf/library/my_validator"
-	"csf/library/viper"
 	"fmt"
 	"github.com/fvbock/endless"
 	"github.com/spf13/cobra"
@@ -37,21 +38,27 @@ func init() {
 // 配置类
 func setUp() {
 	var err error
-	// 初始化viper
-	viper.InitViper()
+	// 初始化Config
+	easy_config.InitConfig()
 	// 初始化数据库
-	err = db.InitMysql("mysql")
+	err = easy_db.InitMysql("mysql")
 	if err != nil {
 		fmt.Printf("database 数据库初始化失败； 错误信息： %v\n", err.Error())
 	}
+	fmt.Println("mysql 初始化成功")
+
 	// 加载验证器
-	my_validator.InitValidate()
-	fmt.Printf("mysql 初始化成功")
+	easy_validator.InitValidate()
+	fmt.Println("验证器 初始化成功")
+
+	// 初始化日志
+	easy_logger.InitLogger()
+	fmt.Println("日志 初始化成功")
 }
 
 func run() (err error) {
 
-	if viper.NewViper.GetString("app.mode") == global.ModeProd {
+	if easy_config.Viper.GetString("app.mode") == global.ModeProd {
 		//gin.SetMode(gin.ReleaseMode)
 	}
 	// 加载Api路由
@@ -63,7 +70,7 @@ func run() (err error) {
 	// 初始化路由入库
 	initRegisterRouter()
 	// 运行
-	err = endless.ListenAndServe(fmt.Sprintf(":%d", viper.NewViper.Get("app.port")), global.GinEngine)
+	err = endless.ListenAndServe(fmt.Sprintf(":%d", easy_config.Viper.Get("app.port")), global.GinEngine)
 	if err != nil {
 		fmt.Printf("运行失败:  %+v\n", err.Error())
 	}

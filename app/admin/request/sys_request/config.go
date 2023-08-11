@@ -18,8 +18,9 @@ type ConfigEditReq struct {
 }
 
 type ConfigGetOneReq struct {
-	Id  int    `json:"id" form:"id"  description:"ID"`
-	Key string `json:"key" form:"key" description:"key"`
+	Id   int      `json:"id" form:"id"  description:"ID"`
+	Key  string   `json:"key" form:"key" description:"key"`
+	Key2 []string `json:"key2" form:"key2" description:"key"`
 }
 
 type ConfigGetOneRes struct {

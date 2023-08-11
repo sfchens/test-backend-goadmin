@@ -12,4 +12,6 @@ const (
 	LoginTypeAdmin = "admin"
 	LoginTypeFront = "front"
 	OperatorSystem = "operator_system"
+
+	ErrorLogKey = "errors"
 )

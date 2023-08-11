@@ -8,7 +8,8 @@ import (
 
 func registerApiRouter(r *gin.RouterGroup) {
 	apis := sys_apis.NewSysApi()
-	r1 := r.Group("/sys/api").Use(middleware.JWTAuthMiddleware())
+	r1 := r.Group("/sys/api").
+		Use(middleware.JWTAuthMiddleware())
 	{
 		r1.GET("/list", apis.List)
 		r1.POST("/refresh", apis.Refresh)

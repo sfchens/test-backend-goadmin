@@ -3,7 +3,7 @@ package live_service
 import (
 	"csf/app/admin/request/live_request"
 	"csf/common/mysql/model"
-	"csf/library/db"
+	"csf/library/easy_db"
 	"csf/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -28,7 +28,7 @@ func (s *sVideoService) AddOrEdit(input live_request.VideoAddOrEditReq) (err err
 		liveVideo model.LiveVideo
 	)
 	if id > 0 {
-		err = db.GetDb().Find(&liveVideo, id).Error
+		err = easy_db.GetDb().Find(&liveVideo, id).Error
 		if err != nil {
 			return
 		}
@@ -40,9 +40,9 @@ func (s *sVideoService) AddOrEdit(input live_request.VideoAddOrEditReq) (err err
 	liveVideo.Operator = utils.GetUserName(s.ctx)
 
 	if id > 0 {
-		err = db.GetDb().Save(&liveVideo).Error
+		err = easy_db.GetDb().Save(&liveVideo).Error
 	} else {
-		err = db.GetDb().Create(&liveVideo).Error
+		err = easy_db.GetDb().Create(&liveVideo).Error
 	}
 	if err != nil {
 		return
@@ -77,7 +77,7 @@ func (s *sVideoService) GetQuery(input live_request.VideoListReq) *gorm.DB {
 		types  = input.Type
 	)
 
-	model := db.GetDb().Model(model.LiveVideo{})
+	model := easy_db.GetDb().Model(model.LiveVideo{})
 
 	if name != "" {
 		model.Where("name like '%?%'", name)

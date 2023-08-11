@@ -22,7 +22,7 @@ type ApiEditReq struct {
 	Id     int    `json:"id" form:"id"  description:"ID"`
 	Tags   string `json:"tags" form:"tags"  validate:"required" msg:"required:分类必填" description:"标题"`
 	Title  string `json:"title" form:"title" validate:"required" msg:"required:标题必填"  description:"标题"`
-	Path   string `json:"path" form:"path" validate:"required" msg:"required:路径必填"  description:"标题"`
+	Path   string `json:"paths" form:"paths" validate:"required" msg:"required:路径必填"  description:"标题"`
 	Handle string `json:"handle" form:"handle" validate:"required" msg:"required:路径必填"  description:"标题"`
 	Method string `json:"method" form:"method" validate:"required" msg:"required:方法类型必填"  description:"提交类型"`
 }

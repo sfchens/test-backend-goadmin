@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"csf/library/viper"
+	"csf/library/easy_config"
 	"os"
 )
 
@@ -13,7 +13,7 @@ type GetDirRes struct {
 func GetDir(paths string) (dir string, err error) {
 
 	date := NowDate()
-	dir = viper.NewViper.GetString("upload.path") + paths + date
+	dir = easy_config.Viper.GetString("upload.path") + paths + date
 
 	_, err = os.Stat(dir)
 	if os.IsNotExist(err) {
@@ -26,7 +26,7 @@ func GetDir(paths string) (dir string, err error) {
 
 func GetPicTureDir(paths string) (dir string, err error) {
 	date := NowDate()
-	dir = viper.NewViper.GetString("upload.path") + "picture/" + paths + date
+	dir = easy_config.Viper.GetString("upload.path") + "picture/" + paths + date
 
 	_, err = os.Stat(dir)
 	if os.IsNotExist(err) {
@@ -39,7 +39,7 @@ func GetPicTureDir(paths string) (dir string, err error) {
 
 func GetVideoDir(paths string) (dir string, err error) {
 	date := NowDate()
-	dir = viper.NewViper.GetString("upload.path") + "video/" + paths + date
+	dir = easy_config.Viper.GetString("upload.path") + "video/" + paths + date
 
 	_, err = os.Stat(dir)
 	if os.IsNotExist(err) {

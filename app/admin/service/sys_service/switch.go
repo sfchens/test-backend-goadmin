@@ -3,7 +3,7 @@ package sys_service
 import (
 	"csf/app/admin/request/sys_request"
 	"csf/common/mysql/model"
-	"csf/library/db"
+	"csf/library/easy_db"
 	"csf/utils"
 	"errors"
 	"fmt"
@@ -32,7 +32,7 @@ func (s *sSwitchService) AddOrEdit(input sys_request.SwitchAddOrEditReq) (err er
 		sysWitchModel model.SysSwitch
 	)
 
-	existModel := db.GetDb().Model(model.SysSwitch{})
+	existModel := easy_db.GetDb().Model(model.SysSwitch{})
 	if id > 0 {
 		existModel.Where("id != ?", id)
 	}
@@ -45,7 +45,7 @@ func (s *sSwitchService) AddOrEdit(input sys_request.SwitchAddOrEditReq) (err er
 		err = errors.New(fmt.Sprintf("键名%s已存在", key))
 	}
 	if id > 0 {
-		err = db.GetDb().Model(model.SysSwitch{}).Scan(&sysWitchModel).Error
+		err = easy_db.GetDb().Model(model.SysSwitch{}).Scan(&sysWitchModel).Error
 		if err != nil {
 			return
 		}
@@ -57,9 +57,9 @@ func (s *sSwitchService) AddOrEdit(input sys_request.SwitchAddOrEditReq) (err er
 	sysWitchModel.Operator = utils.GetUserName(s.ctx)
 
 	if sysWitchModel.ID > 0 {
-		err = db.GetDb().Save(&sysWitchModel).Error
+		err = easy_db.GetDb().Save(&sysWitchModel).Error
 	} else {
-		err = db.GetDb().Create(&sysWitchModel).Error
+		err = easy_db.GetDb().Create(&sysWitchModel).Error
 	}
 
 	if err != nil {
@@ -95,7 +95,7 @@ func (s *sSwitchService) GetQuery(input sys_request.SwitchListReq) *gorm.DB {
 		key  = input.Key
 	)
 
-	model := db.GetDb().Model(model.SysSwitch{})
+	model := easy_db.GetDb().Model(model.SysSwitch{})
 
 	if name != "" {
 		model.Where("name like '%?%'", name)
@@ -116,21 +116,21 @@ func (s *sSwitchService) Delete(ids []int) (err error) {
 	for _, v := range ids {
 		idsStr = append(idsStr, fmt.Sprintf("%v", v))
 	}
-	err = db.GetDb().Model(sysSwitchModel).
+	err = easy_db.GetDb().Model(sysSwitchModel).
 		Where(fmt.Sprintf("id in (%v)", strings.Join(idsStr, ","))).
 		Scan(&sysSwitchModelList).Error
 	if err != nil {
 		return
 	}
 
-	tx := db.GetDb().Begin()
+	tx := easy_db.GetDb().Begin()
 	for _, v := range sysSwitchModelList {
 		if v.Status == 1 {
 			err = errors.New(fmt.Sprintf("配置ID： %v 正在使用", v.ID))
 			break
 		}
 
-		err = db.GetDb().Delete(&sysSwitchModel, v.ID).Error
+		err = easy_db.GetDb().Delete(&sysSwitchModel, v.ID).Error
 		if err != nil {
 			break
 		}
@@ -152,7 +152,7 @@ func (s *sSwitchService) SetStatus(input sys_request.SwitchSetStatusReq) (err er
 		sysSwitchModel model.SysSwitch
 	)
 
-	err = db.GetDb().Find(&sysSwitchModel, id).Error
+	err = easy_db.GetDb().Find(&sysSwitchModel, id).Error
 	if err != nil {
 		return
 	}
@@ -162,7 +162,7 @@ func (s *sSwitchService) SetStatus(input sys_request.SwitchSetStatusReq) (err er
 		return
 	}
 	sysSwitchModel.Status = status
-	err = db.GetDb().Save(&sysSwitchModel).Error
+	err = easy_db.GetDb().Save(&sysSwitchModel).Error
 	if err != nil {
 		return
 	}

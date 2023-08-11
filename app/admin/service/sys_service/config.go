@@ -4,7 +4,7 @@ import (
 	"csf/app/admin/model/sys_model"
 	"csf/app/admin/request/sys_request"
 	"csf/common/mysql/model"
-	"csf/library/db"
+	"csf/library/easy_db"
 	"csf/utils"
 	"encoding/json"
 	"errors"
@@ -60,7 +60,7 @@ func (s *sSysConfig) GetQuery(input sys_request.ConfigListReq) *gorm.DB {
 		sysConfigModel model.SysConfig
 	)
 
-	model := db.GetDb().Model(sysConfigModel)
+	model := easy_db.GetDb().Model(sysConfigModel)
 
 	if name != "" {
 		model.Where(fmt.Sprintf("name like '%%%v%%'", name))
@@ -90,7 +90,7 @@ func (s *sSysConfig) Add(input sys_request.ConfigAddReq) (err error) {
 	}
 
 	var counts int64
-	err = db.GetDb().Model(sysConfigModel).Where("id=?", key).Count(&counts).Error
+	err = easy_db.GetDb().Model(sysConfigModel).Where("id=?", key).Count(&counts).Error
 	if err != nil {
 		return
 	}
@@ -104,7 +104,7 @@ func (s *sSysConfig) Add(input sys_request.ConfigAddReq) (err error) {
 	sysConfigModel.Config = config
 	sysConfigModel.Key = key
 	sysConfigModel.Operator = utils.GetUserName(s.ctx)
-	err = db.GetDb().Create(&sysConfigModel).Error
+	err = easy_db.GetDb().Create(&sysConfigModel).Error
 	if err != nil {
 		return
 	}
@@ -128,7 +128,7 @@ func (s *sSysConfig) Edit(input sys_request.ConfigEditReq) (err error) {
 		return
 	}
 
-	err = db.GetDb().First(&sysConfigModel, id).Error
+	err = easy_db.GetDb().First(&sysConfigModel, id).Error
 	if err != nil {
 		return
 	}
@@ -144,7 +144,7 @@ func (s *sSysConfig) Edit(input sys_request.ConfigEditReq) (err error) {
 	sysConfigModel.Remark = remark
 
 	sysConfigModel.Operator = utils.GetUserName(s.ctx)
-	_ = db.GetDb().Save(&sysConfigModel).Error
+	_ = easy_db.GetDb().Save(&sysConfigModel).Error
 	if err != nil {
 		return
 	}
@@ -175,7 +175,7 @@ func (s *sSysConfig) GetOne(input sys_request.ConfigGetOneReq) (out sys_model.Sy
 		err = errors.New("参数异常")
 		return
 	}
-	model := db.GetDb().Model(sysConfigModel)
+	model := easy_db.GetDb().Model(sysConfigModel)
 	if input.Id > 0 {
 		model.Where("id = ?", input.Id)
 	}
@@ -222,21 +222,21 @@ func (s *sSysConfig) Delete(input sys_request.ConfigDeleteReq) (err error) {
 		idsStr = append(idsStr, fmt.Sprintf("%v", v))
 	}
 
-	err = db.GetDb().Model(sysConfigModel).
+	err = easy_db.GetDb().Model(sysConfigModel).
 		Where(fmt.Sprintf("id in (%v)", strings.Join(idsStr, ","))).
 		Scan(&sysConfigList).Error
 	if err != nil {
 		return
 	}
 
-	tx := db.GetDb().Begin()
+	tx := easy_db.GetDb().Begin()
 	for _, v := range sysConfigList {
 		if v.IsOpen == 1 {
 			err = errors.New(fmt.Sprintf("配置ID： %v 正在使用", v.ID))
 			break
 		}
 
-		err = db.GetDb().Delete(&sysConfigModel, v.ID).Error
+		err = easy_db.GetDb().Delete(&sysConfigModel, v.ID).Error
 		if err != nil {
 			break
 		}
@@ -257,7 +257,7 @@ func (s *sSysConfig) SetStatus(input sys_request.ConfigSetStatusReq) (err error)
 		sysConfigModel model.SysConfig
 	)
 
-	err = db.GetDb().Find(&sysConfigModel, id).Error
+	err = easy_db.GetDb().Find(&sysConfigModel, id).Error
 	if err != nil {
 		return
 	}
@@ -268,7 +268,7 @@ func (s *sSysConfig) SetStatus(input sys_request.ConfigSetStatusReq) (err error)
 	}
 	sysConfigModel.IsOpen = uint(isOpen)
 	sysConfigModel.Operator = utils.GetUserName(s.ctx)
-	err = db.GetDb().Save(&sysConfigModel).Error
+	err = easy_db.GetDb().Save(&sysConfigModel).Error
 	if err != nil {
 		return
 	}

@@ -3,8 +3,8 @@ package sys_service
 import (
 	"csf/app/admin/request/sys_request"
 	"csf/common/mysql/model"
-	"csf/library/db"
-	"csf/library/my_jwt"
+	"csf/library/easy_auth"
+	"csf/library/easy_db"
 	"csf/utils"
 	"errors"
 	"fmt"
@@ -33,7 +33,7 @@ func (s *sSysAdmin) Add(input sys_request.AdminAddOrEditReq) (err error) {
 
 	if id > 0 {
 		// 事务更新数据
-		err = db.GetDb().Transaction(func(tx *gorm.DB) (err error) {
+		err = easy_db.GetDb().Transaction(func(tx *gorm.DB) (err error) {
 			err = tx.Save(&sysAdminModel).Error
 			if err != nil {
 				return
@@ -42,7 +42,7 @@ func (s *sSysAdmin) Add(input sys_request.AdminAddOrEditReq) (err error) {
 		})
 	} else {
 		// 事务更新数据
-		err = db.GetDb().Transaction(func(tx *gorm.DB) (err error) {
+		err = easy_db.GetDb().Transaction(func(tx *gorm.DB) (err error) {
 			err = tx.Create(&sysAdminModel).Error
 			if err != nil {
 				return
@@ -74,14 +74,14 @@ func (s *sSysAdmin) DealAddOrEdit(input sys_request.AdminAddOrEditReq) (sysAdmin
 	)
 
 	if id > 0 {
-		err = db.GetDb().Model(sysAdminModel).Find(&sysAdminModel, id).Error
+		err = easy_db.GetDb().Model(sysAdminModel).Find(&sysAdminModel, id).Error
 		if err != nil {
 			return
 		}
 	}
 
 	var counts int64
-	exitsModel := db.GetDb().Model(sysAdminModel).Where("username=?", username)
+	exitsModel := easy_db.GetDb().Model(sysAdminModel).Where("username=?", username)
 	if id > 0 {
 		exitsModel.Where("id != ?", id)
 	}
@@ -92,7 +92,7 @@ func (s *sSysAdmin) DealAddOrEdit(input sys_request.AdminAddOrEditReq) (sysAdmin
 	}
 
 	if phone != "" {
-		phoneExistModel := db.GetDb().Model(sysAdminModel).Where("phone = ?", phone)
+		phoneExistModel := easy_db.GetDb().Model(sysAdminModel).Where("phone = ?", phone)
 		if id > 0 {
 			phoneExistModel.Where("id != ?", id)
 		}
@@ -111,7 +111,7 @@ func (s *sSysAdmin) DealAddOrEdit(input sys_request.AdminAddOrEditReq) (sysAdmin
 	}
 
 	if email != "" {
-		emailExistModel := db.GetDb().Model(sysAdminModel).Where("email = ?", email)
+		emailExistModel := easy_db.GetDb().Model(sysAdminModel).Where("email = ?", email)
 		if id > 0 {
 			emailExistModel.Where("id != ?", id)
 		}
@@ -153,7 +153,7 @@ func (s *sSysAdmin) SetStatus(input sys_request.AdminSetStatusReq) (err error) {
 		sysAdminModel model.SysAdmin
 	)
 
-	err = db.GetDb().First(&sysAdminModel, id).Error
+	err = easy_db.GetDb().First(&sysAdminModel, id).Error
 	if err != nil {
 		return
 	}
@@ -162,7 +162,7 @@ func (s *sSysAdmin) SetStatus(input sys_request.AdminSetStatusReq) (err error) {
 	}
 	sysAdminModel.Status = int(status)
 	sysAdminModel.Operator = utils.GetUserName(s.ctx)
-	err = db.GetDb().Save(&sysAdminModel).Error
+	err = easy_db.GetDb().Save(&sysAdminModel).Error
 	if err != nil {
 		return
 	}
@@ -188,7 +188,7 @@ func (s *sSysAdmin) List(input sys_request.AdminListReq) (out sys_request.AdminL
 	}
 	for _, item := range sysAdminList {
 		var deptInfo model.SysDept
-		db.GetDb().Where("id = ?", item.DeptID).Find(&deptInfo, item.DeptID)
+		easy_db.GetDb().Where("id = ?", item.DeptID).Find(&deptInfo, item.DeptID)
 
 		var tmp sys_request.AdminListItem
 		utils.StructToStruct(item, &tmp)
@@ -197,7 +197,7 @@ func (s *sSysAdmin) List(input sys_request.AdminListReq) (out sys_request.AdminL
 
 		// 权限
 		var roleList []model.SysRole
-		db.GetDb().Model(model.SysRole{}).Where("id in (?)", tmp.RoleIds).Scan(&roleList)
+		easy_db.GetDb().Model(model.SysRole{}).Where("id in (?)", tmp.RoleIds).Scan(&roleList)
 
 		var textRole []string
 		for _, val := range roleList {
@@ -220,7 +220,7 @@ func (s *sSysAdmin) GetQuery(input sys_request.AdminListReq) *gorm.DB {
 		sysAdminModel model.SysAdmin
 	)
 
-	model := db.GetDb().Model(sysAdminModel)
+	model := easy_db.GetDb().Model(sysAdminModel)
 	if username != "" {
 		model.Where(fmt.Sprintf("username like '%%%v%%'", username))
 	}
@@ -250,14 +250,14 @@ func (s *sSysAdmin) GetAdminInfo() (adminModel model.SysAdmin, err error) {
 			err = errors.New("参数异常")
 			return
 		}
-		var mc *my_jwt.MyClaims
-		mc, err = my_jwt.NewJWT().ParseToken(token)
+		var mc *easy_auth.MyClaims
+		mc, err = easy_auth.NewJWT().ParseToken(token)
 		if err != nil {
 			return
 		}
 		adminModel.ID = uint(mc.BaseClaims.Id)
 	}
-	err = db.GetDb().First(&adminModel, adminModel.ID).Error
+	err = easy_db.GetDb().First(&adminModel, adminModel.ID).Error
 	if err != nil {
 		return
 	}
@@ -275,13 +275,13 @@ func (s *sSysAdmin) ResetPwd(input sys_request.AdminResetPwdReq) (err error) {
 		sysAdmin model.SysAdmin
 	)
 
-	err = db.GetDb().Model(sysAdmin).Find(&sysAdmin, id).Error
+	err = easy_db.GetDb().Model(sysAdmin).Find(&sysAdmin, id).Error
 	if err != nil {
 		return
 	}
 
 	sysAdmin.Password = utils.BcryptHash("123456")
-	err = db.GetDb().Save(&sysAdmin).Error
+	err = easy_db.GetDb().Save(&sysAdmin).Error
 	if err != nil {
 		return
 	}
@@ -295,7 +295,7 @@ func (s *sSysAdmin) DeleteBatch(input sys_request.AdminDeleteBatchReq) (err erro
 		sysAdminList []model.SysAdmin
 	)
 
-	tx := db.GetDb().Begin()
+	tx := easy_db.GetDb().Begin()
 	defer func() {
 		if err != nil {
 			tx.Rollback()
@@ -309,7 +309,7 @@ func (s *sSysAdmin) DeleteBatch(input sys_request.AdminDeleteBatchReq) (err erro
 		return
 	}
 	for _, item := range sysAdminList {
-		err = db.GetDb().Where("id =?", item.ID).Delete(&model.SysAdmin{}).Error
+		err = easy_db.GetDb().Where("id =?", item.ID).Delete(&model.SysAdmin{}).Error
 		if err != nil {
 			break
 		}
@@ -329,13 +329,13 @@ func (s *sSysAdmin) SetRole(input sys_request.AdminSetRoleReq) (err error) {
 		sysAdminModel model.SysAdmin
 	)
 
-	err = db.GetDb().Model(sysAdminModel).Find(&sysAdminModel, id).Error
+	err = easy_db.GetDb().Model(sysAdminModel).Find(&sysAdminModel, id).Error
 	if err != nil {
 		return
 	}
 
 	sysAdminModel.RoleIds = strings.Join(utils.IntToStringArray(roleIds), ",")
-	err = db.GetDb().Save(&sysAdminModel).Error
+	err = easy_db.GetDb().Save(&sysAdminModel).Error
 	if err != nil {
 		return
 	}

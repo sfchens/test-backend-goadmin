@@ -16,14 +16,15 @@ type Response struct {
 }
 
 const (
-	ERROR   = 201
 	SUCCESS = 200
+	ERROR   = http.StatusCreated
 )
 
 func Result(ctx *gin.Context, code int, data interface{}, msg, redirectUrl string) {
 	traceId := ctx.Request.Header.Get(global.TraceIdKey)
+	ctx.Set(global.ErrorLogKey, msg)
 	// 开始时间
-	ctx.JSON(http.StatusOK, Response{
+	ctx.JSON(code, Response{
 		code,
 		msg,
 		redirectUrl,

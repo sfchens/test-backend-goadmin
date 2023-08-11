@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"csf/library/my_jwt"
+	"csf/library/easy_auth"
 	"csf/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -29,7 +29,7 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 			ctx.Abort()
 			return
 		}
-		mc, err := my_jwt.NewJWT().ParseToken(token)
+		mc, err := easy_auth.NewJWT().ParseToken(token)
 		if err != nil {
 			ctx.JSON(http.StatusOK, gin.H{
 				"code": 499,

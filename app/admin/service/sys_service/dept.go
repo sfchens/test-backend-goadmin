@@ -4,7 +4,7 @@ import (
 	"csf/app/admin/model/sys_model"
 	"csf/app/admin/request/sys_request"
 	"csf/common/mysql/model"
-	"csf/library/db"
+	"csf/library/easy_db"
 	"csf/utils"
 	"errors"
 	"fmt"
@@ -34,9 +34,9 @@ func (s *sSysDeptService) AddOrEdit(input sys_request.DeptAddOrEditReq) (err err
 		return
 	}
 	if sysDeptModel.ID > 0 {
-		err = db.GetDb().Updates(sysDeptModel).Error
+		err = easy_db.GetDb().Updates(sysDeptModel).Error
 	} else {
-		err = db.GetDb().Create(&sysDeptModel).Error
+		err = easy_db.GetDb().Create(&sysDeptModel).Error
 
 	}
 	if err != nil {
@@ -60,7 +60,7 @@ func (s *sSysDeptService) DealAddOrEdit(input sys_request.DeptAddOrEditReq) (sys
 
 	if parentId > 0 {
 		var parentIdCount int64
-		parentModel := db.GetDb().Model(sysDept).Where("id = ?", parentId)
+		parentModel := easy_db.GetDb().Model(sysDept).Where("id = ?", parentId)
 		err = parentModel.Count(&parentIdCount).Error
 		if err != nil {
 			return
@@ -73,7 +73,7 @@ func (s *sSysDeptService) DealAddOrEdit(input sys_request.DeptAddOrEditReq) (sys
 	}
 
 	if id > 0 {
-		err = db.GetDb().First(&sysDept, id).Error
+		err = easy_db.GetDb().First(&sysDept, id).Error
 		if err != nil {
 			return
 		}
@@ -108,7 +108,7 @@ func (s *sSysDeptService) Edit(input sys_request.DeptAddOrEditReq) (err error) {
 		return
 	}
 	sysDeptModel.ID = id
-	err = db.GetDb().Updates(sysDeptModel).Error
+	err = easy_db.GetDb().Updates(sysDeptModel).Error
 	if err != nil {
 		return
 	}
@@ -121,12 +121,12 @@ func (s *sSysDeptService) Delete(input sys_request.DeptDeleteReq) (err error) {
 		sysDeptModel model.SysDept
 	)
 
-	err = db.GetDb().First(&sysDeptModel, id).Error
+	err = easy_db.GetDb().First(&sysDeptModel, id).Error
 	if err != nil {
 		return
 	}
 
-	tran := db.GetDb().Begin()
+	tran := easy_db.GetDb().Begin()
 	defer func() {
 		if err != nil {
 			tran.Rollback()
@@ -181,7 +181,7 @@ func (s *sSysDeptService) GetQuery(input sys_request.DeptTreeListReq) *gorm.DB {
 
 		sysDeptModel model.SysDept
 	)
-	model := db.GetDb().Model(sysDeptModel)
+	model := easy_db.GetDb().Model(sysDeptModel)
 	if name != "" {
 		model.Where(fmt.Sprintf("name like '%%%s%%'", name))
 	}
@@ -222,7 +222,7 @@ func (s *sSysDeptService) TreeList(input sys_request.DeptTreeListReq) (out sys_r
 func (s *sSysDeptService) TreeListItem(list []sys_model.DeptTreeListItem) (out []sys_model.DeptTreeListItem) {
 	for _, v := range list {
 		v.Label = v.Name
-		model := db.GetDb().Model(model.SysDept{}).Preload("Children").Where("parent_id = ?", v.ID)
+		model := easy_db.GetDb().Model(model.SysDept{}).Preload("Children").Where("parent_id = ?", v.ID)
 		model.Order("sort desc").Scan(&v.Children)
 		if len(v.Children) > 0 {
 			v.Children = s.TreeListItem(v.Children)
@@ -238,7 +238,7 @@ func (s *sSysDeptService) GetOne(input sys_request.DeptGetOneReq) (out sys_reque
 		sysDeptModel model.SysDept
 	)
 
-	err = db.GetDb().Find(&sysDeptModel, id).Error
+	err = easy_db.GetDb().Find(&sysDeptModel, id).Error
 	if err != nil {
 		return
 	}
