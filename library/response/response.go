@@ -22,7 +22,6 @@ const (
 
 func Result(ctx *gin.Context, code int, data interface{}, msg, redirectUrl string) {
 	traceId := ctx.Request.Header.Get(global.TraceIdKey)
-	ctx.Set(global.ErrorLogKey, msg)
 	// 开始时间
 	ctx.JSON(code, Response{
 		code,

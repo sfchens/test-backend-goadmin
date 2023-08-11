@@ -36,7 +36,10 @@ func initApiRouter() {
 		LogObjKey: easy_logger.LogFileAppKey,
 		LogZap:    true,
 	}))
-	r.Use(middleware.RecoveryLogger(true))
+	r.Use(middleware.RecoveryLogger(&easy_logger.LoggerConfig{
+		LogObjKey: easy_logger.LogFileAppKey,
+		LogZap:    true,
+	}))
 
 	//r.Use(common.Sentinel()).
 	//	Use(common.RequestId(pkg.TrafficKey)).

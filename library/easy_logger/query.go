@@ -2,12 +2,13 @@ package easy_logger
 
 import "time"
 
-const LogFileAppKey = "app"   // 常规日志
-const LogFileHomeKey = "home" // 常规日志
+const LogFileAppKey = "app"     // 常规日志
+const LogFileHomeKey = "home"   // 常规日志
+const LogFileLoginKey = "login" // 常规日志
 
 type LoggerConfig struct {
 	LogObjKey string
-	LogMysql  bool
+	LogMysql  bool //是否写入 mysql 数据库
 	LogZap    bool // 是否写入 zap 日志中
 	LogZinc   bool // 是否发送到 ZincSearch 服务器
 }

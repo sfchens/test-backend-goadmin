@@ -37,7 +37,6 @@ func (c cSysLoginApi) Login(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
 	if easy_config.Viper.Get("app.mode") != "dev" && !common_service.NewComCaptchaService(ctx).Verify(req.CaptChaId, req.Captcha, true) {
 		response.FailWithMessage(ctx, "验证码验证失败")
 		return

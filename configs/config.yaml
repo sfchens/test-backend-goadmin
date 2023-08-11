@@ -25,7 +25,7 @@ zap:
   prefix: '[test-goadmin]'
   format: console # console json
   path: logs
-  log-file: ['app', 'home']
+  log-file: ['app', 'login']
   encode-level: LowercaseColorLevelEncoder
   stacktrace-key: stacktrace
   max-age: 24
