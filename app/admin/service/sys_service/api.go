@@ -2,7 +2,7 @@ package sys_service
 
 import (
 	"bytes"
-	"csf/app/admin/request/sys_request"
+	"csf/app/admin/request/sys_req"
 	"csf/common/mysql/model"
 	"csf/library/easy_db"
 	"csf/library/global"
@@ -24,7 +24,7 @@ func NewSysApiService(ctx *gin.Context) *sSysApiService {
 	return &sSysApiService{ctx: ctx}
 }
 
-func (s *sSysApiService) List(input sys_request.ApiListReq) (out sys_request.ApiListRes, err error) {
+func (s *sSysApiService) List(input sys_req.ApiListReq) (out sys_req.ApiListRes, err error) {
 	var (
 		page     = input.Page
 		pageSize = input.PageSize
@@ -45,7 +45,7 @@ func (s *sSysApiService) List(input sys_request.ApiListReq) (out sys_request.Api
 	return
 }
 
-func (s *sSysApiService) GetQuery(input sys_request.ApiListReq) *gorm.DB {
+func (s *sSysApiService) GetQuery(input sys_req.ApiListReq) *gorm.DB {
 	var (
 		tag    = input.Tag
 		title  = input.Title
@@ -107,7 +107,7 @@ func (s *sSysApiService) Refresh() (err error) {
 	return
 }
 
-func (s *sSysApiService) AddOrEdit(input sys_request.ApiEditReq) (err error) {
+func (s *sSysApiService) AddOrEdit(input sys_req.ApiEditReq) (err error) {
 	var (
 		id     = input.Id
 		tags   = input.Tags
@@ -142,7 +142,7 @@ func (s *sSysApiService) AddOrEdit(input sys_request.ApiEditReq) (err error) {
 	return
 }
 
-func (s *sSysApiService) GetTag(input sys_request.ApiGetTagReq) (out sys_request.ApiGetTagRes, err error) {
+func (s *sSysApiService) GetTag(input sys_req.ApiGetTagReq) (out sys_req.ApiGetTagRes, err error) {
 	var (
 		page     = input.Page
 		pageSize = input.PageSize
@@ -165,7 +165,7 @@ func (s *sSysApiService) GetTag(input sys_request.ApiGetTagReq) (out sys_request
 	return
 }
 
-func (s *sSysApiService) DeleteMulti(input sys_request.ApiDeleteMultiReq) (err error) {
+func (s *sSysApiService) DeleteMulti(input sys_req.ApiDeleteMultiReq) (err error) {
 
 	var (
 		ids = input.Ids

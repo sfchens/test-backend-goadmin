@@ -1,6 +1,8 @@
 package easy_session
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -18,8 +20,15 @@ func NewCustomSession(ctx *gin.Context) customSession {
 	return sessionStore
 }
 
-func (m customSession) Set(key string, val interface{}) (err error) {
-	m.cSession.Set(key, val)
+func (m customSession) Set(key string, data interface{}) (err error) {
+	switch t := data.(type) {
+	case string, int, int64, int32, int8, float32:
+	default:
+		fmt.Printf("t:  %+v\n", t)
+		bytes, _ := json.Marshal(data)
+		data = string(bytes)
+	}
+	m.cSession.Set(key, data)
 	err = m.cSession.Save()
 	if err != nil {
 		return

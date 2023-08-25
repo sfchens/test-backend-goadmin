@@ -1,7 +1,7 @@
 package sys_service
 
 import (
-	"csf/app/admin/request/sys_request"
+	"csf/app/admin/request/sys_req"
 	"csf/common/mysql/model"
 	"csf/library/easy_db"
 	"csf/utils"
@@ -20,7 +20,7 @@ func NewSwitchService(ctx *gin.Context) *sSwitchService {
 	return &sSwitchService{ctx: ctx}
 }
 
-func (s *sSwitchService) AddOrEdit(input sys_request.SwitchAddOrEditReq) (err error) {
+func (s *sSwitchService) AddOrEdit(input sys_req.SwitchAddOrEditReq) (err error) {
 	var (
 		id     = input.Id
 		name   = input.Name
@@ -69,7 +69,7 @@ func (s *sSwitchService) AddOrEdit(input sys_request.SwitchAddOrEditReq) (err er
 	return
 }
 
-func (s *sSwitchService) List(input sys_request.SwitchListReq) (out sys_request.SwitchListRes, err error) {
+func (s *sSwitchService) List(input sys_req.SwitchListReq) (out sys_req.SwitchListRes, err error) {
 	var (
 		page     = input.Page
 		pageSize = input.PageSize
@@ -89,7 +89,7 @@ func (s *sSwitchService) List(input sys_request.SwitchListReq) (out sys_request.
 	return
 }
 
-func (s *sSwitchService) GetQuery(input sys_request.SwitchListReq) *gorm.DB {
+func (s *sSwitchService) GetQuery(input sys_req.SwitchListReq) *gorm.DB {
 	var (
 		name = input.Name
 		key  = input.Key
@@ -144,7 +144,7 @@ func (s *sSwitchService) Delete(ids []int) (err error) {
 	return
 }
 
-func (s *sSwitchService) SetStatus(input sys_request.SwitchSetStatusReq) (err error) {
+func (s *sSwitchService) SetStatus(input sys_req.SwitchSetStatusReq) (err error) {
 	var (
 		id     = input.Id
 		status = input.Status

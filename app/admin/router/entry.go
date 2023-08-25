@@ -1,9 +1,10 @@
 package router
 
 import (
-	"csf/app/admin/router/common_router"
-	"csf/app/admin/router/live_router"
-	"csf/app/admin/router/sys_router"
+	"csf/app/admin/router/common"
+	"csf/app/admin/router/live"
+	"csf/app/admin/router/sys"
+	"csf/app/admin/router/user"
 	"csf/library/global"
 	"os"
 )
@@ -16,11 +17,13 @@ func InitRouter() {
 	}
 
 	// 加载公共路由
-	common_router.InitRouter()
+	common.InitRouter()
 	// 加载路由
-	sys_router.InitRouter()
+	sys.InitRouter()
 	// 直播路由
-	live_router.InitRouter()
+	live.InitRouter()
+	// 用户管理路由
+	user.InitRouter()
 
 	v1 := r.Group("/api/v1")
 	for _, f := range global.RouterList {

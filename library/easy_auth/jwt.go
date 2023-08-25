@@ -18,10 +18,12 @@ var (
 
 // BaseClaims 这里可根据需求来修改
 type BaseClaims struct {
-	Id       int    `json:"id"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Id        int    `json:"id"`
+	Username  string `json:"username"`
+	Realname  string `json:"realname"`
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	LoginType string `json:"login_type"`
 }
 
 type MyClaims struct {

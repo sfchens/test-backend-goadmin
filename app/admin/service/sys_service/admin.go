@@ -1,9 +1,8 @@
 package sys_service
 
 import (
-	"csf/app/admin/request/sys_request"
+	"csf/app/admin/request/sys_req"
 	"csf/common/mysql/model"
-	"csf/library/easy_auth"
 	"csf/library/easy_db"
 	"csf/utils"
 	"errors"
@@ -21,7 +20,7 @@ func NewSysAdminService(ctx *gin.Context) *sSysAdmin {
 	return &sSysAdmin{ctx: ctx}
 }
 
-func (s *sSysAdmin) Add(input sys_request.AdminAddOrEditReq) (err error) {
+func (s *sSysAdmin) Add(input sys_req.AdminAddOrEditReq) (err error) {
 	var (
 		id            = input.Id
 		sysAdminModel model.SysAdmin
@@ -58,7 +57,7 @@ func (s *sSysAdmin) Add(input sys_request.AdminAddOrEditReq) (err error) {
 	return
 }
 
-func (s *sSysAdmin) DealAddOrEdit(input sys_request.AdminAddOrEditReq) (sysAdminModel model.SysAdmin, err error) {
+func (s *sSysAdmin) DealAddOrEdit(input sys_req.AdminAddOrEditReq) (sysAdminModel model.SysAdmin, err error) {
 	var (
 		id       = input.Id
 		username = input.Username
@@ -145,7 +144,7 @@ func (s *sSysAdmin) DealAddOrEdit(input sys_request.AdminAddOrEditReq) (sysAdmin
 	return
 }
 
-func (s *sSysAdmin) SetStatus(input sys_request.AdminSetStatusReq) (err error) {
+func (s *sSysAdmin) SetStatus(input sys_req.AdminSetStatusReq) (err error) {
 	var (
 		id     = input.Id
 		status = input.Status
@@ -169,7 +168,7 @@ func (s *sSysAdmin) SetStatus(input sys_request.AdminSetStatusReq) (err error) {
 	return
 }
 
-func (s *sSysAdmin) List(input sys_request.AdminListReq) (out sys_request.AdminListRes, err error) {
+func (s *sSysAdmin) List(input sys_req.AdminListReq) (out sys_req.AdminListRes, err error) {
 	var (
 		page     = input.Page
 		pageSize = input.PageSize
@@ -190,7 +189,7 @@ func (s *sSysAdmin) List(input sys_request.AdminListReq) (out sys_request.AdminL
 		var deptInfo model.SysDept
 		easy_db.GetDb().Where("id = ?", item.DeptID).Find(&deptInfo, item.DeptID)
 
-		var tmp sys_request.AdminListItem
+		var tmp sys_req.AdminListItem
 		utils.StructToStruct(item, &tmp)
 		tmp.DeptInfo = deptInfo
 		tmp.RoleIds = utils.StringToIntArray(strings.Split(item.RoleIds, ","))
@@ -209,7 +208,7 @@ func (s *sSysAdmin) List(input sys_request.AdminListReq) (out sys_request.AdminL
 	return
 }
 
-func (s *sSysAdmin) GetQuery(input sys_request.AdminListReq) *gorm.DB {
+func (s *sSysAdmin) GetQuery(input sys_req.AdminListReq) *gorm.DB {
 	var (
 		username = input.Username
 		realname = input.Realname
@@ -243,21 +242,12 @@ func (s *sSysAdmin) GetQuery(input sys_request.AdminListReq) *gorm.DB {
 }
 
 func (s *sSysAdmin) GetAdminInfo() (adminModel model.SysAdmin, err error) {
-	adminModel = utils.GetAdminInfo(s.ctx)
-	if adminModel.ID <= 0 {
-		token := utils.GetAuthorization(s.ctx)
-		if token == "" {
-			err = errors.New("参数异常")
-			return
-		}
-		var mc *easy_auth.MyClaims
-		mc, err = easy_auth.NewJWT().ParseToken(token)
-		if err != nil {
-			return
-		}
-		adminModel.ID = uint(mc.BaseClaims.Id)
+	var userInfo utils.UserInfo
+	userInfo, err = utils.GetUserInfo(s.ctx)
+	if err != nil {
+		return
 	}
-	err = easy_db.GetDb().First(&adminModel, adminModel.ID).Error
+	err = easy_db.GetDb().First(&adminModel, userInfo.Id).Error
 	if err != nil {
 		return
 	}
@@ -268,7 +258,7 @@ func (s *sSysAdmin) GetAdminInfo() (adminModel model.SysAdmin, err error) {
 	return
 }
 
-func (s *sSysAdmin) ResetPwd(input sys_request.AdminResetPwdReq) (err error) {
+func (s *sSysAdmin) ResetPwd(input sys_req.AdminResetPwdReq) (err error) {
 	var (
 		id = input.Id
 
@@ -288,7 +278,7 @@ func (s *sSysAdmin) ResetPwd(input sys_request.AdminResetPwdReq) (err error) {
 	return
 }
 
-func (s *sSysAdmin) DeleteBatch(input sys_request.AdminDeleteBatchReq) (err error) {
+func (s *sSysAdmin) DeleteBatch(input sys_req.AdminDeleteBatchReq) (err error) {
 	var (
 		ids = input.Ids
 
@@ -320,7 +310,7 @@ func (s *sSysAdmin) DeleteBatch(input sys_request.AdminDeleteBatchReq) (err erro
 	return
 }
 
-func (s *sSysAdmin) SetRole(input sys_request.AdminSetRoleReq) (err error) {
+func (s *sSysAdmin) SetRole(input sys_req.AdminSetRoleReq) (err error) {
 
 	var (
 		id      = input.Id

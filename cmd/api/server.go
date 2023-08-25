@@ -40,6 +40,8 @@ func setUp() {
 	var err error
 	// 初始化Config
 	easy_config.InitConfig()
+	fmt.Println("viper config 初始化成功")
+
 	// 初始化数据库
 	err = easy_db.InitMysql("mysql")
 	if err != nil {
@@ -54,6 +56,7 @@ func setUp() {
 	// 初始化日志
 	easy_logger.InitLogger()
 	fmt.Println("日志 初始化成功")
+
 }
 
 func run() (err error) {
@@ -61,14 +64,16 @@ func run() (err error) {
 	if easy_config.Viper.GetString("app.mode") == global.ModeProd {
 		//gin.SetMode(gin.ReleaseMode)
 	}
-	// 加载Api路由
+	// 加载公共中间件路由
 	initApiRouter()
+	// 加载路由
 	for _, f := range AppRouters {
 		f()
 	}
 
 	// 初始化路由入库
-	initRegisterRouter()
+	//initRegisterRouter()
+
 	// 运行
 	err = endless.ListenAndServe(fmt.Sprintf(":%d", easy_config.Viper.Get("app.port")), global.GinEngine)
 	if err != nil {

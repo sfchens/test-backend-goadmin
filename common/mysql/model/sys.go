@@ -56,24 +56,24 @@ type SysUser struct {
 }
 
 type SysMenu struct {
-	Id         int        `gorm:"AUTO_INCREMENT;column:id" json:"id"`                                                        // ID
-	MenuName   string     `gorm:"column:menu_name" json:"menu_name"`                                                         // 菜单名称
-	Title      string     `gorm:"column:title" json:"title"`                                                                 // 标题
-	Icon       string     `gorm:"column:icon" json:"icon"`                                                                   // 图标
-	Path       string     `gorm:"column:path" json:"path"`                                                                   // 前端路径
-	ParentId   int        `gorm:"column:parent_id" json:"parent_id"`                                                         // 父级
-	ParentIds  string     `gorm:"column:parent_ids" json:"parent_ids"`                                                       // 父级类型
-	MenuType   string     `gorm:"column:menu_type" json:"menu_type"`                                                         // 菜单类型，M目录 C菜单，F按钮
-	Permission string     `gorm:"column:permission" json:"permission"`                                                       // 权限标识
-	Component  string     `gorm:"column:component" json:"component"`                                                         // 组件
-	ApisId     string     `gorm:"column:apis_id" json:"apis_id"`                                                             // 组件
-	Sort       int        `gorm:"column:sort" json:"sort"`                                                                   // 排序
-	Visible    int        `gorm:"column:visible" json:"visible"`                                                             // 是否启用，1启用
-	IsFrame    int        `gorm:"column:is_frame" json:"is_frame"`                                                           // 是否框架，1
-	Operator   string     `gorm:"NOT NULL;DEFAULT:'';column:operator" json:"operator"`                                       // 操作人
-	CreatedAt  time.Time  `gorm:"DEFAULT:current_timestamp;column:created_at" json:"created_at"`                             // 创建时间
-	UpdatedAt  time.Time  `gorm:"DEFAULT:current_timestamp ON UPDATE current_timestamp;column:updated_at" json:"updated_at"` // 最后更新时间
-	DeletedAt  *time.Time `gorm:"column:deleted_at" json:"deleted_at"`                                                       // 删除时间
+	Id         int       `gorm:"AUTO_INCREMENT;column:id" json:"id"`                                                        // ID
+	MenuName   string    `gorm:"column:menu_name" json:"menu_name"`                                                         // 菜单名称
+	Title      string    `gorm:"column:title" json:"title"`                                                                 // 标题
+	Icon       string    `gorm:"column:icon" json:"icon"`                                                                   // 图标
+	Path       string    `gorm:"column:path" json:"path"`                                                                   // 前端路径
+	ParentId   int       `gorm:"column:parent_id" json:"parent_id"`                                                         // 父级
+	ParentIds  string    `gorm:"column:parent_ids" json:"parent_ids"`                                                       // 父级类型
+	MenuType   string    `gorm:"column:menu_type" json:"menu_type"`                                                         // 菜单类型，M目录 C菜单，F按钮
+	Permission string    `gorm:"column:permission" json:"permission"`                                                       // 权限标识
+	Component  string    `gorm:"column:component" json:"component"`                                                         // 组件
+	ApisId     string    `gorm:"column:apis_id" json:"apis_id"`                                                             // 组件
+	Sort       int       `gorm:"column:sort" json:"sort"`                                                                   // 排序
+	Visible    int       `gorm:"column:visible" json:"visible"`                                                             // 是否启用，1启用
+	IsFrame    int       `gorm:"column:is_frame" json:"is_frame"`                                                           // 是否框架，1
+	Operator   string    `gorm:"NOT NULL;DEFAULT:'';column:operator" json:"operator"`                                       // 操作人
+	CreatedAt  time.Time `gorm:"DEFAULT:current_timestamp;column:created_at" json:"created_at"`                             // 创建时间
+	UpdatedAt  time.Time `gorm:"DEFAULT:current_timestamp ON UPDATE current_timestamp;column:updated_at" json:"updated_at"` // 最后更新时间
+	DeletedAt  time.Time `gorm:"column:deleted_at" json:"deleted_at"`                                                       // 删除时间
 }
 
 type SysMenuApiRule struct {

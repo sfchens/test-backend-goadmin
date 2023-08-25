@@ -2,14 +2,13 @@ package sys_service
 
 import (
 	"csf/app/admin/model/sys_model"
-	"csf/app/admin/request/sys_request"
+	"csf/app/admin/request/sys_req"
 	"csf/common/mysql/model"
 	"csf/library/easy_auth"
 	"csf/library/easy_db"
 	"csf/library/easy_session"
 	"csf/library/global"
 	"csf/utils"
-	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +21,7 @@ func NewSysLoginService(ctx *gin.Context) *SysLogin {
 	return &SysLogin{ctx: ctx}
 }
 
-func (s *SysLogin) Login(input sys_model.LoginInput) (out sys_request.LoginRes, err error) {
+func (s *SysLogin) Login(input sys_model.LoginInput) (out sys_req.LoginRes, err error) {
 	var (
 		username = input.Username
 		password = input.Password
@@ -50,33 +49,25 @@ func (s *SysLogin) Login(input sys_model.LoginInput) (out sys_request.LoginRes, 
 	var tokenInfo sys_model.TokenInfoOut
 	tokenInfo, err = s.CreateToken(adminInfoModel)
 
-	var adminInfo sys_request.AdminInfo
+	var adminInfo sys_req.AdminInfo
 	utils.StructToStruct(adminInfoModel, &adminInfo)
-	out = sys_request.LoginRes{
+	out = sys_req.LoginRes{
 		AdminInfo: adminInfo,
 		TokenInfo: tokenInfo,
 	}
 
-	// 保存session
-	err = easy_session.NewCustomSession(s.ctx).Set(global.LoginTypeKey, global.LoginTypeAdmin)
-	if err != nil {
-		return
-	}
-	jsonStr, _ := json.Marshal(adminInfoModel)
-	err = easy_session.NewCustomSession(s.ctx).Set(global.UserInfoKey, string(jsonStr))
-	if err != nil {
-		return
-	}
 	return
 }
 
 func (s *SysLogin) CreateToken(input model.SysAdmin) (tokenInfoOUt sys_model.TokenInfoOut, err error) {
 	var token string
 	baseClaims := easy_auth.BaseClaims{
-		Id:       int(input.ID),
-		Username: input.Username,
-		Email:    input.Email,
-		Password: input.Password,
+		Id:        int(input.ID),
+		Username:  input.Username,
+		Realname:  input.Realname,
+		Email:     input.Email,
+		Password:  input.Password,
+		LoginType: global.LoginTypeAdmin,
 	}
 	myBaseClaims := easy_auth.NewJWT().CreateClaims(baseClaims)
 	token, err = easy_auth.NewJWT().CreateToken(myBaseClaims)

@@ -1,7 +1,7 @@
 package common_service
 
 import (
-	"csf/app/admin/request/common_request"
+	"csf/app/admin/request/common_req"
 	"csf/common/mysql/model"
 	"csf/library/easy_db"
 	"csf/utils"
@@ -19,11 +19,11 @@ func NewUploadService(ctx *gin.Context) *sUploadService {
 	return &sUploadService{ctx: ctx}
 }
 
-func (s *sUploadService) AddPicture(input common_request.UploadAddPictureReq) (out common_request.UploadAddPictureRes, err error) {
+func (s *sUploadService) AddPicture(input common_req.UploadAddPictureReq) (out common_req.UploadAddPictureRes, err error) {
 
 	var (
-		uploadPictureReq common_request.UploadPictureReq
-		uploadPictureRes common_request.UploadPictureRes
+		uploadPictureReq common_req.UploadPictureReq
+		uploadPictureRes common_req.UploadPictureRes
 
 		uploadPicture model.ComPicture
 	)
@@ -41,12 +41,12 @@ func (s *sUploadService) AddPicture(input common_request.UploadAddPictureReq) (o
 	return
 }
 
-func (s *sUploadService) EditPicture(input common_request.UploadEditPictureReq) (out common_request.UploadEditPictureRes, err error) {
+func (s *sUploadService) EditPicture(input common_req.UploadEditPictureReq) (out common_req.UploadEditPictureRes, err error) {
 
 	return
 }
 
-func (s *sUploadService) UploadPicture(input common_request.UploadPictureReq) (out common_request.UploadPictureRes, err error) {
+func (s *sUploadService) UploadPicture(input common_req.UploadPictureReq) (out common_req.UploadPictureRes, err error) {
 	var (
 		file     = input.File
 		filename = input.Filename
@@ -84,7 +84,7 @@ func (s *sUploadService) UploadPicture(input common_request.UploadPictureReq) (o
 		return
 	}
 
-	out = common_request.UploadPictureRes{
+	out = common_req.UploadPictureRes{
 		Md5Str:   utils.Md5(filename),
 		Filename: filename,
 		Path:     saveDir,
@@ -93,7 +93,7 @@ func (s *sUploadService) UploadPicture(input common_request.UploadPictureReq) (o
 	return
 }
 
-func (s *sUploadService) UploadPictureMulti(input common_request.UploadPictureMultiReq) (out []common_request.UploadPictureMultiRes) {
+func (s *sUploadService) UploadPictureMulti(input common_req.UploadPictureMultiReq) (out []common_req.UploadPictureMultiRes) {
 	var (
 		fileNames = input.Filename
 		files     = input.File
@@ -104,7 +104,7 @@ func (s *sUploadService) UploadPictureMulti(input common_request.UploadPictureMu
 			filename string
 			path     string
 
-			res = common_request.UploadPictureMultiRes{}
+			res = common_req.UploadPictureMultiRes{}
 		)
 		filename = file.Filename
 		if len(fileNames) > 0 && fileNames[i] != "" {
@@ -115,7 +115,7 @@ func (s *sUploadService) UploadPictureMulti(input common_request.UploadPictureMu
 			path = paths[i]
 		}
 
-		var in = common_request.UploadPictureReq{
+		var in = common_req.UploadPictureReq{
 			Filename: filename,
 			Path:     path,
 			File:     file,
@@ -139,7 +139,7 @@ func (s *sUploadService) UploadPictureMulti(input common_request.UploadPictureMu
 	return
 }
 
-func (s *sUploadService) UploadVideo(input common_request.UploadVideoReq) (out common_request.UploadVideoRes, err error) {
+func (s *sUploadService) UploadVideo(input common_req.UploadVideoReq) (out common_req.UploadVideoRes, err error) {
 	var (
 		file     = input.File
 		filename = input.Filename
@@ -169,7 +169,7 @@ func (s *sUploadService) UploadVideo(input common_request.UploadVideoReq) (out c
 		return
 	}
 
-	out = common_request.UploadVideoRes{
+	out = common_req.UploadVideoRes{
 		Md5Str:   utils.Md5(filename),
 		Filename: filename,
 		Path:     saveDir,

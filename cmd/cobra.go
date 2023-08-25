@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"csf/cmd/api"
+	"csf/cmd/apis"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -26,6 +27,7 @@ func init() {
 
 	// 初始化api模块
 	rootCmd.AddCommand(api.StartCmd)
+	rootCmd.AddCommand(apis.StartCmd)
 }
 
 // Execute : apply commands

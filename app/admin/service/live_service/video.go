@@ -1,7 +1,7 @@
 package live_service
 
 import (
-	"csf/app/admin/request/live_request"
+	"csf/app/admin/request/live_req"
 	"csf/common/mysql/model"
 	"csf/library/easy_db"
 	"csf/utils"
@@ -17,7 +17,7 @@ func NewVideoService(ctx *gin.Context) *sVideoService {
 	return &sVideoService{ctx: ctx}
 }
 
-func (s *sVideoService) AddOrEdit(input live_request.VideoAddOrEditReq) (err error) {
+func (s *sVideoService) AddOrEdit(input live_req.VideoAddOrEditReq) (err error) {
 	var (
 		id     = input.Id
 		name   = input.Name
@@ -50,7 +50,7 @@ func (s *sVideoService) AddOrEdit(input live_request.VideoAddOrEditReq) (err err
 	return
 }
 
-func (s *sVideoService) List(input live_request.VideoListReq) (out live_request.VideoListRes, err error) {
+func (s *sVideoService) List(input live_req.VideoListReq) (out live_req.VideoListRes, err error) {
 	var (
 		page     = input.Page
 		pageSize = input.PageSize
@@ -70,7 +70,7 @@ func (s *sVideoService) List(input live_request.VideoListReq) (out live_request.
 	return
 }
 
-func (s *sVideoService) GetQuery(input live_request.VideoListReq) *gorm.DB {
+func (s *sVideoService) GetQuery(input live_req.VideoListReq) *gorm.DB {
 	var (
 		name   = input.Name
 		status = input.Status

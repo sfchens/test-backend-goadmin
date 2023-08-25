@@ -1,7 +1,7 @@
 package live_service
 
 import (
-	"csf/app/admin/request/live_request"
+	"csf/app/admin/request/live_req"
 	"csf/common/mysql/model"
 	"csf/library/easy_db"
 	"csf/utils"
@@ -22,7 +22,7 @@ var liveType = map[int]string{
 	1: "直播背景",
 }
 
-func (s *sBackdropService) AddOrEdit(input live_request.BackdropAddOrEditReq) (err error) {
+func (s *sBackdropService) AddOrEdit(input live_req.BackdropAddOrEditReq) (err error) {
 	var (
 		id     = input.Id
 		name   = input.Name
@@ -61,7 +61,7 @@ func (s *sBackdropService) AddOrEdit(input live_request.BackdropAddOrEditReq) (e
 	return
 }
 
-func (s *sBackdropService) List(input live_request.BackdropListReq) (out live_request.BackdropListRes, err error) {
+func (s *sBackdropService) List(input live_req.BackdropListReq) (out live_req.BackdropListRes, err error) {
 	var (
 		page     = input.Page
 		pageSize = input.PageSize
@@ -81,7 +81,7 @@ func (s *sBackdropService) List(input live_request.BackdropListReq) (out live_re
 	return
 }
 
-func (s *sBackdropService) GetQuery(input live_request.BackdropListReq) *gorm.DB {
+func (s *sBackdropService) GetQuery(input live_req.BackdropListReq) *gorm.DB {
 	var (
 		name   = input.Name
 		status = input.Status

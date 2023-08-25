@@ -1,7 +1,7 @@
 package sys_service
 
 import (
-	"csf/app/admin/request/sys_request"
+	"csf/app/admin/request/sys_req"
 	"csf/common/mysql/model"
 	"csf/library/easy_db"
 	"csf/utils"
@@ -21,7 +21,7 @@ func NewSysRoleService(ctx *gin.Context) *sSysRoleService {
 	return &sSysRoleService{ctx: ctx}
 }
 
-func (s *sSysRoleService) AddOrEdit(input sys_request.RoleAddOrEditReq) (err error) {
+func (s *sSysRoleService) AddOrEdit(input sys_req.RoleAddOrEditReq) (err error) {
 	var (
 		id      = input.Id
 		name    = input.Name
@@ -110,7 +110,7 @@ func (s *sSysRoleService) SaveRoleMenu(tx *gorm.DB, roleId int, menuIds []int) (
 	return
 }
 
-func (s *sSysRoleService) List(input sys_request.RoleListReq) (out sys_request.RoleListRes, err error) {
+func (s *sSysRoleService) List(input sys_req.RoleListReq) (out sys_req.RoleListRes, err error) {
 	var (
 		page     = input.Page
 		pageSize = input.PageSize
@@ -131,7 +131,7 @@ func (s *sSysRoleService) List(input sys_request.RoleListReq) (out sys_request.R
 	}
 
 	for _, item := range sysRoleList {
-		var roleItem sys_request.RoleListItem
+		var roleItem sys_req.RoleListItem
 		utils.StructToStruct(item, &roleItem)
 		menuIds := strings.Split(item.MenuIds, ",")
 		roleItem.MenuIds = utils.StringToIntArray(menuIds)
@@ -141,7 +141,7 @@ func (s *sSysRoleService) List(input sys_request.RoleListReq) (out sys_request.R
 	return
 }
 
-func (s *sSysRoleService) GetQuery(input sys_request.RoleListReq) *gorm.DB {
+func (s *sSysRoleService) GetQuery(input sys_req.RoleListReq) *gorm.DB {
 	var (
 		name   = input.Name
 		key    = input.Key
@@ -164,7 +164,7 @@ func (s *sSysRoleService) GetQuery(input sys_request.RoleListReq) *gorm.DB {
 	return model
 }
 
-func (s *sSysRoleService) DeleteBatch(input sys_request.RoleDeleteBatchReq) (err error) {
+func (s *sSysRoleService) DeleteBatch(input sys_req.RoleDeleteBatchReq) (err error) {
 
 	var (
 		ids = input.Ids
@@ -172,7 +172,7 @@ func (s *sSysRoleService) DeleteBatch(input sys_request.RoleDeleteBatchReq) (err
 		errNew []string
 	)
 	for _, id := range ids {
-		newInput := sys_request.RoleDeleteReq{
+		newInput := sys_req.RoleDeleteReq{
 			Id: id,
 		}
 		err = s.Delete(newInput)
@@ -189,7 +189,7 @@ func (s *sSysRoleService) DeleteBatch(input sys_request.RoleDeleteBatchReq) (err
 	return
 }
 
-func (s *sSysRoleService) Delete(input sys_request.RoleDeleteReq) (err error) {
+func (s *sSysRoleService) Delete(input sys_req.RoleDeleteReq) (err error) {
 	var (
 		id               = input.Id
 		sysRoleModel     model.SysRole

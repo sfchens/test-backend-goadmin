@@ -77,7 +77,6 @@ func GetRequestParams(ctx *gin.Context) (params map[string]interface{}, err erro
 	case "POST":
 		contentType := ctx.Request.Header.Get("Content-Type")
 		if regexp.MustCompile("application/json").MatchString(contentType) {
-			fmt.Printf("222: %+v\n", ctx.Request.Form)
 
 		} else {
 			err = ctx.Request.ParseMultipartForm(32 << 20)
@@ -117,10 +116,11 @@ func GetCurl(ctx *gin.Context) (reqUrl string) {
 	params, _ := GetRequestParams(ctx)
 
 	url := fmt.Sprintf("%v:%d%v",
-		easy_config.Viper.GetString("app.baseUrl"),
-		easy_config.Viper.GetInt("app.port"),
+		easy_config.Config.App.BaseUrl,
+		easy_config.Config.App.Port,
 		path,
 	)
+	fmt.Printf("url: %+v\n", easy_config.Config.App.BaseUrl)
 
 	switch method {
 	case "GET":

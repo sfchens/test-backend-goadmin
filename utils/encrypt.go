@@ -1,10 +1,15 @@
 package utils
 
 import (
+	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha1"
+	"crypto/sha256"
+	"csf/library/easy_config"
+	"encoding/base64"
 	"encoding/hex"
 	"golang.org/x/crypto/bcrypt"
+	"net/url"
 )
 
 func Md5(s string, rawOutput ...bool) string {
@@ -39,4 +44,12 @@ func BcryptHash(password string) string {
 func BcryptCheck(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func HmacSign(signStr string) string {
+	hash := hmac.New(sha256.New, []byte(easy_config.Config.DingDing.Secret))
+	hash.Write([]byte(signStr))
+	signData := hash.Sum(nil)
+	sign := url.QueryEscape(base64.StdEncoding.EncodeToString(signData))
+	return sign
 }

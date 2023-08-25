@@ -3,6 +3,7 @@ package api
 import (
 	"csf/app/admin/service/sys_service"
 	"csf/common/middleware"
+	"csf/library/easy_config"
 	"csf/library/easy_logger"
 	"csf/library/global"
 	"github.com/gin-contrib/sessions"
@@ -28,7 +29,7 @@ func initApiRouter() {
 	//	r.Use(handler.TlsHandler())
 	//}
 	store := cookie.NewStore([]byte("secret"))
-	r.Use(sessions.Sessions("easy_session", store))
+	r.Use(sessions.Sessions("SESSIONID", store))
 	r.Use(middleware.TraceKeyMiddleware(global.TraceIdKey))
 	r.Use(middleware.CORSMiddleware())
 	// 全局操作日志
@@ -49,10 +50,11 @@ func initApiRouter() {
 }
 
 func initRegisterRouter() {
-
-	ctx := &gin.Context{}
-	err := sys_service.NewSysApiService(ctx).Refresh()
-	if err != nil {
-		println("初始化Api数据失败")
+	if easy_config.Config.App.IsApiMysql {
+		ctx := &gin.Context{}
+		err := sys_service.NewSysApiService(ctx).Refresh()
+		if err != nil {
+			println("初始化Api数据失败")
+		}
 	}
 }

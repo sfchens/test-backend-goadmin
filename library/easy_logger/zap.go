@@ -24,12 +24,12 @@ type _customZap struct {
 
 // InitCustomZap 初始化zap
 func initCustomZap() _customZap {
-	paths := easy_config.Viper.GetString("zap.path")
+	paths := easy_config.Config.Zap.Path
 	if ok, _ := utils.FileExists(paths); !ok {
 		_ = os.Mkdir(paths, os.ModePerm)
 	}
 
-	fileNamesTmp := easy_config.Viper.GetStringSlice("zap.log-file")
+	fileNamesTmp := easy_config.Config.Zap.LogFile
 	if len(fileNamesTmp) <= 0 {
 		fileNamesTmp = getDefaultLog()
 	}
@@ -45,7 +45,7 @@ func initCustomZap() _customZap {
 
 		loggerT := zap.New(zapcore.NewTee(cores...))
 		customZap.ZapLogger[fileName] = loggerT
-		customZap.level = easy_config.Viper.GetString("zap.level")
+		customZap.level = easy_config.Config.Zap.Level
 	}
 
 	return customZap
@@ -55,7 +55,7 @@ func initCustomZap() _customZap {
 func zapLogWith(fileName string) *zap.Logger {
 	customZap = _customZap{
 		fileName: fileName,
-		level:    easy_config.Viper.GetString("zap.level"),
+		level:    easy_config.Config.Zap.Level,
 	}
 	cores := customZap.GetZapCores()
 	loggerT := zap.New(zapcore.NewTee(cores...))
@@ -65,7 +65,7 @@ func zapLogWith(fileName string) *zap.Logger {
 // GetEncoder 获取 zapcore.Encoder
 // Author [SliverHorn](https://github.com/SliverHorn)
 func (z *_customZap) GetEncoder() zapcore.Encoder {
-	if easy_config.Viper.GetString("zap.format") == "json" {
+	if easy_config.Config.Zap.Format == "json" {
 		return zapcore.NewJSONEncoder(z.GetEncoderConfig())
 	}
 	return zapcore.NewConsoleEncoder(z.GetEncoderConfig())
@@ -75,17 +75,17 @@ func (z *_customZap) GetEncoder() zapcore.Encoder {
 // Author [SliverHorn](https://github.com/SliverHorn)
 func (z *_customZap) GetEncoderConfig() zapcore.EncoderConfig {
 	return zapcore.EncoderConfig{
-		MessageKey:     "message",                                         // 日志内容对应的key名，此参数必须不为空，否则日志主体不处理
-		LevelKey:       "level",                                           // 日志级别对应的key名
-		TimeKey:        "time",                                            // 时间对应的key名
-		NameKey:        "logger",                                          // logger名对应的key名
-		CallerKey:      "caller",                                          // 调用者对应的key名
-		StacktraceKey:  easy_config.Viper.GetString("zap.stacktrace-key"), // 栈追踪的key名
-		LineEnding:     zapcore.DefaultLineEnding,                         // 行末输出格式
-		EncodeLevel:    z.ZapEncodeLevel(),                                // 日志编码级别
-		EncodeTime:     z.CustomTimeEncoder,                               // 日志时间解析
-		EncodeDuration: zapcore.SecondsDurationEncoder,                    // 日志日期解析
-		EncodeCaller:   zapcore.FullCallerEncoder,                         // 日志调用路径
+		MessageKey:     "message",                            // 日志内容对应的key名，此参数必须不为空，否则日志主体不处理
+		LevelKey:       "level",                              // 日志级别对应的key名
+		TimeKey:        "time",                               // 时间对应的key名
+		NameKey:        "logger",                             // logger名对应的key名
+		CallerKey:      "caller",                             // 调用者对应的key名
+		StacktraceKey:  easy_config.Config.Zap.StacktraceKey, // 栈追踪的key名
+		LineEnding:     zapcore.DefaultLineEnding,            // 行末输出格式
+		EncodeLevel:    z.ZapEncodeLevel(),                   // 日志编码级别
+		EncodeTime:     z.CustomTimeEncoder,                  // 日志时间解析
+		EncodeDuration: zapcore.SecondsDurationEncoder,       // 日志日期解析
+		EncodeCaller:   zapcore.FullCallerEncoder,            // 日志调用路径
 	}
 }
 
@@ -98,7 +98,7 @@ func (z *_customZap) GetEncoderCore(l zapcore.Level, level zap.LevelEnablerFunc)
 
 // ZapEncodeLevel 根据 EncodeLevel 返回 zapcore.LevelEncoder
 func (z *_customZap) ZapEncodeLevel() zapcore.LevelEncoder {
-	level := easy_config.Viper.GetString("zap.encode-level")
+	level := easy_config.Config.Zap.EncodeLevel
 	switch {
 	case level == "LowercaseLevelEncoder": // 小写编码器(默认)
 		return zapcore.LowercaseLevelEncoder
@@ -119,10 +119,10 @@ func (z *_customZap) GetWriteSyncer(level string) zapcore.WriteSyncer {
 		Filename:   z.GetPath(level),
 		MaxSize:    10, // megabytes
 		MaxBackups: 100,
-		MaxAge:     easy_config.Viper.GetInt("zap.max-age"), // days
-		Compress:   false,                                   //Compress确定是否应该使用gzip压缩已旋转的日志文件。默认值是不执行压缩。
+		MaxAge:     easy_config.Config.Zap.MaxAge, // days
+		Compress:   false,                         //Compress确定是否应该使用gzip压缩已旋转的日志文件。默认值是不执行压缩。
 	}
-	if easy_config.Viper.GetBool("zap.log-in-console") {
+	if easy_config.Config.Zap.LogInConsole {
 		return zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(fileWriter))
 	}
 	return zapcore.AddSync(fileWriter)
@@ -131,7 +131,7 @@ func (z *_customZap) GetWriteSyncer(level string) zapcore.WriteSyncer {
 // GetPath 获取路径
 func (z *_customZap) GetPath(level string) string {
 	var pathArr = []string{
-		easy_config.Viper.GetString("zap.path"),
+		easy_config.Config.Zap.Path,
 		time.Now().Format("2006-01-02"),
 	}
 	if len(z.fileName) > 0 {
@@ -146,7 +146,7 @@ func (z *_customZap) GetPath(level string) string {
 // Author [SliverHorn](https://github.com/SliverHorn)
 func (z *_customZap) CustomTimeEncoder(t time.Time, encoder zapcore.PrimitiveArrayEncoder) {
 	var options = []string{
-		easy_config.Viper.GetString("zap.prefix"),
+		easy_config.Config.Zap.Prefix,
 		t.Format("2006-01-02 15:04:05.000"),
 	}
 	encoder.AppendString(strings.Join(options, " "))

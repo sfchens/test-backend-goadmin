@@ -2,7 +2,7 @@ package sys_service
 
 import (
 	"csf/app/admin/model/sys_model"
-	"csf/app/admin/request/sys_request"
+	"csf/app/admin/request/sys_req"
 	"csf/common/mysql/model"
 	"csf/library/easy_db"
 	"csf/utils"
@@ -23,7 +23,7 @@ func NewSysDeptService(ctx *gin.Context) *sSysDeptService {
 	}
 }
 
-func (s *sSysDeptService) AddOrEdit(input sys_request.DeptAddOrEditReq) (err error) {
+func (s *sSysDeptService) AddOrEdit(input sys_req.DeptAddOrEditReq) (err error) {
 
 	var (
 		sysDeptModel model.SysDept
@@ -46,7 +46,7 @@ func (s *sSysDeptService) AddOrEdit(input sys_request.DeptAddOrEditReq) (err err
 	return
 }
 
-func (s *sSysDeptService) DealAddOrEdit(input sys_request.DeptAddOrEditReq) (sysDept model.SysDept, err error) {
+func (s *sSysDeptService) DealAddOrEdit(input sys_req.DeptAddOrEditReq) (sysDept model.SysDept, err error) {
 	var (
 		id       = input.Id
 		parentId = input.ParentId
@@ -94,7 +94,7 @@ func (s *sSysDeptService) DealAddOrEdit(input sys_request.DeptAddOrEditReq) (sys
 	return
 }
 
-func (s *sSysDeptService) Edit(input sys_request.DeptAddOrEditReq) (err error) {
+func (s *sSysDeptService) Edit(input sys_req.DeptAddOrEditReq) (err error) {
 	var (
 		id           = input.Id
 		sysDeptModel model.SysDept
@@ -115,7 +115,7 @@ func (s *sSysDeptService) Edit(input sys_request.DeptAddOrEditReq) (err error) {
 	return
 }
 
-func (s *sSysDeptService) Delete(input sys_request.DeptDeleteReq) (err error) {
+func (s *sSysDeptService) Delete(input sys_req.DeptDeleteReq) (err error) {
 	var (
 		id           = input.Id
 		sysDeptModel model.SysDept
@@ -173,7 +173,7 @@ func (s *sSysDeptService) DeleteDeal(tran *gorm.DB, ids []string) (err error) {
 	return
 }
 
-func (s *sSysDeptService) GetQuery(input sys_request.DeptTreeListReq) *gorm.DB {
+func (s *sSysDeptService) GetQuery(input sys_req.DeptTreeListReq) *gorm.DB {
 	var (
 		name     = input.Name
 		status   = input.Status
@@ -195,7 +195,7 @@ func (s *sSysDeptService) GetQuery(input sys_request.DeptTreeListReq) *gorm.DB {
 	return model
 }
 
-func (s *sSysDeptService) TreeList(input sys_request.DeptTreeListReq) (out sys_request.DeptTreeListRes, err error) {
+func (s *sSysDeptService) TreeList(input sys_req.DeptTreeListReq) (out sys_req.DeptTreeListRes, err error) {
 
 	var (
 		page     = input.Page
@@ -232,7 +232,7 @@ func (s *sSysDeptService) TreeListItem(list []sys_model.DeptTreeListItem) (out [
 	return
 }
 
-func (s *sSysDeptService) GetOne(input sys_request.DeptGetOneReq) (out sys_request.DeptGetOneRes, err error) {
+func (s *sSysDeptService) GetOne(input sys_req.DeptGetOneReq) (out sys_req.DeptGetOneRes, err error) {
 	var (
 		id           = input.Id
 		sysDeptModel model.SysDept
@@ -247,7 +247,7 @@ func (s *sSysDeptService) GetOne(input sys_request.DeptGetOneReq) (out sys_reque
 	return
 }
 
-func (s *sSysDeptService) DeleteMulti(input sys_request.DeptDeleteMultiReq) (err error) {
+func (s *sSysDeptService) DeleteMulti(input sys_req.DeptDeleteMultiReq) (err error) {
 
 	var (
 		ids = input.Ids
@@ -255,7 +255,7 @@ func (s *sSysDeptService) DeleteMulti(input sys_request.DeptDeleteMultiReq) (err
 		errNew []string
 	)
 	for _, id := range ids {
-		newInput := sys_request.DeptDeleteReq{
+		newInput := sys_req.DeptDeleteReq{
 			Id: id,
 		}
 		err = s.Delete(newInput)

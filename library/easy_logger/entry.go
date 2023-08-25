@@ -15,7 +15,8 @@ import (
 var Logger logger
 
 type logger struct {
-	CustomZap _customZap
+	CustomZap  _customZap
+	CurrentZap *zap.Logger
 }
 
 func InitLogger() {
@@ -38,9 +39,10 @@ func ZapLog(fileNames ...string) (loggerT *zap.Logger) {
 		loggerT = log[LogFileAppKey]
 	}
 	// 显示抛出异常行数
-	if easy_config.Viper.GetBool("zap.show-line") {
+	if easy_config.Config.Zap.ShowLine {
 		loggerT = loggerT.WithOptions(zap.AddCaller())
 	}
+	Logger.CurrentZap = loggerT
 	return loggerT
 }
 
@@ -106,4 +108,29 @@ func GetLogTemplate(ctx *gin.Context, msg interface{}) string {
 		tmp = fmt.Sprintf("%v %v response: '%v'", tmp, utils.GetCurl(ctx), utils.ToJson(logDataObj.ResponseData))
 	}
 	return tmp
+}
+
+func (s *logger) Info(ctx *gin.Context, msg interface{}) {
+	tmpMsg := GetLogTemplate(ctx, msg)
+	s.CurrentZap.Info(tmpMsg)
+}
+func (s *logger) Warn(ctx *gin.Context, msg interface{}) {
+	tmpMsg := GetLogTemplate(ctx, msg)
+	s.CurrentZap.Warn(tmpMsg)
+}
+func (s *logger) Error(ctx *gin.Context, msg interface{}) {
+	tmpMsg := GetLogTemplate(ctx, msg)
+	s.CurrentZap.Error(tmpMsg)
+}
+func (s *logger) Panic(ctx *gin.Context, msg interface{}) {
+	tmpMsg := GetLogTemplate(ctx, msg)
+	s.CurrentZap.Panic(tmpMsg)
+}
+func (s *logger) Fatal(ctx *gin.Context, msg interface{}) {
+	tmpMsg := GetLogTemplate(ctx, msg)
+	s.CurrentZap.Fatal(tmpMsg)
+}
+func (s *logger) Debug(ctx *gin.Context, msg interface{}) {
+	tmpMsg := GetLogTemplate(ctx, msg)
+	s.CurrentZap.Debug(tmpMsg)
 }

@@ -29,7 +29,7 @@ type SysMenuListItem struct {
 	Operator   string            `json:"operator"`   // 操作人
 	CreatedAt  time.Time         `json:"created_at"` // 创建时间
 	UpdatedAt  time.Time         `json:"updated_at"` // 最后更新时间
-	DeletedAt  *time.Time        `json:"deleted_at"` // 删除时间
+	DeletedAt  time.Time         `json:"deleted_at"` // 删除时间
 	Children   []SysMenuListItem `json:"children" gorm:"-"`
 	SysApis    []model.SysApi    `json:"sys_apis" gorm:"-"`
 }

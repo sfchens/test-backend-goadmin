@@ -2,7 +2,7 @@ package sys_service
 
 import (
 	"csf/app/admin/model/sys_model"
-	"csf/app/admin/request/sys_request"
+	"csf/app/admin/request/sys_req"
 	"csf/common/mysql/model"
 	"csf/library/easy_db"
 	"csf/utils"
@@ -22,7 +22,7 @@ func NewSysConfigService(ctx *gin.Context) *sSysConfig {
 	return &sSysConfig{ctx: ctx}
 }
 
-func (s *sSysConfig) List(input sys_request.ConfigListReq) (out sys_request.ConfigListRes, err error) {
+func (s *sSysConfig) List(input sys_req.ConfigListReq) (out sys_req.ConfigListRes, err error) {
 	var (
 		page     = input.Page
 		pageSize = input.PageSize
@@ -41,7 +41,7 @@ func (s *sSysConfig) List(input sys_request.ConfigListReq) (out sys_request.Conf
 		return
 	}
 	for _, item := range sysConfigList {
-		var itemTmp sys_request.ConfigGetOneRes
+		var itemTmp sys_req.ConfigGetOneRes
 		utils.StructToStruct(item, &itemTmp)
 		var config interface{}
 		config, _ = s.DealJson(item.Key, item.Config)
@@ -51,7 +51,7 @@ func (s *sSysConfig) List(input sys_request.ConfigListReq) (out sys_request.Conf
 	return
 }
 
-func (s *sSysConfig) GetQuery(input sys_request.ConfigListReq) *gorm.DB {
+func (s *sSysConfig) GetQuery(input sys_req.ConfigListReq) *gorm.DB {
 	var (
 		name    = input.Name
 		key     = input.Key
@@ -75,7 +75,7 @@ func (s *sSysConfig) GetQuery(input sys_request.ConfigListReq) *gorm.DB {
 	return model
 }
 
-func (s *sSysConfig) Add(input sys_request.ConfigAddReq) (err error) {
+func (s *sSysConfig) Add(input sys_req.ConfigAddReq) (err error) {
 	var (
 		name           = input.Name
 		config         = input.Config
@@ -111,7 +111,7 @@ func (s *sSysConfig) Add(input sys_request.ConfigAddReq) (err error) {
 	return
 }
 
-func (s *sSysConfig) Edit(input sys_request.ConfigEditReq) (err error) {
+func (s *sSysConfig) Edit(input sys_req.ConfigEditReq) (err error) {
 	var (
 		id     = input.Id
 		name   = input.Name
@@ -167,7 +167,7 @@ func (s *sSysConfig) CheckConfig(key string, config map[string]string) (err erro
 	return
 }
 
-func (s *sSysConfig) GetOne(input sys_request.ConfigGetOneReq) (out sys_model.SysConfig, err error) {
+func (s *sSysConfig) GetOne(input sys_req.ConfigGetOneReq) (out sys_model.SysConfig, err error) {
 	var (
 		sysConfigModel model.SysConfig
 	)
@@ -210,7 +210,7 @@ func (s *sSysConfig) DealJson(key string, dataJson string) (data interface{}, er
 	return
 }
 
-func (s *sSysConfig) Delete(input sys_request.ConfigDeleteReq) (err error) {
+func (s *sSysConfig) Delete(input sys_req.ConfigDeleteReq) (err error) {
 	var (
 		ids            = input.Ids
 		idsStr         []string
@@ -249,7 +249,7 @@ func (s *sSysConfig) Delete(input sys_request.ConfigDeleteReq) (err error) {
 	return
 }
 
-func (s *sSysConfig) SetStatus(input sys_request.ConfigSetStatusReq) (err error) {
+func (s *sSysConfig) SetStatus(input sys_req.ConfigSetStatusReq) (err error) {
 	var (
 		id     = input.Id
 		isOpen = input.IsOpen

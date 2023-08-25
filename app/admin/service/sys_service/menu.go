@@ -2,7 +2,7 @@ package sys_service
 
 import (
 	"csf/app/admin/model/sys_model"
-	"csf/app/admin/request/sys_request"
+	"csf/app/admin/request/sys_req"
 	"csf/common/mysql/model"
 	"csf/library/easy_db"
 	"csf/utils"
@@ -25,14 +25,19 @@ func NewSysMenuService(ctx *gin.Context) *sSysMenuService {
 	}
 }
 
-func (s *sSysMenuService) TreeList(input sys_request.MenuListReq) (out sys_request.MenuListRes, err error) {
+func (s *sSysMenuService) TreeList(input sys_req.MenuTreeListReq) (out sys_req.MenuTreeListRes, err error) {
 	var (
 		page     = input.Page
 		pageSize = input.PageSize
 
 		sysMenuListTmp []sys_model.MenuListItem
+
+		inputTmp sys_req.MenuListReq
 	)
-	model := s.GetQuery(input)
+
+	utils.StructToStruct(input, &inputTmp)
+	inputTmp.MenuType = "M"
+	model := s.GetQuery(inputTmp)
 
 	err = model.Count(&out.Total).Error
 	if err != nil {
@@ -43,20 +48,47 @@ func (s *sSysMenuService) TreeList(input sys_request.MenuListReq) (out sys_reque
 	if err != nil {
 		return
 	}
-
-	//out.List = s.GetMenuItem(sysMenuListTmp, true)
-	list := s.GetMenuItem(sysMenuListTmp, true)
-	out.List = s.DealTreeList(list)
+	list := s.GetMenuItem(sysMenuListTmp, false)
+	out.List = list
 	return
 }
 
-func (s *sSysMenuService) TreeListAll(input sys_request.MenuListReq) (out sys_request.MenuListRes, err error) {
+//func (s *sSysMenuService) TreeRoleList(input sys_req.MenuTreeRoleListReq) (out sys_req.MenuTreeRoleListRes, err error) {
+//	var (
+//		page     = input.Page
+//		pageSize = input.PageSize
+//
+//		sysMenuListTmp []sys_model.MenuListItem
+//		inputTmp       sys_req.MenuListReq
+//	)
+//	utils.StructToStruct(input, &inputTmp)
+//	model := s.GetQuery(inputTmp)
+//
+//	err = model.Count(&out.Total).Error
+//	if err != nil {
+//		return
+//	}
+//
+//	err = model.Offset((page - 1) * pageSize).Preload("Children").Limit(pageSize).Scan(&sysMenuListTmp).Error
+//	if err != nil {
+//		return
+//	}
+//
+//	//out.List = s.GetMenuItem(sysMenuListTmp, true)
+//	list := s.GetMenuItem(sysMenuListTmp, true)
+//
+//	out.List = s.DealTreeList(list)
+//	return
+//}
+
+func (s *sSysMenuService) List(input sys_req.MenuListReq) (out sys_req.MenuListRes, err error) {
 	var (
 		page     = input.Page
 		pageSize = input.PageSize
 
 		sysMenuListTmp []sys_model.MenuListItem
 	)
+
 	model := s.GetQuery(input)
 
 	err = model.Count(&out.Total).Error
@@ -68,8 +100,7 @@ func (s *sSysMenuService) TreeListAll(input sys_request.MenuListReq) (out sys_re
 	if err != nil {
 		return
 	}
-
-	list := s.GetMenuItem(sysMenuListTmp, false)
+	list := s.GetMenuItem(sysMenuListTmp, true)
 	out.List = s.DealTreeList(list)
 	return
 }
@@ -122,10 +153,11 @@ func (s *sSysMenuService) GetApisByMenuId(ids []int) (out sys_model.GetApisByMen
 	return
 }
 
-func (s *sSysMenuService) GetQuery(input sys_request.MenuListReq) *gorm.DB {
+func (s *sSysMenuService) GetQuery(input sys_req.MenuListReq) *gorm.DB {
 	var (
-		title  = input.Key
-		isShow = input.IsShow
+		title    = input.Key
+		visible  = input.Visible
+		menuType = input.MenuType
 
 		sysMenu model.SysMenu
 	)
@@ -136,11 +168,14 @@ func (s *sSysMenuService) GetQuery(input sys_request.MenuListReq) *gorm.DB {
 		model.Where("title like '%?%'", title)
 	}
 
-	if isShow != -1 {
-		model.Where("is_show = ?", isShow)
+	if visible != -1 {
+		model.Where("visible = ?", visible)
 	}
-	//model.Where("menu_type=?", "C")
-	model.Where("id=?", 2)
+
+	if menuType != "" {
+		model.Where("menu_type = ?", menuType)
+	}
+
 	return model
 }
 
@@ -152,7 +187,7 @@ func (s *sSysMenuService) GetMenuItem(list []sys_model.MenuListItem, isAll bool)
 		if len(v.Children) > 0 {
 			v.Children = s.GetMenuItem(v.Children, isAll)
 		}
-		if !isAll {
+		if isAll {
 			var apis []sys_model.MenuListItem
 			easy_db.GetDb().Model(model.SysMenu{}).Preload("Children").
 				Where("menu_type = ?", "F").
@@ -166,7 +201,7 @@ func (s *sSysMenuService) GetMenuItem(list []sys_model.MenuListItem, isAll bool)
 	return
 }
 
-func (s *sSysMenuService) Add(input sys_request.MenuAddOrEditReq) (err error) {
+func (s *sSysMenuService) Add(input sys_req.MenuAddOrEditReq) (err error) {
 	var (
 		sysMenuModel model.SysMenu
 		parentIds    []int
@@ -202,16 +237,17 @@ func (s *sSysMenuService) Add(input sys_request.MenuAddOrEditReq) (err error) {
 	if err != nil {
 		return
 	}
-
-	// 保存apiRule
-	err = s.saveApiRule(sysMenuModel.Id, input.ApisId)
-	if err != nil {
-		return
+	if len(input.ApisId) > 0 {
+		// 保存apiRule
+		err = s.saveApiRule(sysMenuModel.Id, input.ApisId)
+		if err != nil {
+			return
+		}
 	}
 	return
 }
 
-func (s *sSysMenuService) DealAddOrEdit(input sys_request.MenuAddOrEditReq) (sysMenuModel model.SysMenu, err error) {
+func (s *sSysMenuService) DealAddOrEdit(input sys_req.MenuAddOrEditReq) (sysMenuModel model.SysMenu, err error) {
 	var (
 		id         = input.Id
 		parentId   = input.ParentId
@@ -225,6 +261,7 @@ func (s *sSysMenuService) DealAddOrEdit(input sys_request.MenuAddOrEditReq) (sys
 		isFrame    = input.IsFrame
 		visible    = input.Visible
 		apisId     = input.ApisId
+		component  = input.Component
 	)
 
 	if id > 0 {
@@ -259,6 +296,7 @@ func (s *sSysMenuService) DealAddOrEdit(input sys_request.MenuAddOrEditReq) (sys
 		sysMenuModel.IsFrame = isFrame
 		sysMenuModel.Visible = visible
 		sysMenuModel.Path = path
+		sysMenuModel.Component = component
 	case "C": // 菜单
 		if menuName == "" {
 			err = errors.New("路由名称不能为空")
@@ -279,6 +317,7 @@ func (s *sSysMenuService) DealAddOrEdit(input sys_request.MenuAddOrEditReq) (sys
 		sysMenuModel.Visible = visible
 		sysMenuModel.Path = path
 		sysMenuModel.Permission = permission
+		sysMenuModel.Component = component
 		sysMenuModel.ApisId = strings.Join(apisStr, ",")
 	case "F": // 功能
 		if permission == "" {
@@ -303,7 +342,7 @@ func (s *sSysMenuService) DealAddOrEdit(input sys_request.MenuAddOrEditReq) (sys
 	return
 }
 
-func (s *sSysMenuService) Edit(input sys_request.MenuAddOrEditReq) (err error) {
+func (s *sSysMenuService) Edit(input sys_req.MenuAddOrEditReq) (err error) {
 	var (
 		sysMenuModel model.SysMenu
 	)
@@ -354,7 +393,9 @@ func (s *sSysMenuService) saveApiRule(menuId int, apis []int) (err error) {
 		noApi               []string
 		sysMenuApiRuleModel model.SysMenuApiRule
 	)
+
 	apisStr = s.IntToStringArray(apis)
+	fmt.Printf("apisStr:  %+v\n", apis)
 	err = easy_db.GetDb().Model(model.SysApi{}).Where(fmt.Sprintf("id in (%v)", strings.Join(apisStr, ","))).Scan(&sysApiList).Error
 	if err != nil {
 		return
@@ -387,6 +428,55 @@ func (s *sSysMenuService) saveApiRule(menuId int, apis []int) (err error) {
 	if len(noApi) > 0 {
 		err = errors.New(fmt.Sprintf("接口ID：%v，不能存在", strings.Join(noApi, ",")))
 		return
+	}
+
+	return
+}
+
+func (s *sSysMenuService) GetMenuByRoleId(roleIds []int) (err error) {
+	var (
+		roleMenuList   []model.SysRoleMenu
+		roleList       []model.SysRole
+		menuApiList    []model.SysMenu
+		permissionList []string
+	)
+
+	if len(roleIds) <= 0 {
+		err = errors.New("获取菜单路由权限参数异常")
+		return
+	}
+
+	roleIdStr := utils.IntToStringArray(roleIds)
+	// 角色信息
+	err = easy_db.GetDb().Model(model.SysRole{}).Where(fmt.Sprintf("id in (%v)", strings.Join(roleIdStr, ","))).Scan(&roleList).Error
+	if err != nil {
+		return
+	}
+
+	// 获取角色与Api信息
+	err = easy_db.GetDb().Model(model.SysRoleMenu{}).Where(fmt.Sprintf("role_id in (%v)", strings.Join(roleIdStr, ","))).
+		Scan(&roleMenuList).Error
+	if err != nil {
+		return
+	}
+
+	// 获取菜单信息
+	var menuIds []string
+	for _, item := range roleMenuList {
+		if item.RoleID == 1 {
+			permissionList = append(permissionList, "*:*:*")
+		}
+		menuIds = append(menuIds, fmt.Sprintf("%v", item.MenuID))
+	}
+
+	err = easy_db.GetDb().Model(model.SysMenu{}).Where(fmt.Sprintf("id in (%v)", strings.Join(menuIds, ","))).
+		Scan(&menuApiList).Error
+	if err != nil {
+		return
+	}
+	// 获取permission
+	for _, item := range menuApiList {
+		permissionList = append(permissionList, item.Permission)
 	}
 
 	return
