@@ -3,12 +3,15 @@ package sys
 import (
 	"csf/app/admin/request/sys_req"
 	"csf/app/admin/service/sys_service"
-	"csf/common/mysql/model"
+	"csf/core/mysql/model"
+	"csf/core/query/sys_query"
+	"csf/core/service"
 	"csf/library/easy_session"
 	"csf/library/global"
 	"csf/library/response"
 	"csf/utils"
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -87,13 +90,16 @@ func (c *cSysAdminApi) SetStatus(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.AdminSetStatusReq
+
+		input sys_query.AdminSetStatusInput
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSysAdminService(ctx).SetStatus(req)
+	fmt.Printf("input: %+v\n", input)
+	err = service.NewSysServiceGroup().AdminService.SetStatus(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return

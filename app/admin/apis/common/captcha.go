@@ -2,7 +2,7 @@ package common
 
 import (
 	"csf/app/admin/request/common_req"
-	"csf/app/admin/service/common_service"
+	"csf/core/service"
 	"csf/library/response"
 	"github.com/gin-gonic/gin"
 )
@@ -23,7 +23,7 @@ func NewCaptchaApi() *captchaApi {
 // @Router /api/vi/sys/common/get_captcha [get]
 func (c *captchaApi) GetCaptcha(ctx *gin.Context) {
 
-	id, b64, err := common_service.NewComCaptchaService(ctx).CreateCaptcha()
+	id, b64, err := service.NewCommonServiceGroup().CaptchaService.CreateCaptcha(ctx)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 	}

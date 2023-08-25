@@ -3,7 +3,7 @@ package sys_service
 import (
 	"csf/app/admin/model/sys_model"
 	"csf/app/admin/request/sys_req"
-	"csf/common/mysql/model"
+	"csf/core/mysql/model"
 	"csf/library/easy_db"
 	"csf/utils"
 	"errors"

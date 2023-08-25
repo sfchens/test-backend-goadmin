@@ -13,9 +13,14 @@ import (
 	"time"
 )
 
-var DingDing = dingDing{}
+var DingDing dingDing
 
 type dingDing struct {
+}
+
+func NewDingDing() dingDing {
+	DingDing = dingDing{}
+	return DingDing
 }
 
 func (s *dingDing) SendMsg(env string, data interface{}) (resp Response, err error) {

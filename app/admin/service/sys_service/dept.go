@@ -3,7 +3,7 @@ package sys_service
 import (
 	"csf/app/admin/model/sys_model"
 	"csf/app/admin/request/sys_req"
-	"csf/common/mysql/model"
+	"csf/core/mysql/model"
 	"csf/library/easy_db"
 	"csf/utils"
 	"errors"
@@ -191,7 +191,6 @@ func (s *sSysDeptService) GetQuery(input sys_req.DeptTreeListReq) *gorm.DB {
 	if parentId >= 0 {
 		model.Where("parent_id = ?", parentId)
 	}
-	fmt.Printf("input: %+v\n", input)
 	return model
 }
 

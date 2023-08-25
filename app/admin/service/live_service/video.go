@@ -2,7 +2,7 @@ package live_service
 
 import (
 	"csf/app/admin/request/live_req"
-	"csf/common/mysql/model"
+	"csf/core/mysql/model"
 	"csf/library/easy_db"
 	"csf/utils"
 	"github.com/gin-gonic/gin"

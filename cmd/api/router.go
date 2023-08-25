@@ -2,7 +2,7 @@ package api
 
 import (
 	"csf/app/admin/service/sys_service"
-	"csf/common/middleware"
+	"csf/core/middleware"
 	"csf/library/easy_config"
 	"csf/library/easy_logger"
 	"csf/library/global"

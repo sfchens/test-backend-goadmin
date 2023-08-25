@@ -56,7 +56,6 @@ func setUp() {
 	// 初始化日志
 	easy_logger.InitLogger()
 	fmt.Println("日志 初始化成功")
-
 }
 
 func run() (err error) {

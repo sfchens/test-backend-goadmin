@@ -12,35 +12,37 @@ import (
 	"strconv"
 )
 
-func BindParams(ctx *gin.Context, data interface{}) (err error) {
-	val := reflect.ValueOf(data)
-	if val.Kind() != reflect.Ptr {
-		err = errors.New("绑定参数传值类型异常")
-		return
-	}
-	switch ctx.Request.Method {
-	case "POST":
-		contentType := ctx.Request.Header.Get("Content-Type")
-		if regexp.MustCompile("application/json").MatchString(contentType) {
-			err = ctx.ShouldBindJSON(data)
+func BindParams(ctx *gin.Context, datas ...interface{}) (err error) {
+	for _, data := range datas {
+		val := reflect.ValueOf(data)
+		if val.Kind() != reflect.Ptr {
+			err = errors.New("绑定参数传值类型异常")
+			return
+		}
+		switch ctx.Request.Method {
+		case "POST":
+			contentType := ctx.Request.Header.Get("Content-Type")
+			if regexp.MustCompile("application/json").MatchString(contentType) {
+				err = ctx.ShouldBindJSON(data)
+			} else {
+				err = ctx.ShouldBind(data)
+			}
+		default:
+			err = ctx.ShouldBindQuery(data)
+		}
+		if isSliceOrArray(data) {
+			//err = CheckArr(data)
 		} else {
-			err = ctx.ShouldBind(data)
-		}
-	default:
-		err = ctx.ShouldBindQuery(data)
-	}
-	if isSliceOrArray(data) {
-		//err = CheckArr(data)
-	} else {
-		// 设置默认值
-		err = SetDefault(data)
-		if err != nil {
-			return
-		}
-		// 校验参数是否合法
-		err = easy_validator.EasyValidator().Validate(data)
-		if err != nil {
-			return
+			// 设置默认值
+			err = SetDefault(data)
+			if err != nil {
+				return
+			}
+			// 校验参数是否合法
+			err = easy_validator.EasyValidator().Validate(data)
+			if err != nil {
+				return
+			}
 		}
 	}
 	return

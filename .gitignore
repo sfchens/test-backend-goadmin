@@ -11,4 +11,4 @@ logs/
 .air.toml
 air.exe
 /tmp
-configs/config.yaml
+/configs/config.yaml

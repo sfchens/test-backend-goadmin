@@ -1,7 +1,7 @@
 package sys_model
 
 import (
-	"csf/common/mysql/model"
+	"csf/core/mysql/model"
 	"time"
 )
 

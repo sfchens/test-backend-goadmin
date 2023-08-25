@@ -1,6 +1,6 @@
-package user_service
+package user_query
 
-type LoginInfo struct {
+type UserAdd struct {
 	Id       int    `json:"id" form:"id" description:"ID"`
 	Username string `json:"username" form:"username" description:"账号"`
 	Realname string `json:"realname" form:"realname" description:"姓名"`
