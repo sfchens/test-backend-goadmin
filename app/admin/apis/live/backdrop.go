@@ -2,7 +2,8 @@ package live
 
 import (
 	"csf/app/admin/request/live_req"
-	"csf/app/admin/service/live_service"
+	"csf/core/query/live_query"
+	"csf/core/service"
 	"csf/library/response"
 	"csf/utils"
 	"github.com/gin-gonic/gin"
@@ -26,15 +27,16 @@ func (c *cBackdropApi) Add(ctx *gin.Context) {
 	var (
 		err error
 		req live_req.BackdropAddOrEditReq
+
+		input live_query.BackdropAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	err = live_service.NewBackdropService(ctx).AddOrEdit(req)
+	err = service.NewLiveServiceGroup().BackdropService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -55,15 +57,16 @@ func (c *cBackdropApi) Edit(ctx *gin.Context) {
 	var (
 		err error
 		req live_req.BackdropAddOrEditReq
+
+		input live_query.BackdropAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	err = live_service.NewBackdropService(ctx).AddOrEdit(req)
+	err = service.NewLiveServiceGroup().BackdropService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -82,18 +85,18 @@ func (c *cBackdropApi) Edit(ctx *gin.Context) {
 // @Router /api/v1/live/backdrop/list [get]
 func (c *cBackdropApi) List(ctx *gin.Context) {
 	var (
-		err error
-		req live_req.BackdropListReq
-		res live_req.BackdropListRes
+		err   error
+		req   live_req.BackdropListReq
+		res   live_query.BackdropListOut
+		input live_query.BackdropListInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	res, err = live_service.NewBackdropService(ctx).List(req)
+	res, err = service.NewLiveServiceGroup().BackdropService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return

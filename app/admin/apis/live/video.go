@@ -2,7 +2,8 @@ package live
 
 import (
 	"csf/app/admin/request/live_req"
-	"csf/app/admin/service/live_service"
+	"csf/core/query/live_query"
+	"csf/core/service"
 	"csf/library/response"
 	"csf/utils"
 	"github.com/gin-gonic/gin"
@@ -26,14 +27,15 @@ func (c *cVideoApi) Add(ctx *gin.Context) {
 	var (
 		err error
 		req live_req.VideoAddOrEditReq
+
+		input live_query.VideoAddOrEditInput
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	err = live_service.NewVideoService(ctx).AddOrEdit(req)
+	err = service.NewLiveServiceGroup().VideoService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -54,14 +56,15 @@ func (c *cVideoApi) Edit(ctx *gin.Context) {
 	var (
 		err error
 		req live_req.VideoAddOrEditReq
+
+		input live_query.VideoAddOrEditInput
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	err = live_service.NewVideoService(ctx).AddOrEdit(req)
+	err = service.NewLiveServiceGroup().VideoService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -82,15 +85,18 @@ func (c *cVideoApi) List(ctx *gin.Context) {
 	var (
 		err error
 		req live_req.VideoListReq
-		res live_req.VideoListRes
+
+		input live_query.VideoListInput
+		res   live_query.VideoListOut
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
-	res, err = live_service.NewVideoService(ctx).List(req)
+	res, err = service.NewLiveServiceGroup().VideoService.List(ctx, input)
+
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return

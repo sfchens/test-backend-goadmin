@@ -2,7 +2,8 @@ package user
 
 import (
 	"csf/app/admin/request/user_req"
-	"csf/app/admin/service/user_service"
+	"csf/core/query/user_query"
+	"csf/core/service"
 	"csf/library/response"
 	"csf/utils"
 	"github.com/gin-gonic/gin"
@@ -20,15 +21,17 @@ func (c *cUserApi) Add(ctx *gin.Context) {
 		err error
 
 		req user_req.UserAddOrEditReq
+
+		input user_query.UserAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
-	err = user_service.NewUserService(ctx).Add(req)
+	err = service.NewUserServiceGroup().UserService.Add(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return

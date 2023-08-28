@@ -172,3 +172,8 @@ func (s *sUploadService) UploadVideo(ctx *gin.Context, input common_query.Upload
 	}
 	return
 }
+
+func (s *sUploadService) EditPicture(ctx *gin.Context, input common_query.UploadEditPictureInput) (out common_query.UploadEditPictureOut, err error) {
+
+	return
+}

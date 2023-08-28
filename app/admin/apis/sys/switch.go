@@ -2,7 +2,8 @@ package sys
 
 import (
 	"csf/app/admin/request/sys_req"
-	"csf/app/admin/service/sys_service"
+	"csf/core/query/config_query"
+	"csf/core/service"
 	"csf/library/response"
 	"csf/utils"
 	"github.com/gin-gonic/gin"
@@ -27,13 +28,19 @@ func (c *cSwitchApi) Add(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.SwitchAddOrEditReq
+
+		input config_query.SwitchAddOrEditInput
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSwitchService(ctx).AddOrEdit(req)
+	err = service.NewConfigServiceGroup().SwitchService.AddOrEdit(ctx, input)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
 	response.Success(ctx)
 }
 
@@ -50,13 +57,19 @@ func (c *cSwitchApi) Edit(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.SwitchAddOrEditReq
+
+		input config_query.SwitchAddOrEditInput
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSwitchService(ctx).AddOrEdit(req)
+	err = service.NewConfigServiceGroup().SwitchService.AddOrEdit(ctx, input)
+	if err != nil {
+		response.FailWithMessage(ctx, err.Error())
+		return
+	}
 	response.Success(ctx)
 }
 
@@ -71,16 +84,17 @@ func (c *cSwitchApi) Edit(ctx *gin.Context) {
 // @Router /api/v1/sys/switch/list [get]
 func (c *cSwitchApi) List(ctx *gin.Context) {
 	var (
-		err error
-		req sys_req.SwitchListReq
-		res sys_req.SwitchListRes
+		err   error
+		req   sys_req.SwitchListReq
+		input config_query.SwitchListInput
+		res   config_query.SwitchListOut
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	res, err = sys_service.NewSwitchService(ctx).List(req)
+	res, err = service.NewConfigServiceGroup().SwitchService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -100,14 +114,15 @@ func (c *cSwitchApi) List(ctx *gin.Context) {
 func (c *cSwitchApi) Delete(ctx *gin.Context) {
 	var (
 		err error
-		req sys_req.SwitchDeleteReq
+
+		input config_query.SwitchDeleteInput
 	)
-	err = ctx.ShouldBindJSON(&req)
+	err = ctx.ShouldBindJSON(&input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSwitchService(ctx).Delete(req.Ids)
+	err = service.NewConfigServiceGroup().SwitchService.Delete(input.Ids)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -126,15 +141,16 @@ func (c *cSwitchApi) Delete(ctx *gin.Context) {
 // @Router /api/v1/sys/switch/set_status [post]
 func (c *cSwitchApi) SetStatus(ctx *gin.Context) {
 	var (
-		err error
-		req sys_req.SwitchSetStatusReq
+		err   error
+		req   sys_req.SwitchSetStatusReq
+		input config_query.SwitchSetStatusInput
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSwitchService(ctx).SetStatus(req)
+	err = service.NewConfigServiceGroup().SwitchService.SetStatus(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return

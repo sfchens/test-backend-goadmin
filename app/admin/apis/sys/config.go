@@ -1,9 +1,9 @@
 package sys
 
 import (
-	"csf/app/admin/model/sys_model"
 	"csf/app/admin/request/sys_req"
-	"csf/app/admin/service/sys_service"
+	"csf/core/query/config_query"
+	"csf/core/service"
 	"csf/library/response"
 	"csf/utils"
 	"github.com/gin-gonic/gin"
@@ -29,15 +29,17 @@ func (c cSysConfigApi) List(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.ConfigListReq
-		res sys_req.ConfigListRes
+
+		input config_query.ConfigListInput
+		res   config_query.ConfigListOut
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
-	res, err = sys_service.NewSysConfigService(ctx).List(req)
+	res, err = service.NewConfigServiceGroup().ConfigService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -58,13 +60,15 @@ func (c cSysConfigApi) Add(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.ConfigAddReq
+
+		input config_query.ConfigAddInput
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSysConfigService(ctx).Add(req)
+	err = service.NewConfigServiceGroup().ConfigService.Add(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -83,18 +87,19 @@ func (c cSysConfigApi) Add(ctx *gin.Context) {
 // @Router /api/v1/sys/config/get_one [get]
 func (c cSysConfigApi) GetOne(ctx *gin.Context) {
 	var (
-		err error
-		req sys_req.ConfigGetOneReq
-		res sys_req.ConfigGetOneRes
+		err   error
+		req   sys_req.ConfigGetOneReq
+		input config_query.ConfigGetOneInput
+		res   config_query.ConfigGetOneOut
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
-	var out sys_model.SysConfig
-	out, err = sys_service.NewSysConfigService(ctx).GetOne(req)
+	var out config_query.SysConfig
+	out, err = service.NewConfigServiceGroup().ConfigService.GetOne(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -117,14 +122,16 @@ func (c cSysConfigApi) Edit(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.ConfigEditReq
+
+		input config_query.ConfigEditInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSysConfigService(ctx).Edit(req)
+	err = service.NewConfigServiceGroup().ConfigService.Edit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -146,6 +153,8 @@ func (c cSysConfigApi) Delete(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.ConfigDeleteReq
+
+		input config_query.ConfigDeleteInput
 	)
 
 	err = ctx.ShouldBindJSON(&req)
@@ -153,7 +162,7 @@ func (c cSysConfigApi) Delete(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSysConfigService(ctx).Delete(req)
+	err = service.NewConfigServiceGroup().ConfigService.Delete(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -175,6 +184,8 @@ func (c cSysConfigApi) SetStatus(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.ConfigSetStatusReq
+
+		input config_query.ConfigSetStatusInput
 	)
 
 	err = ctx.ShouldBindJSON(&req)
@@ -182,7 +193,7 @@ func (c cSysConfigApi) SetStatus(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSysConfigService(ctx).SetStatus(req)
+	err = service.NewConfigServiceGroup().ConfigService.SetStatus(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return

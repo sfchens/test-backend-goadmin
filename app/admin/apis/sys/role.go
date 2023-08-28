@@ -2,7 +2,8 @@ package sys
 
 import (
 	"csf/app/admin/request/sys_req"
-	"csf/app/admin/service/sys_service"
+	"csf/core/query/sys_query"
+	"csf/core/service"
 	"csf/library/response"
 	"csf/utils"
 	"github.com/gin-gonic/gin"
@@ -27,16 +28,16 @@ func (c *cSysRoleApi) Add(ctx *gin.Context) {
 	var (
 		err error
 
-		req sys_req.RoleAddOrEditReq
+		req   sys_req.RoleAddOrEditReq
+		input sys_query.RoleAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	err = sys_service.NewSysRoleService(ctx).AddOrEdit(req)
+	err = service.NewSysServiceGroup().RoleService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -58,17 +59,17 @@ func (c *cSysRoleApi) List(ctx *gin.Context) {
 	var (
 		err error
 
-		req sys_req.RoleListReq
-		res sys_req.RoleListRes
+		req   sys_req.RoleListReq
+		input sys_query.RoleListInput
+		res   sys_query.RoleListOut
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	res, err = sys_service.NewSysRoleService(ctx).List(req)
+	res, err = service.NewSysServiceGroup().RoleService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -89,15 +90,15 @@ func (c *cSysRoleApi) DeleteBatch(ctx *gin.Context) {
 	var (
 		err error
 
-		req sys_req.RoleDeleteBatchReq
+		req   sys_req.RoleDeleteBatchReq
+		input sys_query.RoleDeleteBatchInput
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	err = sys_service.NewSysRoleService(ctx).DeleteBatch(req)
+	err = service.NewSysServiceGroup().RoleService.DeleteBatch(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -119,15 +120,15 @@ func (c *cSysRoleApi) Delete(ctx *gin.Context) {
 	var (
 		err error
 
-		req sys_req.RoleDeleteReq
+		req   sys_req.RoleDeleteReq
+		input sys_query.RoleDeleteInput
 	)
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	err = sys_service.NewSysRoleService(ctx).Delete(req)
+	err = service.NewSysServiceGroup().RoleService.Delete(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return

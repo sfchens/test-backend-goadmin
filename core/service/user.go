@@ -2,6 +2,7 @@ package service
 
 import (
 	"csf/core/query/user_query"
+	"github.com/gin-gonic/gin"
 )
 
 var localUserService userServiceGroup
@@ -16,7 +17,7 @@ type userServiceGroup struct {
 
 type (
 	iUser interface {
-		Add(input user_query.UserAdd)
+		Add(ctx *gin.Context, input user_query.UserAddOrEditInput) (err error)
 	}
 )
 

@@ -31,6 +31,7 @@ type (
 		GetAdminInfo(ctx *gin.Context) (adminModel model.SysAdmin, err error)
 		ResetPwd(ctx *gin.Context, input sys_query.AdminResetPwdInput) (err error)
 		SetRole(ctx *gin.Context, input sys_query.AdminSetRoleInput) (err error)
+		DeleteBatch(ctx *gin.Context, input sys_query.AdminDeleteBatchInput) (err error)
 	}
 
 	iApi interface {

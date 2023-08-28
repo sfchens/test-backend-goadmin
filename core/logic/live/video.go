@@ -54,7 +54,7 @@ func (s *sVideoService) AddOrEdit(ctx *gin.Context, input live_query.VideoAddOrE
 	return
 }
 
-func (s *sVideoService) List(input live_query.VideoListInput) (out live_query.VideoListOut, err error) {
+func (s *sVideoService) List(ctx *gin.Context, input live_query.VideoListInput) (out live_query.VideoListOut, err error) {
 	var (
 		page     = input.Page
 		pageSize = input.PageSize

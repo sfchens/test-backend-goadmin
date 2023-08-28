@@ -2,7 +2,6 @@ package sys
 
 import (
 	"csf/app/admin/request/sys_req"
-	"csf/app/admin/service/sys_service"
 	"csf/core/mysql/model"
 	"csf/core/query/sys_query"
 	"csf/core/service"
@@ -11,7 +10,6 @@ import (
 	"csf/library/response"
 	"csf/utils"
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -35,14 +33,16 @@ func (c *cSysAdminApi) List(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.AdminListReq
-		res sys_req.AdminListRes
+
+		input sys_query.AdminListInput
+		res   sys_query.AdminListOut
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	res, err = sys_service.NewSysAdminService(ctx).List(req)
+	res, err = service.NewSysServiceGroup().AdminService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -63,13 +63,15 @@ func (c *cSysAdminApi) Add(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.AdminAddOrEditReq
+
+		input sys_query.AdminAddOrEditInput
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSysAdminService(ctx).Add(req)
+	err = service.NewSysServiceGroup().AdminService.Add(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -98,7 +100,6 @@ func (c *cSysAdminApi) SetStatus(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	fmt.Printf("input: %+v\n", input)
 	err = service.NewSysServiceGroup().AdminService.SetStatus(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -122,7 +123,7 @@ func (c *cSysAdminApi) GetAdminInfo(ctx *gin.Context) {
 		adminInfo  sys_req.AdminInfoRes
 		adminModel model.SysAdmin
 	)
-	adminModel, err = sys_service.NewSysAdminService(ctx).GetAdminInfo()
+	adminModel, err = service.NewSysServiceGroup().AdminService.GetAdminInfo(ctx)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -159,15 +160,16 @@ func (c *cSysAdminApi) ResetPwd(ctx *gin.Context) {
 	var (
 		err error
 
-		req sys_req.AdminResetPwdReq
+		req   sys_req.AdminResetPwdReq
+		input sys_query.AdminResetPwdInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSysAdminService(ctx).ResetPwd(req)
+	err = service.NewSysServiceGroup().AdminService.ResetPwd(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -188,15 +190,16 @@ func (c *cSysAdminApi) DeleteBatch(ctx *gin.Context) {
 	var (
 		err error
 
-		req sys_req.AdminDeleteBatchReq
+		req   sys_req.AdminDeleteBatchReq
+		input sys_query.AdminDeleteBatchInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSysAdminService(ctx).DeleteBatch(req)
+	err = service.NewSysServiceGroup().AdminService.DeleteBatch(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -208,16 +211,17 @@ func (c *cSysAdminApi) SetRole(ctx *gin.Context) {
 	var (
 		err error
 
-		req sys_req.AdminSetRoleReq
+		req   sys_req.AdminSetRoleReq
+		input sys_query.AdminSetRoleInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
-	err = sys_service.NewSysAdminService(ctx).SetRole(req)
+	err = service.NewSysServiceGroup().AdminService.SetRole(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return

@@ -1,10 +1,10 @@
 package sys
 
 import (
-	"csf/app/admin/model/sys_model"
 	"csf/app/admin/request/sys_req"
-	"csf/app/admin/service/common_service"
-	"csf/app/admin/service/sys_service"
+	"csf/core/query/config_query"
+	"csf/core/query/login_query"
+	"csf/core/service"
 	"csf/library/easy_config"
 	"csf/library/response"
 	"csf/utils"
@@ -30,27 +30,29 @@ func (c cSysLoginApi) Login(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.LoginReq
+
+		input login_query.AdminLoginInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	if easy_config.Viper.Get("app.mode") != "dev" && !common_service.NewComCaptchaService(ctx).Verify(req.CaptChaId, req.Captcha, true) {
+	if easy_config.Config.App.Mode != "dev" && !service.NewCommonServiceGroup().CaptchaService.Verify(ctx, req.CaptChaId, req.Captcha, true) {
 		response.FailWithMessage(ctx, "验证码验证失败")
 		return
 	}
 
 	var (
-		inputLogin = sys_model.LoginInput{
+		inputLogin = login_query.AdminLoginInput{
 			Username: req.Username,
 			Password: req.Password,
 		}
 
-		loginRes sys_req.LoginRes
+		loginRes login_query.AdminLoginOut
 	)
-	loginRes, err = sys_service.NewSysLoginService(ctx).Login(inputLogin)
+	loginRes, err = service.NewLoginServiceGroup().AdminLoginService.Login(ctx, inputLogin)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -72,15 +74,17 @@ func (c cSysLoginApi) LoginInfo(ctx *gin.Context) {
 		err error
 
 		req sys_req.ConfigGetOneReq
-		res sys_req.ConfigGetOneRes
+
+		input config_query.ConfigGetOneInput
+		res   config_query.ConfigGetOneOut
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	var out sys_model.SysConfig
-	out, err = sys_service.NewSysConfigService(ctx).GetOne(req)
+	var out config_query.SysConfig
+	out, err = service.NewConfigServiceGroup().ConfigService.GetOne(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 	}
@@ -101,7 +105,7 @@ func (c cSysLoginApi) Logout(ctx *gin.Context) {
 	var (
 		err error
 	)
-	err = sys_service.NewSysLoginService(ctx).Logout()
+	err = service.NewLoginServiceGroup().AdminLoginService.Logout(ctx)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 	}

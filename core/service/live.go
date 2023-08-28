@@ -24,7 +24,7 @@ type (
 
 	iVideo interface {
 		AddOrEdit(ctx *gin.Context, input live_query.VideoAddOrEditInput) (err error)
-		List(input live_query.VideoListInput) (out live_query.VideoListOut, err error)
+		List(ctx *gin.Context, input live_query.VideoListInput) (out live_query.VideoListOut, err error)
 	}
 )
 

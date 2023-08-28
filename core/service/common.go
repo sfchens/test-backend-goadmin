@@ -26,6 +26,8 @@ type (
 		AddPicture(ctx *gin.Context, input common_query.UploadPictureInput) (out common_query.UploadPictureOut, err error)
 		UploadPicture(ctx *gin.Context, input common_query.UploadPictureInput) (out common_query.UploadPictureOut, err error)
 		UploadPictureMulti(ctx *gin.Context, input common_query.UploadPictureMultiInput) (out []common_query.UploadPictureMultiOut)
+		UploadVideo(ctx *gin.Context, input common_query.UploadVideoInput) (out common_query.UploadVideoOut, err error)
+		EditPicture(ctx *gin.Context, input common_query.UploadEditPictureInput) (out common_query.UploadEditPictureOut, err error)
 	}
 )
 

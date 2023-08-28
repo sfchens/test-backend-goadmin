@@ -149,7 +149,7 @@ func (s *sSwitchService) Delete(ids []int) (err error) {
 	return
 }
 
-func (s *sSwitchService) SetStatus(input config_query.SwitchSetStatusInput) (err error) {
+func (s *sSwitchService) SetStatus(ctx *gin.Context, input config_query.SwitchSetStatusInput) (err error) {
 	var (
 		id     = input.Id
 		status = input.Status

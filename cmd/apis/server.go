@@ -1,11 +1,10 @@
 package apis
 
 import (
-	"csf/app/admin/service/sys_service"
+	"csf/core/service"
 	"csf/library/easy_config"
 	"csf/library/easy_db"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 )
 
@@ -55,8 +54,7 @@ func run() (err error) {
 
 func initRegisterRouter() {
 	if easy_config.Config.App.IsApiMysql {
-		ctx := &gin.Context{}
-		err := sys_service.NewSysApiService(ctx).Refresh()
+		err := service.NewSysServiceGroup().ApiService.Refresh()
 		if err != nil {
 			println("初始化Api数据失败")
 		}

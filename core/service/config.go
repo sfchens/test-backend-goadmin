@@ -31,7 +31,7 @@ type (
 		AddOrEdit(ctx *gin.Context, input config_query.SwitchAddOrEditInput) (err error)
 		List(ctx *gin.Context, input config_query.SwitchListInput) (out config_query.SwitchListOut, err error)
 		Delete(ids []int) (err error)
-		SetStatus(input config_query.SwitchSetStatusInput) (err error)
+		SetStatus(ctx *gin.Context, input config_query.SwitchSetStatusInput) (err error)
 	}
 )
 

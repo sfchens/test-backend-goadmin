@@ -2,10 +2,10 @@ package sys
 
 import (
 	"csf/app/admin/request/sys_req"
-	"csf/app/admin/service/sys_service"
+	"csf/core/query/sys_query"
+	"csf/core/service"
 	"csf/library/response"
 	"csf/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,8 +26,9 @@ func NewSysDeptApi() *cSysDeptApi {
 // @Router /api/v1/sys/dept/add [post]
 func (c *cSysDeptApi) Add(ctx *gin.Context) {
 	var (
-		err error
-		req sys_req.DeptAddOrEditReq
+		err   error
+		req   sys_req.DeptAddOrEditReq
+		input sys_query.DeptAddOrEditInput
 	)
 
 	err = utils.BindParams(ctx, &req)
@@ -35,8 +36,7 @@ func (c *cSysDeptApi) Add(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	fmt.Printf("req:  %+v\n", req)
-	err = sys_service.NewSysDeptService(ctx).AddOrEdit(req)
+	err = service.NewSysServiceGroup().DeptService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
 		return
@@ -55,17 +55,18 @@ func (c *cSysDeptApi) Add(ctx *gin.Context) {
 // @Router /api/v1/sys/dept/edit [post]
 func (c *cSysDeptApi) Edit(ctx *gin.Context) {
 	var (
-		err error
-		req sys_req.DeptAddOrEditReq
+		err   error
+		req   sys_req.DeptAddOrEditReq
+		input sys_query.DeptAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
-	err = sys_service.NewSysDeptService(ctx).Edit(req)
+	err = service.NewSysServiceGroup().DeptService.Edit(ctx, input)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
 		return
@@ -86,14 +87,15 @@ func (c *cSysDeptApi) Delete(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.DeptDeleteReq
+
+		input sys_query.DeptDeleteInput
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	err = sys_service.NewSysDeptService(ctx).Delete(req)
+	err = service.NewSysServiceGroup().DeptService.Delete(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -114,21 +116,21 @@ func (c *cSysDeptApi) TreeList(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.DeptTreeListReq
-		res sys_req.DeptTreeListRes
+
+		input sys_query.DeptTreeListInput
+		res   sys_query.DeptTreeListOut
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	res, err = sys_service.NewSysDeptService(ctx).TreeList(req)
+	res, err = service.NewSysServiceGroup().DeptService.TreeList(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
 	response.SuccessWithData(ctx, res)
 }
 
@@ -145,16 +147,17 @@ func (c *cSysDeptApi) GetOne(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.DeptGetOneReq
-		res sys_req.DeptGetOneRes
+
+		input sys_query.DeptGetOneInput
+		res   sys_query.DeptGetOneOut
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	res, err = sys_service.NewSysDeptService(ctx).GetOne(req)
+	res, err = service.NewSysServiceGroup().DeptService.GetOne(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -175,15 +178,16 @@ func (c *cSysDeptApi) DeleteMulti(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.DeptDeleteMultiReq
+
+		input sys_query.DeptDeleteMultiInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	err = sys_service.NewSysDeptService(ctx).DeleteMulti(req)
+	err = service.NewSysServiceGroup().DeptService.DeleteMulti(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return

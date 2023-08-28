@@ -2,7 +2,8 @@ package sys
 
 import (
 	"csf/app/admin/request/sys_req"
-	"csf/app/admin/service/sys_service"
+	"csf/core/query/sys_query"
+	"csf/core/service"
 	"csf/library/response"
 	"csf/utils"
 	"github.com/gin-gonic/gin"
@@ -28,15 +29,16 @@ func (c *cSysMenuApi) TreeList(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.MenuTreeListReq
-		res sys_req.MenuTreeListRes
+
+		input sys_query.MenuTreeListInput
+		res   sys_query.MenuTreeListOut
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	res, err = sys_service.NewSysMenuService(ctx).TreeList(req)
+	res, err = service.NewSysServiceGroup().MenuService.TreeList(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -58,14 +60,16 @@ func (c *cSysMenuApi) List(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.MenuListReq
-		res sys_req.MenuListRes
+
+		input sys_query.MenuListInput
+		res   sys_query.MenuListOut
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	res, err = sys_service.NewSysMenuService(ctx).List(req)
+	res, err = service.NewSysServiceGroup().MenuService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -114,16 +118,17 @@ func (c *cSysMenuApi) List(ctx *gin.Context) {
 // @Router /api/v1/sys/menu/add [post]
 func (c *cSysMenuApi) Add(ctx *gin.Context) {
 	var (
-		err error
-		req sys_req.MenuAddOrEditReq
+		err   error
+		req   sys_req.MenuAddOrEditReq
+		input sys_query.MenuAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSysMenuService(ctx).Add(req)
+	err = service.NewSysServiceGroup().MenuService.Add(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -142,17 +147,17 @@ func (c *cSysMenuApi) Add(ctx *gin.Context) {
 // @Router /api/v1/sys/menu/edit [post]
 func (c *cSysMenuApi) Edit(ctx *gin.Context) {
 	var (
-		err error
-		req sys_req.MenuAddOrEditReq
+		err   error
+		req   sys_req.MenuAddOrEditReq
+		input sys_query.MenuAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	err = sys_service.NewSysMenuService(ctx).Edit(req)
+	err = service.NewSysServiceGroup().MenuService.Edit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return

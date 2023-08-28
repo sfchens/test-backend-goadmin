@@ -2,10 +2,10 @@ package sys
 
 import (
 	"csf/app/admin/request/sys_req"
-	"csf/app/admin/service/sys_service"
+	"csf/core/query/sys_query"
+	"csf/core/service"
 	"csf/library/response"
 	"csf/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,16 +28,18 @@ func (c *cSysApi) List(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.ApiListReq
-		res sys_req.ApiListRes
+		res sys_query.ApiListOut
+
+		input sys_query.ApiListInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
-	res, err = sys_service.NewSysApiService(ctx).List(req)
+	res, err = service.NewSysServiceGroup().ApiService.List(ctx, input)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
 		return
@@ -57,8 +59,7 @@ func (c *cSysApi) Refresh(ctx *gin.Context) {
 	var (
 		err error
 	)
-
-	err = sys_service.NewSysApiService(ctx).Refresh()
+	err = service.NewSysServiceGroup().ApiService.Refresh()
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
 		return
@@ -78,17 +79,17 @@ func (c *cSysApi) Edit(ctx *gin.Context) {
 	var (
 		err error
 
-		req sys_req.ApiEditReq
+		req   sys_req.ApiEditReq
+		input sys_query.ApiEditInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
-		fmt.Printf("err.Error():  %+v\n", err.Error())
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
-	err = sys_service.NewSysApiService(ctx).AddOrEdit(req)
+	err = service.NewSysServiceGroup().ApiService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
 		return
@@ -109,7 +110,9 @@ func (c *cSysApi) GetTag(ctx *gin.Context) {
 		err error
 
 		req sys_req.ApiGetTagReq
-		res sys_req.ApiGetTagRes
+		res sys_query.ApiGetTagOut
+
+		input sys_query.ApiGetTagInput
 	)
 
 	err = utils.BindParams(ctx, &req)
@@ -117,7 +120,7 @@ func (c *cSysApi) GetTag(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	res, err = sys_service.NewSysApiService(ctx).GetTag(req)
+	res, err = service.NewSysServiceGroup().ApiService.GetTag(ctx, input)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
 		return
@@ -135,17 +138,16 @@ func (c *cSysApi) GetTag(ctx *gin.Context) {
 // @Router /api/v1/sys/api/delete_multi [get]
 func (c *cSysApi) DeleteMulti(ctx *gin.Context) {
 	var (
-		err error
-
-		req sys_req.ApiDeleteMultiReq
+		err   error
+		input sys_query.ApiDeleteMultiInput
 	)
 
-	err = ctx.ShouldBindJSON(&req)
+	err = ctx.ShouldBindJSON(&input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	err = sys_service.NewSysApiService(ctx).DeleteMulti(req)
+	err = service.NewSysServiceGroup().ApiService.DeleteMulti(ctx, input)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
 		return

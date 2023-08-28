@@ -2,7 +2,8 @@ package common
 
 import (
 	"csf/app/admin/request/common_req"
-	"csf/app/admin/service/common_service"
+	"csf/core/query/common_query"
+	"csf/core/service"
 	"csf/library/response"
 	"csf/utils"
 	"github.com/gin-gonic/gin"
@@ -24,17 +25,17 @@ func NewUploadApi() *cUploadApi {
 // @Router /api/v1/upload/add_picture [post]
 func (c *cUploadApi) AddPicture(ctx *gin.Context) {
 	var (
-		err error
-		req common_req.UploadAddPictureReq
-		res common_req.UploadAddPictureRes
+		err   error
+		req   common_req.UploadAddPictureReq
+		res   common_query.UploadPictureOut
+		input common_query.UploadPictureInput
 	)
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	res, err = common_service.NewUploadService(ctx).AddPicture(req)
+	res, err = service.NewCommonServiceGroup().UploadService.AddPicture(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -52,16 +53,17 @@ func (c *cUploadApi) AddPicture(ctx *gin.Context) {
 // @Router /api/v1/upload/edit_picture [post]
 func (c *cUploadApi) EditPicture(ctx *gin.Context) {
 	var (
-		err error
-		req common_req.UploadEditPictureReq
-		res common_req.UploadEditPictureRes
+		err   error
+		req   common_req.UploadEditPictureReq
+		res   common_query.UploadEditPictureOut
+		input common_query.UploadEditPictureInput
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	res, err = common_service.NewUploadService(ctx).EditPicture(req)
+	res, err = service.NewCommonServiceGroup().UploadService.EditPicture(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -81,17 +83,17 @@ func (c *cUploadApi) UploadPicture(ctx *gin.Context) {
 	var (
 		err error
 
-		req common_req.UploadPictureReq
-		res common_req.UploadPictureRes
+		req   common_req.UploadPictureReq
+		input common_query.UploadPictureInput
+		res   common_query.UploadPictureOut
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	res, err = common_service.NewUploadService(ctx).UploadPicture(req)
+	res, err = service.NewCommonServiceGroup().UploadService.UploadPicture(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -113,16 +115,17 @@ func (c *cUploadApi) UploadPictureMulti(ctx *gin.Context) {
 		err error
 
 		req common_req.UploadPictureMultiReq
-		res []common_req.UploadPictureMultiRes
+		res []common_query.UploadPictureMultiOut
+
+		input common_query.UploadPictureMultiInput
 	)
 
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
-	res = common_service.NewUploadService(ctx).UploadPictureMulti(req)
+	res = service.NewCommonServiceGroup().UploadService.UploadPictureMulti(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -143,14 +146,16 @@ func (c *cUploadApi) UploadVideo(ctx *gin.Context) {
 	var (
 		err error
 		req common_req.UploadVideoReq
-		res common_req.UploadVideoRes
+		res common_query.UploadVideoOut
+
+		input common_query.UploadVideoInput
 	)
-	err = utils.BindParams(ctx, &req)
+	err = utils.BindParams(ctx, &req, &input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	res, err = common_service.NewUploadService(ctx).UploadVideo(req)
+	res, err = service.NewCommonServiceGroup().UploadService.UploadVideo(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
