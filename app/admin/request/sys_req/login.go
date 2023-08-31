@@ -1,6 +1,8 @@
 package sys_req
 
-import "csf/app/admin/model/sys_model"
+import (
+	"csf/core/query/login_query"
+)
 
 type LoginReq struct {
 	Username  string `json:"username" form:"username" validate:"required" msg:"required:账号不能为空"`
@@ -10,8 +12,8 @@ type LoginReq struct {
 }
 
 type LoginRes struct {
-	AdminInfo AdminInfo              `json:"userinfo" description:"用户信息"`
-	TokenInfo sys_model.TokenInfoOut `json:"token_info" description:"token信息"`
+	AdminInfo AdminInfo                `json:"userinfo" description:"用户信息"`
+	TokenInfo login_query.TokenInfoOut `json:"token_info" description:"token信息"`
 }
 
 type AdminInfo struct {

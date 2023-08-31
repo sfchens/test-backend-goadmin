@@ -23,7 +23,7 @@ func NewSysApi() *cSysApi {
 // @Produce application/json
 // @Param raw body     sys.AdminSetStatusReq true "请求参数"
 // @Success 200 {object} response.Response{data=sys.ApiListRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/api/list [get]
+// @Router /admin/v1/sys/api/list [get]
 func (c *cSysApi) List(ctx *gin.Context) {
 	var (
 		err error
@@ -54,7 +54,7 @@ func (c *cSysApi) List(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/api/refresh [get]
+// @Router /admin/v1/sys/api/refresh [get]
 func (c *cSysApi) Refresh(ctx *gin.Context) {
 	var (
 		err error
@@ -74,7 +74,7 @@ func (c *cSysApi) Refresh(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/api/edit [post]
+// @Router /admin/v1/sys/api/edit [post]
 func (c *cSysApi) Edit(ctx *gin.Context) {
 	var (
 		err error
@@ -104,7 +104,7 @@ func (c *cSysApi) Edit(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/api/get_tag [get]
+// @Router /admin/v1/sys/api/get_tag [get]
 func (c *cSysApi) GetTag(ctx *gin.Context) {
 	var (
 		err error
@@ -135,7 +135,7 @@ func (c *cSysApi) GetTag(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/api/delete_multi [get]
+// @Router /admin/v1/sys/api/delete_multi [get]
 func (c *cSysApi) DeleteMulti(ctx *gin.Context) {
 	var (
 		err   error

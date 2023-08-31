@@ -56,7 +56,7 @@ func (s *sSysApiService) getQuery(ctx *gin.Context, input sys_query.ApiListInput
 		method = input.Method
 	)
 
-	model1 := easy_db.GetDb().Model(model.SysApi{})
+	model1 := easy_db.GetDb().Model(model.SysAPI{})
 
 	if tag != "" {
 		model1.Where(fmt.Sprintf("tags like '%%%v%%'", tag))
@@ -84,7 +84,7 @@ func (s *sSysApiService) Refresh() (err error) {
 	jsonData, _ := simplejson.NewFromReader(bytes.NewReader(jsonFile))
 	for _, route := range routers {
 		var (
-			sysApiModel model.SysApi
+			sysApiModel model.SysAPI
 		)
 		json := jsonData.Get("paths").Get(route.Path).Get(strings.ToLower(route.Method))
 		title, _ := json.Get("summary").String()
@@ -117,7 +117,7 @@ func (s *sSysApiService) AddOrEdit(ctx *gin.Context, input sys_query.ApiEditInpu
 		title  = input.Title
 		method = input.Method
 
-		sysApiModel model.SysApi
+		sysApiModel model.SysAPI
 	)
 
 	if id > 0 {
@@ -152,7 +152,7 @@ func (s *sSysApiService) GetTag(ctx *gin.Context, input sys_query.ApiGetTagInput
 		tag      = input.Tag
 	)
 
-	model := easy_db.GetDb().Model(model.SysApi{}).Group("tags").Select("tags")
+	model := easy_db.GetDb().Model(model.SysAPI{}).Group("tags").Select("tags")
 	if tag != "" {
 		model.Where("tags like %?%", tag)
 	}
@@ -174,8 +174,8 @@ func (s *sSysApiService) DeleteMulti(ctx *gin.Context, input sys_query.ApiDelete
 		ids = input.Ids
 
 		idsStr          []string
-		sysApiModel     model.SysApi
-		sysApiModelList []model.SysApi
+		sysApiModel     model.SysAPI
+		sysApiModelList []model.SysAPI
 	)
 	for _, v := range ids {
 		idsStr = append(idsStr, fmt.Sprintf("%v", v))

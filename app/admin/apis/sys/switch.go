@@ -23,7 +23,7 @@ func NewSwitchApi() *cSwitchApi {
 // @Produce application/json
 // @Param raw body     sys.SwitchAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/switch/add [post]
+// @Router /admin/v1/sys/switch/add [post]
 func (c *cSwitchApi) Add(ctx *gin.Context) {
 	var (
 		err error
@@ -52,7 +52,7 @@ func (c *cSwitchApi) Add(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.SwitchAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/switch/edit [post]
+// @Router /admin/v1/sys/switch/edit [post]
 func (c *cSwitchApi) Edit(ctx *gin.Context) {
 	var (
 		err error
@@ -81,7 +81,7 @@ func (c *cSwitchApi) Edit(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.SwitchAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response{data=sys.SwitchListRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/switch/list [get]
+// @Router /admin/v1/sys/switch/list [get]
 func (c *cSwitchApi) List(ctx *gin.Context) {
 	var (
 		err   error
@@ -110,7 +110,7 @@ func (c *cSwitchApi) List(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.SwitchDeleteReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/switch/delete [post]
+// @Router /admin/v1/sys/switch/delete [post]
 func (c *cSwitchApi) Delete(ctx *gin.Context) {
 	var (
 		err error
@@ -138,7 +138,7 @@ func (c *cSwitchApi) Delete(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.SwitchDeleteReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/switch/set_status [post]
+// @Router /admin/v1/sys/switch/set_status [post]
 func (c *cSwitchApi) SetStatus(ctx *gin.Context) {
 	var (
 		err   error

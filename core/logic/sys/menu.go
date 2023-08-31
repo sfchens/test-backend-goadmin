@@ -74,6 +74,7 @@ func (s *sSysMenuService) List(ctx *gin.Context, input sys_query.MenuListInput) 
 		return
 	}
 	list := s.GetMenuItem(ctx, sysMenuListTmp, true)
+
 	out.List = s.DealTreeList(ctx, list)
 	return
 }
@@ -84,25 +85,24 @@ func (s *sSysMenuService) DealTreeList(ctx *gin.Context, data []sys_query.MenuLi
 		utils.StructToStruct(item.SysMenu, &tmpV)
 		tmpV.Label = item.Title
 		// 取出apis
-		if item.ApisId != "" {
+		if item.ApisID != "" {
 			var apiIds []int
-			for _, apiId := range strings.Split(item.ApisId, ",") {
+			for _, apiId := range strings.Split(item.ApisID, ",") {
 				tmp, _ := strconv.Atoi(apiId)
 				apiIds = append(apiIds, tmp)
 			}
 			tmpV.ApisId = apiIds
-			var apiList []model.SysApi
-			easy_db.GetDb().Model(model.SysApi{}).Where(fmt.Sprintf("id in (%v)", item.ApisId)).Scan(&apiList)
+			var apiList []model.SysAPI
+			easy_db.GetDb().Model(model.SysAPI{}).Where(fmt.Sprintf("id in (%v)", item.ApisID)).Scan(&apiList)
 			tmpV.SysApis = apiList
 		} else {
-			out, _ := s.GetApisByMenuId(ctx, []int{item.Id})
+			out, _ := s.GetApisByMenuId(ctx, []int{int(item.ID)})
 			tmpV.ApisId = out.ApisId
 			tmpV.SysApis = out.ApisList
 		}
 		if len(item.Children) > 0 {
 			tmpV.Children = s.DealTreeList(ctx, item.Children)
 		}
-
 		if len(tmpV.ApisId) <= 0 {
 			tmpV.ApisId = []int{}
 		}
@@ -115,7 +115,7 @@ func (s *sSysMenuService) GetApisByMenuId(ctx *gin.Context, ids []int) (out sys_
 	idsArr := utils.IntToStringArray(ids)
 	idsStr := strings.Join(idsArr, ",")
 
-	err = easy_db.GetDb().Model(model.SysApi{}).Where(fmt.Sprintf("id in (%v)", idsStr)).Scan(&out.ApisList).Error
+	err = easy_db.GetDb().Model(model.SysAPI{}).Where(fmt.Sprintf("id in (%v)", idsStr)).Scan(&out.ApisList).Error
 	if err != nil {
 		return
 	}
@@ -148,15 +148,14 @@ func (s *sSysMenuService) getQuery(input sys_query.MenuListInput) *gorm.DB {
 	if menuType != "" {
 		model.Where("menu_type = ?", menuType)
 	}
-
+	model.Where("parent_id=?", 0)
 	return model
 }
 
 func (s *sSysMenuService) GetMenuItem(ctx *gin.Context, list []sys_query.MenuListItem, isAll bool) (res []sys_query.MenuListItem) {
 	for _, v := range list {
-		model1 := easy_db.GetDb().Model(model.SysMenu{}).Preload("Children").Where("menu_type != ?", "F").Where("parent_id = ?", v.Id)
+		model1 := easy_db.GetDb().Model(model.SysMenu{}).Preload("Children").Where("menu_type != ?", "F").Where("parent_id = ?", v.ID)
 		model1.Order("sort ASC").Scan(&v.Children)
-
 		if len(v.Children) > 0 {
 			v.Children = s.GetMenuItem(ctx, v.Children, isAll)
 		}
@@ -164,7 +163,7 @@ func (s *sSysMenuService) GetMenuItem(ctx *gin.Context, list []sys_query.MenuLis
 			var apis []sys_query.MenuListItem
 			easy_db.GetDb().Model(model.SysMenu{}).Preload("Children").
 				Where("menu_type = ?", "F").
-				Where("parent_id = ?", v.Id).Order("sort ASC").Scan(&apis)
+				Where("parent_id = ?", v.ID).Order("sort ASC").Scan(&apis)
 			if len(apis) > 0 {
 				v.Children = append(v.Children, apis...)
 			}
@@ -203,16 +202,16 @@ func (s *sSysMenuService) Add(ctx *gin.Context, input sys_query.MenuAddOrEditInp
 	}
 
 	// 保存parent_ids
-	parentIds, err = s.GetParentId(sysMenuModel.ParentId)
-	parentIds = append(parentIds, sysMenuModel.Id)
-	sysMenuModel.ParentIds = strings.Join(utils.IntToStringArray(parentIds), ",")
+	parentIds, err = s.GetParentId(int(sysMenuModel.ParentID))
+	parentIds = append(parentIds, int(sysMenuModel.ID))
+	sysMenuModel.ParentIDs = strings.Join(utils.IntToStringArray(parentIds), ",")
 	err = tx.Save(&sysMenuModel).Error
 	if err != nil {
 		return
 	}
 	if len(input.ApisId) > 0 {
 		// 保存apiRule
-		err = s.saveApiRule(sysMenuModel.Id, input.ApisId)
+		err = s.saveApiRule(int(sysMenuModel.ID), input.ApisId)
 		if err != nil {
 			return
 		}
@@ -242,8 +241,8 @@ func (s *sSysMenuService) DealAddOrEdit(ctx *gin.Context, input sys_query.MenuAd
 		if err != nil {
 			return
 		}
-		if len(sysMenuModel.ApisId) > 0 {
-			tmpApisId := strings.Split(sysMenuModel.ApisId, ",")
+		if len(sysMenuModel.ApisID) > 0 {
+			tmpApisId := strings.Split(sysMenuModel.ApisID, ",")
 			for _, val := range tmpApisId {
 				apiId, _ := strconv.Atoi(val)
 				apisId = append(apisId, apiId)
@@ -291,14 +290,14 @@ func (s *sSysMenuService) DealAddOrEdit(ctx *gin.Context, input sys_query.MenuAd
 		sysMenuModel.Path = path
 		sysMenuModel.Permission = permission
 		sysMenuModel.Component = component
-		sysMenuModel.ApisId = strings.Join(apisStr, ",")
+		sysMenuModel.ApisID = strings.Join(apisStr, ",")
 	case "F": // 功能
 		if permission == "" {
 			err = errors.New("权限标识不能为空")
 			return
 		}
 		sysMenuModel.Permission = permission
-		sysMenuModel.ApisId = strings.Join(apisStr, ",")
+		sysMenuModel.ApisID = strings.Join(apisStr, ",")
 	default:
 		err = errors.New("格式异常")
 		return
@@ -308,7 +307,7 @@ func (s *sSysMenuService) DealAddOrEdit(ctx *gin.Context, input sys_query.MenuAd
 		sysMenuModel.Icon = icon
 	}
 	sysMenuModel.MenuType = menuType
-	sysMenuModel.ParentId = parentId
+	sysMenuModel.ParentID = int64(parentId)
 	sysMenuModel.Title = title
 	sysMenuModel.Sort = sort
 	sysMenuModel.Operator = utils.GetUserName(ctx)
@@ -337,38 +336,38 @@ func (s *sSysMenuService) GetParentId(parentId int) (parentIds []int, err error)
 	if err != nil {
 		return
 	}
-	if tmp.ParentId != 0 {
+	if tmp.ParentID != 0 {
 		var tmpParentId []int
-		tmpParentId, err = s.GetParentId(tmp.ParentId)
+		tmpParentId, err = s.GetParentId(int(tmp.ParentID))
 
 		if err != nil {
 			return
 		}
 		parentIds = append(parentIds, tmpParentId...)
 	}
-	parentIds = append(parentIds, tmp.Id)
+	parentIds = append(parentIds, int(tmp.ID))
 	return
 }
 
 func (s *sSysMenuService) saveApiRule(menuId int, apis []int) (err error) {
 	var (
-		sysApiList []model.SysApi
+		sysApiList []model.SysAPI
 		apisStr    []string
 
 		noApi               []string
-		sysMenuApiRuleModel model.SysMenuApiRule
+		sysMenuApiRuleModel model.SysMenuAPIRule
 	)
 
 	apisStr = utils.IntToStringArray(apis)
 	fmt.Printf("apisStr:  %+v\n", apis)
-	err = easy_db.GetDb().Model(model.SysApi{}).Where(fmt.Sprintf("id in (%v)", strings.Join(apisStr, ","))).Scan(&sysApiList).Error
+	err = easy_db.GetDb().Model(model.SysAPI{}).Where(fmt.Sprintf("id in (%v)", strings.Join(apisStr, ","))).Scan(&sysApiList).Error
 	if err != nil {
 		return
 	}
 	for _, item := range sysApiList {
 		var flag bool
 		for _, id := range apis {
-			if item.ID == uint64(id) {
+			if item.ID == int64(id) {
 				flag = true
 				break
 			}
@@ -377,8 +376,8 @@ func (s *sSysMenuService) saveApiRule(menuId int, apis []int) (err error) {
 			noApi = append(noApi, string(item.ID))
 			continue
 		}
-		sysMenuApiRuleModel.SysApiID = item.ID
-		sysMenuApiRuleModel.SysMenuID = uint64(menuId)
+		sysMenuApiRuleModel.SysAPIID = item.ID
+		sysMenuApiRuleModel.SysMenuID = int64(menuId)
 		err = easy_db.GetDb().Clauses(clause.OnConflict{
 			UpdateAll: true,
 		}).Create(&sysMenuApiRuleModel).Error

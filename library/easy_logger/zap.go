@@ -40,7 +40,6 @@ func initCustomZap() _customZap {
 			}
 		}
 		customZap.fileName = fileName
-
 		cores := customZap.GetZapCores()
 
 		loggerT := zap.New(zapcore.NewTee(cores...))

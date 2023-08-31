@@ -2,6 +2,7 @@ package api
 
 import (
 	"csf/app/admin/router"
+	router2 "csf/app/h5/router"
 	"csf/library/easy_config"
 	"csf/library/easy_db"
 	"csf/library/easy_logger"
@@ -32,7 +33,7 @@ var (
 
 func init() {
 	StartCmd.PersistentFlags().StringVarP(&configYml, "config", "c", "config/settings.yml", "Start server with provided configuration file")
-	AppRouters = append(AppRouters, router.InitRouter)
+	AppRouters = append(AppRouters, router.InitRouter, router2.InitRouter)
 }
 
 // 配置类

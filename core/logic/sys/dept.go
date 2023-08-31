@@ -85,11 +85,11 @@ func (s *sSysDeptService) DealAddOrEdit(ctx *gin.Context, input sys_query.DeptAd
 	if email != "" {
 		sysDept.Email = email
 	}
-	sysDept.ParentId = parentId
+	sysDept.ParentID = int64(parentId)
 	sysDept.Name = name
 	sysDept.Leader = leader
 	sysDept.Sort = sort
-	sysDept.Status = status
+	sysDept.Status = int(status)
 	sysDept.Operator = utils.GetUserName(ctx)
 	return
 }
@@ -107,7 +107,7 @@ func (s *sSysDeptService) Edit(ctx *gin.Context, input sys_query.DeptAddOrEditIn
 		err = errors.New("参数异常")
 		return
 	}
-	sysDeptModel.ID = id
+	sysDeptModel.ID = int64(id)
 	err = easy_db.GetDb().Updates(sysDeptModel).Error
 	if err != nil {
 		return
@@ -191,7 +191,6 @@ func (s *sSysDeptService) getQuery(input sys_query.DeptTreeListInput) *gorm.DB {
 	if parentId >= 0 {
 		model.Where("parent_id = ?", parentId)
 	}
-	fmt.Printf("input: %+v\n", input)
 	return model
 }
 

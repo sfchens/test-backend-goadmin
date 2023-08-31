@@ -22,7 +22,7 @@ func NewUploadApi() *cUploadApi {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response{data=common.UploadAddPictureRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/upload/add_picture [post]
+// @Router /admin/v1/upload/add_picture [post]
 func (c *cUploadApi) AddPicture(ctx *gin.Context) {
 	var (
 		err   error
@@ -50,7 +50,7 @@ func (c *cUploadApi) AddPicture(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response{data=common.UploadEditPictureRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/upload/edit_picture [post]
+// @Router /admin/v1/upload/edit_picture [post]
 func (c *cUploadApi) EditPicture(ctx *gin.Context) {
 	var (
 		err   error
@@ -78,7 +78,7 @@ func (c *cUploadApi) EditPicture(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response{data=common.UploadPictureRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/upload/picture [post]
+// @Router /admin/v1/upload/picture [post]
 func (c *cUploadApi) UploadPicture(ctx *gin.Context) {
 	var (
 		err error
@@ -109,7 +109,7 @@ func (c *cUploadApi) UploadPicture(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response{data=[]common.UploadPictureMultiRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/upload/picture_multi [post]
+// @Router /admin/v1/upload/picture_multi [post]
 func (c *cUploadApi) UploadPictureMulti(ctx *gin.Context) {
 	var (
 		err error
@@ -141,7 +141,7 @@ func (c *cUploadApi) UploadPictureMulti(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response{data=common.UploadVideoRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/upload/video [post]
+// @Router /admin/v1/upload/video [post]
 func (c *cUploadApi) UploadVideo(ctx *gin.Context) {
 	var (
 		err error

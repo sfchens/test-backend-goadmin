@@ -7,6 +7,7 @@ import (
 	"csf/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strings"
 )
 
 func JWTAuthMiddleware() func(c *gin.Context) {
@@ -25,6 +26,15 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 			ctx.JSON(http.StatusOK, gin.H{
 				"code": 499,
 				"msg":  "登录已过期",
+			})
+			ctx.Abort()
+			return
+		}
+
+		if strings.ToUpper(mc.LoginType) != strings.ToUpper(utils.GetModulesName(ctx)) {
+			ctx.JSON(http.StatusOK, gin.H{
+				"code": 499,
+				"msg":  "token异常",
 			})
 			ctx.Abort()
 			return

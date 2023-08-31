@@ -72,7 +72,7 @@ func (s *sSysRoleService) AddOrEdit(ctx *gin.Context, input sys_query.RoleAddOrE
 	sysRoleModel.Key = key
 	sysRoleModel.Sort = int64(sort)
 	sysRoleModel.Remark = remark
-	sysRoleModel.MenuIds = strings.Join(utils.IntToStringArray(menuIds), ",")
+	sysRoleModel.MenuIDs = strings.Join(utils.IntToStringArray(menuIds), ",")
 	if id > 0 {
 		err = tx.Save(&sysRoleModel).Error
 	} else {
@@ -136,7 +136,7 @@ func (s *sSysRoleService) List(ctx *gin.Context, input sys_query.RoleListInput) 
 	for _, item := range sysRoleList {
 		var roleItem sys_query.RoleListItem
 		utils.StructToStruct(item, &roleItem)
-		menuIds := strings.Split(item.MenuIds, ",")
+		menuIds := strings.Split(item.MenuIDs, ",")
 		roleItem.MenuIds = utils.StringToIntArray(menuIds)
 		out.List = append(out.List, roleItem)
 	}

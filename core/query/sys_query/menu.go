@@ -6,8 +6,11 @@ import (
 )
 
 type MenuTreeListInput struct {
-	Page     int `json:"page" form:"page"  default:"1" description:"页码"`
-	PageSize int `json:"page_size" form:"page_size"  default:"20" description:"页数"`
+	Page     int    `json:"page" form:"page"  default:"1" description:"页码"`
+	PageSize int    `json:"page_size" form:"page_size"  default:"20" description:"页数"`
+	MenuType string `json:"menu_type" form:"menu_type" default:"M"  description:"菜单类型"`
+	Key      string `json:"key" form:"key"  description:"名称"`
+	Visible  int    `json:"visible" form:"visible" default:"-1" description:"是否显示"`
 }
 type MenuTreeListOut struct {
 	Total int64          `json:"total" form:"total" description:"总数"`
@@ -19,7 +22,7 @@ type MenuListItem struct {
 	Children []MenuListItem `json:"children" gorm:"-"`
 }
 type SysMenuListItem struct {
-	Id         int               `json:"id"`         // ID
+	ID         int64             `json:"id"`         // ID
 	MenuName   string            `json:"menu_name"`  // 菜单名称
 	Label      string            `json:"label"`      // 菜单名称
 	Title      string            `json:"title"`      // 标题
@@ -39,7 +42,7 @@ type SysMenuListItem struct {
 	UpdatedAt  time.Time         `json:"updated_at"` // 最后更新时间
 	DeletedAt  time.Time         `json:"deleted_at"` // 删除时间
 	Children   []SysMenuListItem `json:"children" gorm:"-"`
-	SysApis    []model.SysApi    `json:"sys_apis" gorm:"-"`
+	SysApis    []model.SysAPI    `json:"sys_apis" gorm:"-"`
 }
 
 type MenuListInput struct {
@@ -56,7 +59,7 @@ type MenuListOut struct {
 
 type GetApisByMenuIdOut struct {
 	ApisId   []int          `json:"apis_id" descriptions:"Api ID"`
-	ApisList []model.SysApi `json:"apis_list" description:"apis_list"`
+	ApisList []model.SysAPI `json:"apis_list" description:"apis_list"`
 }
 
 type MenuAddOrEditInput struct {

@@ -24,7 +24,7 @@ func NewSysConfigApi() *cSysConfigApi {
 // @Produce application/json
 // @Param raw body     sys.ConfigListReq true "请求参数"
 // @Success 200 {object} response.Response{data=sys.ConfigListRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/config/list [get]
+// @Router /admin/v1/sys/config/list [get]
 func (c cSysConfigApi) List(ctx *gin.Context) {
 	var (
 		err error
@@ -55,7 +55,7 @@ func (c cSysConfigApi) List(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.ConfigAddReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/config/add [post]
+// @Router /admin/v1/sys/config/add [post]
 func (c cSysConfigApi) Add(ctx *gin.Context) {
 	var (
 		err error
@@ -84,7 +84,7 @@ func (c cSysConfigApi) Add(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.ConfigGetOneReq true "请求参数"
 // @Success 200 {object} response.Response{data=sys.ConfigGetOneRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/config/get_one [get]
+// @Router /admin/v1/sys/config/get_one [get]
 func (c cSysConfigApi) GetOne(ctx *gin.Context) {
 	var (
 		err   error
@@ -116,7 +116,7 @@ func (c cSysConfigApi) GetOne(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.ConfigEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/config/edit [post]
+// @Router /admin/v1/sys/config/edit [post]
 func (c cSysConfigApi) Edit(ctx *gin.Context) {
 
 	var (
@@ -147,7 +147,7 @@ func (c cSysConfigApi) Edit(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.ConfigDeleteReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/config/delete [post]
+// @Router /admin/v1/sys/config/delete [post]
 func (c cSysConfigApi) Delete(ctx *gin.Context) {
 
 	var (
@@ -178,7 +178,7 @@ func (c cSysConfigApi) Delete(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.ConfigEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/config/delete [post]
+// @Router /admin/v1/sys/config/delete [post]
 func (c cSysConfigApi) SetStatus(ctx *gin.Context) {
 
 	var (

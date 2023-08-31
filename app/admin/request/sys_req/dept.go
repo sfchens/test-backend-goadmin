@@ -1,8 +1,8 @@
 package sys_req
 
 import (
-	"csf/app/admin/model/sys_model"
 	"csf/core/mysql/model"
+	"csf/core/query/sys_query"
 )
 
 type DeptAddOrEditReq struct {
@@ -43,7 +43,7 @@ type DeptTreeListReq struct {
 
 type DeptTreeListRes struct {
 	Total int64                        `json:"total" form:"total" description:"总数"`
-	List  []sys_model.DeptTreeListItem `json:"list" form:"list" description:"列表"`
+	List  []sys_query.DeptTreeListItem `json:"list" form:"list" description:"列表"`
 }
 
 type DeptGetOneReq struct {

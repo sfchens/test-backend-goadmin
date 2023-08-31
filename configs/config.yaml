@@ -19,7 +19,7 @@ zap:
   prefix: '[test-goadmin]'
   format: console # console json
   path: logs
-  logFile: ['app', 'login']
+  logFile: ['app', 'login', 'h5']
   encodeLevel: LowercaseColorLevelEncoder
   stacktraceKey: stacktrace
   maxAge: 24
@@ -36,8 +36,6 @@ jwt:
 
 database:
   mysql:
-    # 数据库类型 mysql, sqlite3, postgres, sqlserver
-    # sqlserver: sqlserver://用户名:密码@地址?database=数据库名
     driver: mysql
     username: root
     password: root
@@ -49,6 +47,21 @@ database:
     maxIdConnect: 100
     maxOpenConnect: 100
     charset: "utf8mb4"
+
+email:
+  # 是否不启用
+  disabled: true
+  # 默认发件人
+  from: 1147422686@qq.com
+  # 服务器地址
+  host: smtp.qq.com
+  # 服务器端口 465/587
+  port: 587
+  # 服务器账户
+  username: test
+  # 服务器密码
+  password: D7Pt2goBw7PcxANJUe5IGV
+
 dingDing:
   env: dev,test
   url: https://oapi.dingtalk.com/robot/send

@@ -28,7 +28,7 @@ func NewSysAdminApi() *cSysAdminApi {
 // @Produce application/json
 // @Param raw body     sys.AdminListReq true "请求参数"
 // @Success 200 {object} response.Response{data=sys.AdminListRes}  "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/admin/list [get]
+// @Router /admin/v1/sys/admin/list [get]
 func (c *cSysAdminApi) List(ctx *gin.Context) {
 	var (
 		err error
@@ -58,7 +58,7 @@ func (c *cSysAdminApi) List(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.AdminAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/admin/add [post]
+// @Router /admin/v1/sys/admin/add [post]
 func (c *cSysAdminApi) Add(ctx *gin.Context) {
 	var (
 		err error
@@ -87,7 +87,7 @@ func (c *cSysAdminApi) Add(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.AdminSetStatusReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/admin/set_status [post]
+// @Router /admin/v1/sys/admin/set_status [post]
 func (c *cSysAdminApi) SetStatus(ctx *gin.Context) {
 	var (
 		err error
@@ -115,7 +115,7 @@ func (c *cSysAdminApi) SetStatus(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response{data=sys.AdminListItem} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/admin/get_admin_info [get]
+// @Router /admin/v1/sys/admin/get_admin_info [get]
 func (c *cSysAdminApi) GetAdminInfo(ctx *gin.Context) {
 	var (
 		err error
@@ -130,12 +130,12 @@ func (c *cSysAdminApi) GetAdminInfo(ctx *gin.Context) {
 	}
 
 	utils.StructToStruct(adminModel, &adminInfo)
-	adminInfo.Roles = global.Permissions
+	adminInfo.Roles = []string{"admin"}
 	adminInfo.Permissions = global.Permissions
 
 	// 保存session
 	sessionStore := easy_session.NewCustomSession(ctx)
-	err = sessionStore.Set(global.LoginTypeKey, global.LoginTypeAdmin)
+	err = sessionStore.Set(global.LoginTypeKey, global.ModuleAdmin)
 	if err != nil {
 		return
 	}
@@ -155,7 +155,7 @@ func (c *cSysAdminApi) GetAdminInfo(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys_request.AdminResetPwd true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/admin/reset_pwd [post]
+// @Router /admin/v1/sys/admin/reset_pwd [post]
 func (c *cSysAdminApi) ResetPwd(ctx *gin.Context) {
 	var (
 		err error
@@ -185,7 +185,7 @@ func (c *cSysAdminApi) ResetPwd(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.AdminDeleteBatchReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/admin/delete_batch [post]
+// @Router /admin/v1/sys/admin/delete_batch [post]
 func (c *cSysAdminApi) DeleteBatch(ctx *gin.Context) {
 	var (
 		err error

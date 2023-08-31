@@ -17,7 +17,11 @@ type userServiceGroup struct {
 
 type (
 	iUser interface {
-		Add(ctx *gin.Context, input user_query.UserAddOrEditInput) (err error)
+		AddOrEdit(ctx *gin.Context, input user_query.UserAddOrEditInput) (err error)
+		ResetPwd(ctx *gin.Context, input user_query.UserResetPwdInput) (err error)
+		SetStatus(ctx *gin.Context, input user_query.UserSetStatusInput) (err error)
+		List(ctx *gin.Context, input user_query.UserListInput) (total int64, out []user_query.UserListItem, err error)
+		GetInfo(ctx *gin.Context, id int) (out user_query.UserListItem, err error)
 	}
 )
 

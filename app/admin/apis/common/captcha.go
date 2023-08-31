@@ -20,7 +20,7 @@ func NewCaptchaApi() *captchaApi {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response{data=common.GetOneRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/vi/sys/common/get_captcha [get]
+// @Router /admin/vi/sys/common/get_captcha [get]
 func (c *captchaApi) GetCaptcha(ctx *gin.Context) {
 
 	id, b64, err := service.NewCommonServiceGroup().CaptchaService.CreateCaptcha(ctx)

@@ -39,7 +39,7 @@ func BindParams(ctx *gin.Context, datas ...interface{}) (err error) {
 				return
 			}
 			// 校验参数是否合法
-			err = easy_validator.EasyValidator().Validate(data)
+			err = easy_validator.NewValidator().Validate(data)
 			if err != nil {
 				return
 			}
@@ -122,7 +122,6 @@ func GetCurl(ctx *gin.Context) (reqUrl string) {
 		easy_config.Config.App.Port,
 		path,
 	)
-	fmt.Printf("url: %+v\n", easy_config.Config.App.BaseUrl)
 
 	switch method {
 	case "GET":

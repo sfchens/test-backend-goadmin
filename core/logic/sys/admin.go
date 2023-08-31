@@ -143,7 +143,7 @@ func (s *sSysAdmin) DealAddOrEdit(ctx *gin.Context, input sys_query.AdminAddOrEd
 	sysAdminModel.Status = status
 	sysAdminModel.Username = username
 	sysAdminModel.Realname = realname
-	sysAdminModel.RoleIds = strings.Join(roleIdsNew, ",")
+	sysAdminModel.RoleIDS = strings.Join(roleIdsNew, ",")
 	return
 }
 
@@ -194,7 +194,7 @@ func (s *sSysAdmin) List(ctx *gin.Context, input sys_query.AdminListInput) (out 
 		var tmp sys_query.AdminListItem
 		utils.StructToStruct(item, &tmp)
 		tmp.DeptInfo = deptInfo
-		tmp.RoleIds = utils.StringToIntArray(strings.Split(item.RoleIds, ","))
+		tmp.RoleIds = utils.StringToIntArray(strings.Split(item.RoleIDS, ","))
 
 		// 权限
 		var roleList []model.SysRole
@@ -326,7 +326,7 @@ func (s *sSysAdmin) SetRole(ctx *gin.Context, input sys_query.AdminSetRoleInput)
 		return
 	}
 
-	sysAdminModel.RoleIds = strings.Join(utils.IntToStringArray(roleIds), ",")
+	sysAdminModel.RoleIDS = strings.Join(utils.IntToStringArray(roleIds), ",")
 	err = easy_db.GetDb().Save(&sysAdminModel).Error
 	if err != nil {
 		return

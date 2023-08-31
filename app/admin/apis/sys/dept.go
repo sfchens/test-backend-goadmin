@@ -23,7 +23,7 @@ func NewSysDeptApi() *cSysDeptApi {
 // @Produce application/json
 // @Param raw body     sys.DeptAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response  "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/dept/add [post]
+// @Router /admin/v1/sys/dept/add [post]
 func (c *cSysDeptApi) Add(ctx *gin.Context) {
 	var (
 		err   error
@@ -52,7 +52,7 @@ func (c *cSysDeptApi) Add(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.DeptAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response  "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/dept/edit [post]
+// @Router /admin/v1/sys/dept/edit [post]
 func (c *cSysDeptApi) Edit(ctx *gin.Context) {
 	var (
 		err   error
@@ -82,7 +82,7 @@ func (c *cSysDeptApi) Edit(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.DeptDeleteReq true "请求参数"
 // @Success 200 {object} response.Response  "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/dept/delete [post]
+// @Router /admin/v1/sys/dept/delete [post]
 func (c *cSysDeptApi) Delete(ctx *gin.Context) {
 	var (
 		err error
@@ -111,7 +111,7 @@ func (c *cSysDeptApi) Delete(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.DeptTreeListReq true "请求参数"
 // @Success 200 {object} response.Response{data=sys.DeptTreeListRes}  "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/dept/list [get]
+// @Router /admin/v1/sys/dept/list [get]
 func (c *cSysDeptApi) TreeList(ctx *gin.Context) {
 	var (
 		err error
@@ -142,7 +142,7 @@ func (c *cSysDeptApi) TreeList(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.DeptTreeListReq true "请求参数"
 // @Success 200 {object} response.Response{data=sys.DeptTreeListRes}  "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/dept/get_one [get]
+// @Router /admin/v1/sys/dept/get_one [get]
 func (c *cSysDeptApi) GetOne(ctx *gin.Context) {
 	var (
 		err error
@@ -173,7 +173,7 @@ func (c *cSysDeptApi) GetOne(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.DeptTreeListReq true "请求参数"
 // @Success 200 {object} response.Response{data=sys.DeptTreeListRes}  "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/dept/delete_multi [post]
+// @Router /admin/v1/sys/dept/delete_multi [post]
 func (c *cSysDeptApi) DeleteMulti(ctx *gin.Context) {
 	var (
 		err error

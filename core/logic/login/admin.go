@@ -69,7 +69,7 @@ func (s *sAdminLogin) CreateToken(ctx *gin.Context, input model.SysAdmin) (token
 		Realname:  input.Realname,
 		Email:     input.Email,
 		Password:  input.Password,
-		LoginType: global.LoginTypeAdmin,
+		LoginType: global.ModuleAdmin,
 	}
 	myBaseClaims := easy_auth.NewJWT().CreateClaims(baseClaims)
 	token, err = easy_auth.NewJWT().CreateToken(myBaseClaims)

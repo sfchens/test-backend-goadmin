@@ -23,7 +23,7 @@ func NewSysRoleApi() *cSysRoleApi {
 // @Produce application/json
 // @Param raw body     sys.RoleAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/role/add [post]
+// @Router /admin/v1/sys/role/add [post]
 func (c *cSysRoleApi) Add(ctx *gin.Context) {
 	var (
 		err error
@@ -54,7 +54,7 @@ func (c *cSysRoleApi) Add(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.RoleListReq true "请求参数"
 // @Success 200 {object} response.Response{data=sys.RoleListRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/role/list [get]
+// @Router /admin/v1/sys/role/list [get]
 func (c *cSysRoleApi) List(ctx *gin.Context) {
 	var (
 		err error
@@ -85,7 +85,7 @@ func (c *cSysRoleApi) List(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.RoleDeleteBatchReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/role/delete_batch [post]
+// @Router /admin/v1/sys/role/delete_batch [post]
 func (c *cSysRoleApi) DeleteBatch(ctx *gin.Context) {
 	var (
 		err error
@@ -115,7 +115,7 @@ func (c *cSysRoleApi) DeleteBatch(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.RoleDeleteReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/role/delete[post]
+// @Router /admin/v1/sys/role/delete[post]
 func (c *cSysRoleApi) Delete(ctx *gin.Context) {
 	var (
 		err error

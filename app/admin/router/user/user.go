@@ -12,5 +12,6 @@ func registerUserRouter(r *gin.RouterGroup) {
 	{
 		r1.POST("/add", api.Add)
 		r1.GET("/list", api.List)
+		r1.GET("/get_info", api.GetInfo)
 	}
 }

@@ -3,6 +3,7 @@ package router
 import (
 	"csf/app/admin/router/common"
 	"csf/app/admin/router/live"
+	"csf/app/admin/router/product"
 	"csf/app/admin/router/sys"
 	"csf/app/admin/router/user"
 	"csf/library/global"
@@ -24,9 +25,11 @@ func InitRouter() {
 	live.InitRouter()
 	// 用户管理路由
 	user.InitRouter()
+	// 商品路由
+	product.InitRouter()
 
-	v1 := r.Group("/api/v1")
-	for _, f := range global.RouterList {
+	v1 := r.Group("/admin/v1")
+	for _, f := range global.RouterList[global.ModuleAdmin] {
 		f(v1)
 	}
 }

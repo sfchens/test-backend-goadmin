@@ -24,9 +24,13 @@ func OperateLogger(config *easy_logger.LoggerConfig) gin.HandlerFunc {
 
 		// 处理请求
 		ctx.Next()
+		logObjKey := config.LogObjKey
+		if logObjKey == "" {
+			logObjKey = utils.GetModulesName(ctx)
+		}
 
 		if config.LogZap {
-			easy_logger.OperateLogger(ctx, config.LogObjKey)
+			easy_logger.OperateLogger(ctx, logObjKey)
 		}
 		if config.LogZinc {
 

@@ -22,7 +22,7 @@ func NewVideoApi() *cVideoApi {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/live/video/add [post]
+// @Router /admin/v1/live/video/add [post]
 func (c *cVideoApi) Add(ctx *gin.Context) {
 	var (
 		err error
@@ -51,7 +51,7 @@ func (c *cVideoApi) Add(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/live/video/edit [post]
+// @Router /admin/v1/live/video/edit [post]
 func (c *cVideoApi) Edit(ctx *gin.Context) {
 	var (
 		err error
@@ -80,7 +80,7 @@ func (c *cVideoApi) Edit(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response{data=live.VideoListRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/live/video/list [get]
+// @Router /admin/v1/live/video/list [get]
 func (c *cVideoApi) List(ctx *gin.Context) {
 	var (
 		err error

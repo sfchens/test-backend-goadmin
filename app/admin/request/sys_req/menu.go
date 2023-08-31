@@ -1,6 +1,8 @@
 package sys_req
 
-import "csf/app/admin/model/sys_model"
+import (
+	"csf/core/query/sys_query"
+)
 
 // MenuListReq 列表数据
 type MenuListReq struct {
@@ -13,20 +15,21 @@ type MenuListReq struct {
 
 type MenuListRes struct {
 	Total int64                       `json:"total" form:"total" description:"总数"`
-	List  []sys_model.SysMenuListItem `json:"list" form:"list" description:"列表"`
+	List  []sys_query.SysMenuListItem `json:"list" form:"list" description:"列表"`
 }
 
 // MenuTreeListReq 菜单数据
 type MenuTreeListReq struct {
-	Page     int `json:"page" form:"page"  default:"1" description:"页码"`
-	PageSize int `json:"page_size" form:"page_size"  default:"20" description:"页数"`
-	//Key      string `json:"key" form:"key"  description:"名称"`
-	//IsShow   int    `json:"is_show" form:"is_show" default:"-1" description:"是否显示"`
+	Page     int    `json:"page" form:"page"  default:"1" description:"页码"`
+	PageSize int    `json:"page_size" form:"page_size"  default:"20" description:"页数"`
+	MenuType string `json:"menu_type" form:"menu_type" default:"M"  description:"菜单类型"`
+	Key      string `json:"key" form:"key"  description:"名称"`
+	Visible  int    `json:"visible" form:"visible" default:"1" description:"是否显示"`
 }
 
 type MenuTreeListRes struct {
 	Total int64                    `json:"total" form:"total" description:"总数"`
-	List  []sys_model.MenuListItem `json:"list" form:"list" description:"列表"`
+	List  []sys_query.MenuListItem `json:"list" form:"list" description:"列表"`
 }
 
 // MenuTreeRoleListReq 选择数据
@@ -39,7 +42,7 @@ type MenuTreeRoleListReq struct {
 
 type MenuTreeRoleListRes struct {
 	Total int64                       `json:"total" form:"total" description:"总数"`
-	List  []sys_model.SysMenuListItem `json:"list" form:"list" description:"列表"`
+	List  []sys_query.SysMenuListItem `json:"list" form:"list" description:"列表"`
 }
 
 type MenuAddOrEditReq struct {

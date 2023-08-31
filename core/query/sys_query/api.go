@@ -12,7 +12,7 @@ type ApiListInput struct {
 }
 type ApiListOut struct {
 	Total int64          `json:"total" form:"total" description:"总数"`
-	List  []model.SysApi `json:"list" form:"list" description:"列表"`
+	List  []model.SysAPI `json:"list" form:"list" description:"列表"`
 }
 
 type ApiEditInput struct {

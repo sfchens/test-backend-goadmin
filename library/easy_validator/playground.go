@@ -14,7 +14,7 @@ type easyValidate struct {
 	Validator *validator.Validate
 }
 
-func EasyValidator() easyValidate {
+func NewValidator() easyValidate {
 	return easyValidator
 }
 

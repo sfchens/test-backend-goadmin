@@ -1,10 +1,13 @@
 package easy_logger
 
-import "time"
+import (
+	"csf/library/global"
+	"time"
+)
 
-const LogFileAppKey = "app"     // 常规日志
-const LogFileHomeKey = "home"   // 常规日志
-const LogFileLoginKey = "login" // 常规日志
+const LogFileAppKey = global.ModuleAdmin // 常规日志
+const LogFileH5Key = global.ModuleH5     // 常规日志
+const LogFileLoginKey = "login"          // 常规日志
 
 type LoggerConfig struct {
 	LogObjKey string

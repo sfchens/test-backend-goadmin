@@ -7,7 +7,7 @@ import (
 
 func InitRouter() {
 	fmt.Println("初始化 sys_router路由")
-	global.RouterList = append(global.RouterList,
+	global.RouterList[global.ModuleAdmin] = append(global.RouterList[global.ModuleAdmin],
 		registerLoginRouter,
 		registerConfigRouter,
 		registerAdminRouter,

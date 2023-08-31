@@ -23,7 +23,7 @@ func NewSysMenuApi() *cSysMenuApi {
 // @Produce application/json
 // @Param raw body     sys.MenuListReq true "请求参数"
 // @Success 200 {object} response.Response{data=sys.MenuListRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/menu/tree_list [get]
+// @Router /admin/v1/sys/menu/tree_list [get]
 func (c *cSysMenuApi) TreeList(ctx *gin.Context) {
 
 	var (
@@ -33,11 +33,13 @@ func (c *cSysMenuApi) TreeList(ctx *gin.Context) {
 		input sys_query.MenuTreeListInput
 		res   sys_query.MenuTreeListOut
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
+
 	res, err = service.NewSysServiceGroup().MenuService.TreeList(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -54,7 +56,7 @@ func (c *cSysMenuApi) TreeList(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.MenuListReq true "请求参数"
 // @Success 200 {object} response.Response{data=sys.MenuListRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/menu/list [get]
+// @Router /admin/v1/sys/menu/list [get]
 func (c *cSysMenuApi) List(ctx *gin.Context) {
 
 	var (
@@ -64,11 +66,13 @@ func (c *cSysMenuApi) List(ctx *gin.Context) {
 		input sys_query.MenuListInput
 		res   sys_query.MenuListOut
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
+
 	res, err = service.NewSysServiceGroup().MenuService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -115,7 +119,7 @@ func (c *cSysMenuApi) List(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.MenuAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/menu/add [post]
+// @Router /admin/v1/sys/menu/add [post]
 func (c *cSysMenuApi) Add(ctx *gin.Context) {
 	var (
 		err   error
@@ -123,11 +127,12 @@ func (c *cSysMenuApi) Add(ctx *gin.Context) {
 		input sys_query.MenuAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().MenuService.Add(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -144,7 +149,7 @@ func (c *cSysMenuApi) Add(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.MenuAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/menu/edit [post]
+// @Router /admin/v1/sys/menu/edit [post]
 func (c *cSysMenuApi) Edit(ctx *gin.Context) {
 	var (
 		err   error

@@ -25,16 +25,13 @@ func NewSysLogin() *cSysLoginApi {
 // @Produce application/json
 // @Param raw body     sys.LoginReq true "请求参数"
 // @Success 200 {object} response.Response{data=sys.LoginRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/login [post]
+// @Router /admin/v1/sys/login [post]
 func (c cSysLoginApi) Login(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.LoginReq
-
-		input login_query.AdminLoginInput
 	)
-
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -68,7 +65,7 @@ func (c cSysLoginApi) Login(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.LoginReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/login_info [get]
+// @Router /admin/v1/sys/login_info [get]
 func (c cSysLoginApi) LoginInfo(ctx *gin.Context) {
 	var (
 		err error
@@ -100,7 +97,7 @@ func (c cSysLoginApi) LoginInfo(ctx *gin.Context) {
 // @Produce application/json
 // @Param raw body     sys.LoginReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/logout [post]
+// @Router /admin/v1/sys/logout [post]
 func (c cSysLoginApi) Logout(ctx *gin.Context) {
 	var (
 		err error

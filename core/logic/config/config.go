@@ -101,7 +101,7 @@ func (s *sSysConfig) Add(ctx *gin.Context, input config_query.ConfigAddInput) (e
 		return
 	}
 	sysConfigModel.Remark = remark
-	sysConfigModel.IsOpen = uint(isOpen)
+	sysConfigModel.IsOpen = isOpen
 	sysConfigModel.Name = name
 	sysConfigModel.Config = config
 	sysConfigModel.Key = key
@@ -142,7 +142,7 @@ func (s *sSysConfig) Edit(ctx *gin.Context, input config_query.ConfigEditInput) 
 	sysConfigModel.Key = key
 	sysConfigModel.Name = name
 	sysConfigModel.Config = string(configTmp)
-	sysConfigModel.IsOpen = uint(isOpen)
+	sysConfigModel.IsOpen = isOpen
 	sysConfigModel.Remark = remark
 
 	sysConfigModel.Operator = utils.GetUserName(ctx)
@@ -264,11 +264,11 @@ func (s *sSysConfig) SetStatus(ctx *gin.Context, input config_query.ConfigSetSta
 		return
 	}
 
-	if sysConfigModel.IsOpen == uint(isOpen) {
+	if sysConfigModel.IsOpen == isOpen {
 		err = errors.New("状态异常，刷新后重试")
 		return
 	}
-	sysConfigModel.IsOpen = uint(isOpen)
+	sysConfigModel.IsOpen = isOpen
 	sysConfigModel.Operator = utils.GetUserName(ctx)
 	err = easy_db.GetDb().Save(&sysConfigModel).Error
 	if err != nil {

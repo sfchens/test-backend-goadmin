@@ -22,7 +22,7 @@ func NewBackdropApi() *cBackdropApi {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/live/backdrop/add [post]
+// @Router /admin/v1/live/backdrop/add [post]
 func (c *cBackdropApi) Add(ctx *gin.Context) {
 	var (
 		err error
@@ -52,7 +52,7 @@ func (c *cBackdropApi) Add(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/live/backdrop/edit [post]
+// @Router /admin/v1/live/backdrop/edit [post]
 func (c *cBackdropApi) Edit(ctx *gin.Context) {
 	var (
 		err error
@@ -82,7 +82,7 @@ func (c *cBackdropApi) Edit(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {object} response.Response{data=live.BackdropListRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/live/backdrop/list [get]
+// @Router /admin/v1/live/backdrop/list [get]
 func (c *cBackdropApi) List(ctx *gin.Context) {
 	var (
 		err   error
