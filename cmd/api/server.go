@@ -75,7 +75,9 @@ func run() (err error) {
 	//initRegisterRouter()
 
 	// 运行
-	err = endless.ListenAndServe(fmt.Sprintf(":%d", easy_config.Viper.Get("app.port")), global.GinEngine)
+	address := fmt.Sprintf(":%d", easy_config.Config.App.Port)
+	fmt.Printf("访问地址： %v%v\n", easy_config.Config.App.BaseUrl, address)
+	err = endless.ListenAndServe(address, global.GinEngine)
 	if err != nil {
 		fmt.Printf("运行失败:  %+v\n", err.Error())
 	}

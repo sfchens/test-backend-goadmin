@@ -11,15 +11,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"strings"
+	"time"
 )
 
 func init() {
-	service.RegisterNewCategory(NewSysAdminService())
+	service.RegisterNewProductCategory(NewCategoryService())
 }
 
 type sCategory struct{}
 
-func NewSysAdminService() *sCategory {
+func NewCategoryService() *sCategory {
 	return &sCategory{}
 }
 func (s *sCategory) AddOrEdit(ctx *gin.Context, input product_query.CategoryAddOrEditInput) (err error) {
@@ -70,6 +71,9 @@ func (s *sCategory) AddOrEdit(ctx *gin.Context, input product_query.CategoryAddO
 	categoryModel.BigPic = bigPic
 	categoryModel.IsShow = isShow
 	categoryModel.Operator = utils.GetUserName(ctx)
+	if categoryModel.ID <= 0 {
+		categoryModel.CreatedAt = time.Now()
+	}
 	err = tx.Save(&categoryModel).Error
 	if err != nil {
 		return
@@ -107,17 +111,28 @@ func (s *sCategory) List(ctx *gin.Context, input product_query.CategoryListInput
 
 func (s *sCategory) getQuery(input product_query.CategoryListInput) *gorm.DB {
 	var (
+		pids          = input.Pids
+		isShow        = input.IsShow
 		categoryModel model.ProductCategory
 	)
 	m := easy_db.GetDb().Model(categoryModel)
 
-	m.Where("pid=?", 0)
+	if len(pids) > 0 {
+		m.Where("id=?", pids[len(pids)-1])
+	} else {
+		m.Where("pid=?", 0)
+	}
+
+	if isShow != -1 {
+		m.Where("is_show=?", isShow)
+	}
 	return m
 }
 
 func (s *sCategory) TreeListItem(ctx *gin.Context, list []product_query.CategoryTreeListItem) (out []product_query.CategoryTreeListItem) {
 	for _, v := range list {
 		v.Label = v.Name
+		v.Value = v.Id
 		model := easy_db.GetDb().Model(model.ProductCategory{}).Preload("Children").Where("pid = ?", v.Id)
 		model.Order("sort desc").Scan(&v.Children)
 		if len(v.Children) > 0 {

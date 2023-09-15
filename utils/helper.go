@@ -6,6 +6,7 @@ import (
 	"csf/library/global"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
@@ -63,7 +64,6 @@ func GetToken(ctx *gin.Context) (token string) {
 }
 
 func GetModulesName(ctx *gin.Context) (module string) {
-
 	path := ctx.Request.URL.Path
 	strArr := strings.Split(path, "/")
 
@@ -73,4 +73,8 @@ func GetModulesName(ctx *gin.Context) (module string) {
 		module = easy_config.Config.App.Name
 	}
 	return
+}
+
+func GetBaseUrl(url string) string {
+	return fmt.Sprintf("%v:%v/%v", easy_config.Config.App.BaseUrl, easy_config.Config.App.Port, url)
 }

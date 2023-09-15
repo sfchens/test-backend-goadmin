@@ -15,6 +15,7 @@ func initApiRouter() {
 		r = gin.New()
 		global.GinEngine = r
 	}
+	r.Static("/resource", "./resource")
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("SESSIONID", store))
 	r.Use(middleware.TraceKeyMiddleware(global.TraceIdKey))
@@ -24,7 +25,7 @@ func initApiRouter() {
 		LogZap: true,
 	}))
 	r.Use(middleware.RecoveryLogger(&easy_logger.LoggerConfig{
-		LogObjKey: easy_logger.LogFileAppKey,
+		LogObjKey: easy_logger.LogFileAdminKey,
 		LogZap:    true,
 	}))
 

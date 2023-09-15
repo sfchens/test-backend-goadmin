@@ -22,8 +22,9 @@ func NewSysConfigApi() *cSysConfigApi {
 // @Tags 配置管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.ConfigListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys.ConfigListRes} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query     sys_req.ConfigListReq true "请求参数"
+// @Success 200 {object} response.Response{data=config_query.ConfigListOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/config/list [get]
 func (c cSysConfigApi) List(ctx *gin.Context) {
 	var (
@@ -33,12 +34,12 @@ func (c cSysConfigApi) List(ctx *gin.Context) {
 		input config_query.ConfigListInput
 		res   config_query.ConfigListOut
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
+	utils.StructToStruct(req, &input)
 	res, err = service.NewConfigServiceGroup().ConfigService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -53,7 +54,8 @@ func (c cSysConfigApi) List(ctx *gin.Context) {
 // @Tags 配置管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.ConfigAddReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.ConfigAddReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/config/add [post]
 func (c cSysConfigApi) Add(ctx *gin.Context) {
@@ -63,11 +65,12 @@ func (c cSysConfigApi) Add(ctx *gin.Context) {
 
 		input config_query.ConfigAddInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewConfigServiceGroup().ConfigService.Add(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -82,8 +85,8 @@ func (c cSysConfigApi) Add(ctx *gin.Context) {
 // @Tags 配置管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.ConfigGetOneReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys.ConfigGetOneRes} "code错误码 msg操作信息 data返回信息"
+// @Param object query     sys_req.ConfigGetOneReq true "请求参数"
+// @Success 200 {object} response.Response{data=config_query.ConfigGetOneOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/config/get_one [get]
 func (c cSysConfigApi) GetOne(ctx *gin.Context) {
 	var (
@@ -92,12 +95,12 @@ func (c cSysConfigApi) GetOne(ctx *gin.Context) {
 		input config_query.ConfigGetOneInput
 		res   config_query.ConfigGetOneOut
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
+	utils.StructToStruct(req, &input)
 	var out config_query.SysConfig
 	out, err = service.NewConfigServiceGroup().ConfigService.GetOne(ctx, input)
 	if err != nil {
@@ -114,7 +117,8 @@ func (c cSysConfigApi) GetOne(ctx *gin.Context) {
 // @Tags 配置管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.ConfigEditReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.ConfigEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/config/edit [post]
 func (c cSysConfigApi) Edit(ctx *gin.Context) {
@@ -126,11 +130,12 @@ func (c cSysConfigApi) Edit(ctx *gin.Context) {
 		input config_query.ConfigEditInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewConfigServiceGroup().ConfigService.Edit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -145,7 +150,8 @@ func (c cSysConfigApi) Edit(ctx *gin.Context) {
 // @Tags 配置管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.ConfigDeleteReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.ConfigDeleteReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/config/delete [post]
 func (c cSysConfigApi) Delete(ctx *gin.Context) {
@@ -162,6 +168,7 @@ func (c cSysConfigApi) Delete(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewConfigServiceGroup().ConfigService.Delete(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -176,7 +183,8 @@ func (c cSysConfigApi) Delete(ctx *gin.Context) {
 // @Tags 配置管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.ConfigEditReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.ConfigSetStatusReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/config/delete [post]
 func (c cSysConfigApi) SetStatus(ctx *gin.Context) {
@@ -193,6 +201,7 @@ func (c cSysConfigApi) SetStatus(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewConfigServiceGroup().ConfigService.SetStatus(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())

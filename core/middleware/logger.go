@@ -26,9 +26,8 @@ func OperateLogger(config *easy_logger.LoggerConfig) gin.HandlerFunc {
 		ctx.Next()
 		logObjKey := config.LogObjKey
 		if logObjKey == "" {
-			logObjKey = utils.GetModulesName(ctx)
+			logObjKey = easy_logger.GetLogModulesName(ctx)
 		}
-
 		if config.LogZap {
 			easy_logger.OperateLogger(ctx, logObjKey)
 		}

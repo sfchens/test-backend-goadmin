@@ -21,7 +21,8 @@ func NewSysDeptApi() *cSysDeptApi {
 // @Tags 部门管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.DeptAddOrEditReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.DeptAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response  "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/dept/add [post]
 func (c *cSysDeptApi) Add(ctx *gin.Context) {
@@ -36,6 +37,7 @@ func (c *cSysDeptApi) Add(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().DeptService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
@@ -50,7 +52,8 @@ func (c *cSysDeptApi) Add(ctx *gin.Context) {
 // @Tags 部门管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.DeptAddOrEditReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.DeptAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response  "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/dept/edit [post]
 func (c *cSysDeptApi) Edit(ctx *gin.Context) {
@@ -60,12 +63,12 @@ func (c *cSysDeptApi) Edit(ctx *gin.Context) {
 		input sys_query.DeptAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().DeptService.Edit(ctx, input)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
@@ -80,7 +83,8 @@ func (c *cSysDeptApi) Edit(ctx *gin.Context) {
 // @Tags 部门管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.DeptDeleteReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.DeptDeleteReq true "请求参数"
 // @Success 200 {object} response.Response  "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/dept/delete [post]
 func (c *cSysDeptApi) Delete(ctx *gin.Context) {
@@ -90,11 +94,12 @@ func (c *cSysDeptApi) Delete(ctx *gin.Context) {
 
 		input sys_query.DeptDeleteInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().DeptService.Delete(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -109,8 +114,9 @@ func (c *cSysDeptApi) Delete(ctx *gin.Context) {
 // @Tags 部门管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.DeptTreeListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys.DeptTreeListRes}  "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query     sys_req.DeptTreeListReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_query.DeptTreeListOut}  "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/dept/list [get]
 func (c *cSysDeptApi) TreeList(ctx *gin.Context) {
 	var (
@@ -121,11 +127,12 @@ func (c *cSysDeptApi) TreeList(ctx *gin.Context) {
 		res   sys_query.DeptTreeListOut
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	res, err = service.NewSysServiceGroup().DeptService.TreeList(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -140,8 +147,9 @@ func (c *cSysDeptApi) TreeList(ctx *gin.Context) {
 // @Tags 部门管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.DeptTreeListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys.DeptTreeListRes}  "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query     sys_req.DeptGetOneReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_query.DeptGetOneOut}  "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/dept/get_one [get]
 func (c *cSysDeptApi) GetOne(ctx *gin.Context) {
 	var (
@@ -152,11 +160,12 @@ func (c *cSysDeptApi) GetOne(ctx *gin.Context) {
 		res   sys_query.DeptGetOneOut
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	res, err = service.NewSysServiceGroup().DeptService.GetOne(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -171,8 +180,9 @@ func (c *cSysDeptApi) GetOne(ctx *gin.Context) {
 // @Tags 部门管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.DeptTreeListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys.DeptTreeListRes}  "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.DeptDeleteMultiReq true "请求参数"
+// @Success 200 {object} response.Response  "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/dept/delete_multi [post]
 func (c *cSysDeptApi) DeleteMulti(ctx *gin.Context) {
 	var (

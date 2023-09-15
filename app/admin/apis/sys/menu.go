@@ -21,8 +21,9 @@ func NewSysMenuApi() *cSysMenuApi {
 // @Tags 菜单管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.MenuListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys.MenuListRes} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query     sys_req.MenuTreeListReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_query.MenuTreeListOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/menu/tree_list [get]
 func (c *cSysMenuApi) TreeList(ctx *gin.Context) {
 
@@ -39,7 +40,6 @@ func (c *cSysMenuApi) TreeList(ctx *gin.Context) {
 		return
 	}
 	utils.StructToStruct(req, &input)
-
 	res, err = service.NewSysServiceGroup().MenuService.TreeList(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -54,8 +54,9 @@ func (c *cSysMenuApi) TreeList(ctx *gin.Context) {
 // @Tags 菜单管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.MenuListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys.MenuListRes} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query     sys_req.MenuListReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_query.MenuListOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/menu/list [get]
 func (c *cSysMenuApi) List(ctx *gin.Context) {
 
@@ -81,43 +82,14 @@ func (c *cSysMenuApi) List(ctx *gin.Context) {
 	response.SuccessWithData(ctx, res)
 }
 
-// TreeRoleList  权限菜单
-// @Summary 权限菜单
-// @Description 权限菜单
-// @Tags 菜单管理
-// @Accept application/json
-// @Produce application/json
-// @Param raw body     sys.MenuListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys.MenuListRes} "code错误码 msg操作信息 data返回信息"
-// @Router /api/v1/sys/menu/tree_role_list [get]
-//func (c *cSysMenuApi) TreeRoleList(ctx *gin.Context) {
-//
-//	var (
-//		err error
-//		req sys_req.MenuTreeRoleListReq
-//		res sys_req.MenuTreeRoleListRes
-//	)
-//	err = utils.BindParams(ctx, &req)
-//	if err != nil {
-//		response.FailWithMessage(ctx, err.Error())
-//		return
-//	}
-//
-//	res, err = sys_service.NewSysMenuService(ctx).TreeRoleList(req)
-//	if err != nil {
-//		response.FailWithMessage(ctx, err.Error())
-//		return
-//	}
-//	response.SuccessWithData(ctx, res)
-//}
-
 // Add  添加菜单
 // @Summary 添加菜单
 // @Description 添加菜单
 // @Tags 菜单管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.MenuAddOrEditReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.MenuAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/menu/add [post]
 func (c *cSysMenuApi) Add(ctx *gin.Context) {
@@ -147,7 +119,8 @@ func (c *cSysMenuApi) Add(ctx *gin.Context) {
 // @Tags 菜单管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.MenuAddOrEditReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.MenuAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/menu/edit [post]
 func (c *cSysMenuApi) Edit(ctx *gin.Context) {
@@ -157,11 +130,12 @@ func (c *cSysMenuApi) Edit(ctx *gin.Context) {
 		input sys_query.MenuAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().MenuService.Edit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())

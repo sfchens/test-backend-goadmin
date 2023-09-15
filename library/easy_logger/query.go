@@ -5,9 +5,17 @@ import (
 	"time"
 )
 
-const LogFileAppKey = global.ModuleAdmin // 常规日志
-const LogFileH5Key = global.ModuleH5     // 常规日志
-const LogFileLoginKey = "login"          // 常规日志
+const LogFileApp = "app"                   // 常规日志
+const LogFileAdminKey = global.ModuleAdmin // 常规日志
+const LogFileH5Key = global.ModuleH5       // 常规日志
+const LogFileLoginKey = "login"            // 常规日志
+
+var LogArr = []string{
+	LogFileApp,
+	LogFileAdminKey,
+	LogFileH5Key,
+	LogFileLoginKey,
+}
 
 type LoggerConfig struct {
 	LogObjKey string

@@ -19,7 +19,7 @@ func NewCaptchaApi() *captchaApi {
 // @Tags 验证码管理
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} response.Response{data=common.GetOneRes} "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=common_req.GetOneRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/vi/sys/common/get_captcha [get]
 func (c *captchaApi) GetCaptcha(ctx *gin.Context) {
 

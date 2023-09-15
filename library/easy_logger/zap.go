@@ -31,8 +31,10 @@ func initCustomZap() _customZap {
 
 	fileNamesTmp := easy_config.Config.Zap.LogFile
 	if len(fileNamesTmp) <= 0 {
-		fileNamesTmp = getDefaultLog()
+		fileNamesTmp = LogArr
 	}
+	// 重新保存log文件日志
+	LogArr = fileNamesTmp
 	for _, fileName := range fileNamesTmp {
 		if len(customZap.ZapLogger) <= 0 {
 			customZap = _customZap{

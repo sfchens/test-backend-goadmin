@@ -21,7 +21,8 @@ func NewSwitchApi() *cSwitchApi {
 // @Tags 开关管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.SwitchAddOrEditReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.SwitchAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/switch/add [post]
 func (c *cSwitchApi) Add(ctx *gin.Context) {
@@ -31,11 +32,12 @@ func (c *cSwitchApi) Add(ctx *gin.Context) {
 
 		input config_query.SwitchAddOrEditInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewConfigServiceGroup().SwitchService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -50,7 +52,8 @@ func (c *cSwitchApi) Add(ctx *gin.Context) {
 // @Tags 开关管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.SwitchAddOrEditReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.SwitchAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/switch/edit [post]
 func (c *cSwitchApi) Edit(ctx *gin.Context) {
@@ -60,11 +63,12 @@ func (c *cSwitchApi) Edit(ctx *gin.Context) {
 
 		input config_query.SwitchAddOrEditInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewConfigServiceGroup().SwitchService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -79,8 +83,9 @@ func (c *cSwitchApi) Edit(ctx *gin.Context) {
 // @Tags 开关管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.SwitchAddOrEditReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys.SwitchListRes} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query     sys_req.SwitchListReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_req.SwitchListRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/switch/list [get]
 func (c *cSwitchApi) List(ctx *gin.Context) {
 	var (
@@ -108,7 +113,8 @@ func (c *cSwitchApi) List(ctx *gin.Context) {
 // @Tags 开关管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.SwitchDeleteReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     config_query.SwitchDeleteInput true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/switch/delete [post]
 func (c *cSwitchApi) Delete(ctx *gin.Context) {
@@ -136,7 +142,8 @@ func (c *cSwitchApi) Delete(ctx *gin.Context) {
 // @Tags 开关管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.SwitchDeleteReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.SwitchDeleteReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/switch/set_status [post]
 func (c *cSwitchApi) SetStatus(ctx *gin.Context) {
@@ -145,11 +152,12 @@ func (c *cSwitchApi) SetStatus(ctx *gin.Context) {
 		req   sys_req.SwitchSetStatusReq
 		input config_query.SwitchSetStatusInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewConfigServiceGroup().SwitchService.SetStatus(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())

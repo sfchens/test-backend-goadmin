@@ -16,7 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/live/backdrop/add": {
+        "/admin/v1/live/backdrop/add": {
             "post": {
                 "description": "添加背景",
                 "consumes": [
@@ -29,6 +29,24 @@ const docTemplate = `{
                     "直播背景"
                 ],
                 "summary": "添加背景",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_req.BackdropAddOrEditReq"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -39,7 +57,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/live/backdrop/edit": {
+        "/admin/v1/live/backdrop/edit": {
             "post": {
                 "description": "编辑背景",
                 "consumes": [
@@ -52,6 +70,24 @@ const docTemplate = `{
                     "直播背景"
                 ],
                 "summary": "编辑背景",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_req.BackdropAddOrEditReq"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -62,7 +98,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/live/backdrop/list": {
+        "/admin/v1/live/backdrop/list": {
             "get": {
                 "description": "背景列表",
                 "consumes": [
@@ -75,6 +111,42 @@ const docTemplate = `{
                     "直播背景"
                 ],
                 "summary": "背景列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "type",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -87,7 +159,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/live_request.BackdropListRes"
+                                            "$ref": "#/definitions/live_query.BackdropListOut"
                                         }
                                     }
                                 }
@@ -97,7 +169,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/live/video/add": {
+        "/admin/v1/live/video/add": {
             "post": {
                 "description": "新增视频",
                 "consumes": [
@@ -110,6 +182,24 @@ const docTemplate = `{
                     "直播视频管理"
                 ],
                 "summary": "新增视频",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_req.VideoAddOrEditReq"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -120,7 +210,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/live/video/edit": {
+        "/admin/v1/live/video/edit": {
             "post": {
                 "description": "编辑视频",
                 "consumes": [
@@ -133,6 +223,24 @@ const docTemplate = `{
                     "直播视频管理"
                 ],
                 "summary": "编辑视频",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/live_req.VideoAddOrEditReq"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -143,7 +251,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/live/video/list": {
+        "/admin/v1/live/video/list": {
             "get": {
                 "description": "视频列表",
                 "consumes": [
@@ -153,9 +261,45 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "视频管理"
+                    "直播视频管理"
                 ],
                 "summary": "视频列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "type",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -168,7 +312,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/live_request.VideoListRes"
+                                            "$ref": "#/definitions/live_query.VideoListOut"
                                         }
                                     }
                                 }
@@ -178,7 +322,304 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/admin/add": {
+        "/admin/v1/product/category/add": {
+            "post": {
+                "description": "添加分类",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "分类管理"
+                ],
+                "summary": "添加分类",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/product_req.CategoryAddOrEditReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/product/category/delete_multi": {
+            "post": {
+                "description": "批量删除",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "分类管理"
+                ],
+                "summary": "批量删除",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/product_req.CategoryDeleteBatchReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/product/category/edit": {
+            "post": {
+                "description": "编辑分类",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "分类管理"
+                ],
+                "summary": "编辑分类",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/product_req.CategoryAddOrEditReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/product/category/list": {
+            "get": {
+                "description": "分类列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "分类管理"
+                ],
+                "summary": "分类列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "is_show",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "collectionFormat": "csv",
+                        "name": "pids[]",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/product_query.CategoryListOut"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/product/rule/add": {
+            "post": {
+                "description": "添加商品规格",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "商品规格管理"
+                ],
+                "summary": "添加商品规格",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/product/rule/list": {
+            "get": {
+                "description": "商品规格列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "商品规格管理"
+                ],
+                "summary": "商品规格列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/product_req.RuleListRes"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/sys/admin/add": {
             "post": {
                 "description": "添加管理员",
                 "consumes": [
@@ -193,12 +634,19 @@ const docTemplate = `{
                 "summary": "添加管理员",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.AdminAddReq"
+                            "$ref": "#/definitions/sys_req.AdminAddOrEditReq"
                         }
                     }
                 ],
@@ -212,9 +660,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/admin/edit": {
+        "/admin/v1/sys/admin/delete_batch": {
             "post": {
-                "description": "编辑管理员",
+                "description": "批量删除",
                 "consumes": [
                     "application/json"
                 ],
@@ -224,15 +672,22 @@ const docTemplate = `{
                 "tags": [
                     "管理员管理"
                 ],
-                "summary": "编辑管理员",
+                "summary": "批量删除",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.AdminEditReq"
+                            "$ref": "#/definitions/sys_req.AdminDeleteBatchReq"
                         }
                     }
                 ],
@@ -246,7 +701,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/admin/get_admin_info": {
+        "/admin/v1/sys/admin/get_admin_info": {
             "get": {
                 "description": "管理员信息",
                 "consumes": [
@@ -259,6 +714,15 @@ const docTemplate = `{
                     "管理员管理"
                 ],
                 "summary": "管理员信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -271,7 +735,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sys_request.AdminListItem"
+                                            "$ref": "#/definitions/sys_req.AdminInfoRes"
                                         }
                                     }
                                 }
@@ -281,7 +745,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/admin/list": {
+        "/admin/v1/sys/admin/list": {
             "get": {
                 "description": "管理员列表",
                 "consumes": [
@@ -296,12 +760,19 @@ const docTemplate = `{
                 "summary": "管理员列表",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.AdminListReq"
+                            "$ref": "#/definitions/sys_req.AdminListReq"
                         }
                     }
                 ],
@@ -317,7 +788,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sys_request.AdminListRes"
+                                            "$ref": "#/definitions/sys_query.AdminListOut"
                                         }
                                     }
                                 }
@@ -327,7 +798,89 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/admin/set_status": {
+        "/admin/v1/sys/admin/reset_pwd": {
+            "post": {
+                "description": "重置密码",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "管理员管理"
+                ],
+                "summary": "重置密码",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sys_req.AdminResetPwdReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/sys/admin/set_role": {
+            "post": {
+                "description": "设置规则",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "管理员管理"
+                ],
+                "summary": "设置规则",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sys_req.AdminSetRoleReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/sys/admin/set_status": {
             "post": {
                 "description": "设置状态",
                 "consumes": [
@@ -342,12 +895,19 @@ const docTemplate = `{
                 "summary": "设置状态",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.AdminSetStatusReq"
+                            "$ref": "#/definitions/sys_req.AdminSetStatusReq"
                         }
                     }
                 ],
@@ -361,7 +921,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/api/delete_multi": {
+        "/admin/v1/sys/api/delete_multi": {
             "get": {
                 "description": "接口分类",
                 "consumes": [
@@ -374,6 +934,24 @@ const docTemplate = `{
                     "接口管理"
                 ],
                 "summary": "接口分类",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "collectionFormat": "csv",
+                        "name": "ids",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -384,7 +962,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/api/edit": {
+        "/admin/v1/sys/api/edit": {
             "post": {
                 "description": "编辑接口",
                 "consumes": [
@@ -397,6 +975,24 @@ const docTemplate = `{
                     "接口管理"
                 ],
                 "summary": "编辑接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sys_req.ApiEditReq"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -407,7 +1003,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/api/get_tag": {
+        "/admin/v1/sys/api/get_tag": {
             "get": {
                 "description": "接口分类",
                 "consumes": [
@@ -420,17 +1016,55 @@ const docTemplate = `{
                     "接口管理"
                 ],
                 "summary": "接口分类",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "tag",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
                         "schema": {
-                            "$ref": "#/definitions/response.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/sys_query.ApiGetTagOut"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
             }
         },
-        "/api/v1/sys/api/list": {
+        "/admin/v1/sys/api/list": {
             "get": {
                 "description": "接口列表",
                 "consumes": [
@@ -445,13 +1079,43 @@ const docTemplate = `{
                 "summary": "接口列表",
                 "parameters": [
                     {
-                        "description": "请求参数",
-                        "name": "raw",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/sys_request.AdminSetStatusReq"
-                        }
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "method",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "path",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "tag",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "title",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -466,7 +1130,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sys_request.ApiListRes"
+                                            "$ref": "#/definitions/sys_query.ApiListOut"
                                         }
                                     }
                                 }
@@ -476,8 +1140,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/api/refresh": {
-            "get": {
+        "/admin/v1/sys/api/refresh": {
+            "post": {
                 "description": "刷新接口",
                 "consumes": [
                     "application/json"
@@ -489,6 +1153,15 @@ const docTemplate = `{
                     "接口管理"
                 ],
                 "summary": "刷新接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -499,7 +1172,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/config/add": {
+        "/admin/v1/sys/config/add": {
             "post": {
                 "description": "添加配置",
                 "consumes": [
@@ -514,12 +1187,19 @@ const docTemplate = `{
                 "summary": "添加配置",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.ConfigAddReq"
+                            "$ref": "#/definitions/sys_req.ConfigAddReq"
                         }
                     }
                 ],
@@ -533,7 +1213,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/config/delete": {
+        "/admin/v1/sys/config/delete": {
             "post": {
                 "description": "设置状态",
                 "consumes": [
@@ -548,12 +1228,19 @@ const docTemplate = `{
                 "summary": "设置状态",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.ConfigEditReq"
+                            "$ref": "#/definitions/sys_req.ConfigSetStatusReq"
                         }
                     }
                 ],
@@ -567,7 +1254,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/config/edit": {
+        "/admin/v1/sys/config/edit": {
             "post": {
                 "description": "编辑配置",
                 "consumes": [
@@ -582,12 +1269,19 @@ const docTemplate = `{
                 "summary": "编辑配置",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.ConfigEditReq"
+                            "$ref": "#/definitions/sys_req.ConfigEditReq"
                         }
                     }
                 ],
@@ -601,7 +1295,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/config/get_one": {
+        "/admin/v1/sys/config/get_one": {
             "get": {
                 "description": "获取一条配置",
                 "consumes": [
@@ -616,13 +1310,23 @@ const docTemplate = `{
                 "summary": "获取一条配置",
                 "parameters": [
                     {
-                        "description": "请求参数",
-                        "name": "raw",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/sys_request.ConfigGetOneReq"
-                        }
+                        "type": "integer",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "key",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "name": "key2",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -637,7 +1341,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sys_request.ConfigGetOneRes"
+                                            "$ref": "#/definitions/config_query.ConfigGetOneOut"
                                         }
                                     }
                                 }
@@ -647,7 +1351,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/config/list": {
+        "/admin/v1/sys/config/list": {
             "get": {
                 "description": "配置列表",
                 "consumes": [
@@ -662,13 +1366,44 @@ const docTemplate = `{
                 "summary": "配置列表",
                 "parameters": [
                     {
-                        "description": "请求参数",
-                        "name": "raw",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/sys_request.ConfigListReq"
-                        }
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "key",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "key_name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "id ASC",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "name": "page_size",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -683,7 +1418,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sys_request.ConfigListRes"
+                                            "$ref": "#/definitions/config_query.ConfigListOut"
                                         }
                                     }
                                 }
@@ -693,7 +1428,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/dept/add": {
+        "/admin/v1/sys/dept/add": {
             "post": {
                 "description": "添加部门",
                 "consumes": [
@@ -708,12 +1443,19 @@ const docTemplate = `{
                 "summary": "添加部门",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.DeptAddOrEditReq"
+                            "$ref": "#/definitions/sys_req.DeptAddOrEditReq"
                         }
                     }
                 ],
@@ -727,7 +1469,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/dept/delete": {
+        "/admin/v1/sys/dept/delete": {
             "post": {
                 "description": "删除部门",
                 "consumes": [
@@ -742,12 +1484,19 @@ const docTemplate = `{
                 "summary": "删除部门",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.DeptDeleteReq"
+                            "$ref": "#/definitions/sys_req.DeptDeleteReq"
                         }
                     }
                 ],
@@ -761,7 +1510,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/dept/delete_multi": {
+        "/admin/v1/sys/dept/delete_multi": {
             "post": {
                 "description": "批量删除",
                 "consumes": [
@@ -776,12 +1525,19 @@ const docTemplate = `{
                 "summary": "批量删除",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.DeptTreeListReq"
+                            "$ref": "#/definitions/sys_req.DeptDeleteMultiReq"
                         }
                     }
                 ],
@@ -789,25 +1545,13 @@ const docTemplate = `{
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/sys_request.DeptTreeListRes"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
             }
         },
-        "/api/v1/sys/dept/edit": {
+        "/admin/v1/sys/dept/edit": {
             "post": {
                 "description": "编辑部门",
                 "consumes": [
@@ -822,12 +1566,19 @@ const docTemplate = `{
                 "summary": "编辑部门",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.DeptAddOrEditReq"
+                            "$ref": "#/definitions/sys_req.DeptAddOrEditReq"
                         }
                     }
                 ],
@@ -841,7 +1592,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/dept/get_one": {
+        "/admin/v1/sys/dept/get_one": {
             "get": {
                 "description": "一条部门信息",
                 "consumes": [
@@ -856,13 +1607,16 @@ const docTemplate = `{
                 "summary": "一条部门信息",
                 "parameters": [
                     {
-                        "description": "请求参数",
-                        "name": "raw",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/sys_request.DeptTreeListReq"
-                        }
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "id",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -877,7 +1631,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sys_request.DeptTreeListRes"
+                                            "$ref": "#/definitions/sys_query.DeptGetOneOut"
                                         }
                                     }
                                 }
@@ -887,7 +1641,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/dept/list": {
+        "/admin/v1/sys/dept/list": {
             "get": {
                 "description": "部门tree列表",
                 "consumes": [
@@ -902,13 +1656,44 @@ const docTemplate = `{
                 "summary": "部门tree列表",
                 "parameters": [
                     {
-                        "description": "请求参数",
-                        "name": "raw",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/sys_request.DeptTreeListReq"
-                        }
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "id ASC",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "parent_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "status",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -923,7 +1708,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sys_request.DeptTreeListRes"
+                                            "$ref": "#/definitions/sys_query.DeptTreeListOut"
                                         }
                                     }
                                 }
@@ -933,7 +1718,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/login": {
+        "/admin/v1/sys/login": {
             "post": {
                 "description": "登录",
                 "consumes": [
@@ -949,11 +1734,11 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.LoginReq"
+                            "$ref": "#/definitions/sys_req.LoginReq"
                         }
                     }
                 ],
@@ -969,7 +1754,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sys_request.LoginRes"
+                                            "$ref": "#/definitions/sys_req.LoginRes"
                                         }
                                     }
                                 }
@@ -979,7 +1764,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/login_info": {
+        "/admin/v1/sys/login_info": {
             "get": {
                 "description": "登录信息",
                 "consumes": [
@@ -994,26 +1779,55 @@ const docTemplate = `{
                 "summary": "登录信息",
                 "parameters": [
                     {
-                        "description": "请求参数",
-                        "name": "raw",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/sys_request.LoginReq"
-                        }
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "key",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "name": "key2",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
                         "schema": {
-                            "$ref": "#/definitions/response.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/config_query.ConfigGetOneOut"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
             }
         },
-        "/api/v1/sys/logout": {
+        "/admin/v1/sys/logout": {
             "post": {
                 "description": "退出",
                 "consumes": [
@@ -1033,7 +1847,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.LoginReq"
+                            "$ref": "#/definitions/sys_req.LoginReq"
                         }
                     }
                 ],
@@ -1047,7 +1861,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/menu/add": {
+        "/admin/v1/sys/menu/add": {
             "post": {
                 "description": "添加菜单",
                 "consumes": [
@@ -1062,12 +1876,19 @@ const docTemplate = `{
                 "summary": "添加菜单",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.MenuAddOrEditReq"
+                            "$ref": "#/definitions/sys_req.MenuAddOrEditReq"
                         }
                     }
                 ],
@@ -1081,7 +1902,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/menu/edit": {
+        "/admin/v1/sys/menu/edit": {
             "post": {
                 "description": "编辑菜单",
                 "consumes": [
@@ -1096,12 +1917,19 @@ const docTemplate = `{
                 "summary": "编辑菜单",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.MenuAddOrEditReq"
+                            "$ref": "#/definitions/sys_req.MenuAddOrEditReq"
                         }
                     }
                 ],
@@ -1115,7 +1943,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/menu/tree_list": {
+        "/admin/v1/sys/menu/list": {
             "get": {
                 "description": "菜单列表",
                 "consumes": [
@@ -1130,13 +1958,40 @@ const docTemplate = `{
                 "summary": "菜单列表",
                 "parameters": [
                     {
-                        "description": "请求参数",
-                        "name": "raw",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/sys_request.MenuListReq"
-                        }
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "key",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "M",
+                        "name": "menu_type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": -1,
+                        "name": "visible",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1151,7 +2006,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sys_request.MenuListRes"
+                                            "$ref": "#/definitions/sys_query.MenuListOut"
                                         }
                                     }
                                 }
@@ -1161,7 +2016,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/menu/tree_list_all": {
+        "/admin/v1/sys/menu/tree_list": {
             "get": {
                 "description": "菜单列表",
                 "consumes": [
@@ -1176,13 +2031,40 @@ const docTemplate = `{
                 "summary": "菜单列表",
                 "parameters": [
                     {
-                        "description": "请求参数",
-                        "name": "raw",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/sys_request.MenuListReq"
-                        }
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "key",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "M",
+                        "name": "menu_type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "name": "visible",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1197,7 +2079,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sys_request.MenuListRes"
+                                            "$ref": "#/definitions/sys_query.MenuTreeListOut"
                                         }
                                     }
                                 }
@@ -1207,9 +2089,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/menu/tree_role_list": {
-            "get": {
-                "description": "权限菜单",
+        "/admin/v1/sys/role/add": {
+            "post": {
+                "description": "添加角色",
                 "consumes": [
                     "application/json"
                 ],
@@ -1217,18 +2099,166 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "菜单管理"
+                    "角色管理"
                 ],
-                "summary": "权限菜单",
+                "summary": "添加角色",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.MenuListReq"
+                            "$ref": "#/definitions/sys_req.RoleAddOrEditReq"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/sys/role/delete": {
+            "post": {
+                "description": "删除角色",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "删除角色",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sys_req.RoleDeleteReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/sys/role/delete_batch": {
+            "post": {
+                "description": "批量删除角色",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "批量删除角色",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sys_req.RoleDeleteBatchReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/sys/role/list": {
+            "get": {
+                "description": "角色列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "角色列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "key",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "status",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1243,7 +2273,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sys_request.MenuListRes"
+                                            "$ref": "#/definitions/sys_query.RoleListOut"
                                         }
                                     }
                                 }
@@ -1253,7 +2283,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/switch/add": {
+        "/admin/v1/sys/switch/add": {
             "post": {
                 "description": "添加开关配置",
                 "consumes": [
@@ -1268,12 +2298,19 @@ const docTemplate = `{
                 "summary": "添加开关配置",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.SwitchAddOrEditReq"
+                            "$ref": "#/definitions/sys_req.SwitchAddOrEditReq"
                         }
                     }
                 ],
@@ -1287,7 +2324,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/switch/delete": {
+        "/admin/v1/sys/switch/delete": {
             "post": {
                 "description": "删除开关",
                 "consumes": [
@@ -1302,12 +2339,19 @@ const docTemplate = `{
                 "summary": "删除开关",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.SwitchDeleteReq"
+                            "$ref": "#/definitions/config_query.SwitchDeleteInput"
                         }
                     }
                 ],
@@ -1321,7 +2365,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/switch/edit": {
+        "/admin/v1/sys/switch/edit": {
             "post": {
                 "description": "编辑开关配置",
                 "consumes": [
@@ -1336,12 +2380,19 @@ const docTemplate = `{
                 "summary": "编辑开关配置",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.SwitchAddOrEditReq"
+                            "$ref": "#/definitions/sys_req.SwitchAddOrEditReq"
                         }
                     }
                 ],
@@ -1355,7 +2406,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/switch/list": {
+        "/admin/v1/sys/switch/list": {
             "get": {
                 "description": "开关配置列表",
                 "consumes": [
@@ -1370,13 +2421,39 @@ const docTemplate = `{
                 "summary": "开关配置列表",
                 "parameters": [
                     {
-                        "description": "请求参数",
-                        "name": "raw",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/sys_request.SwitchAddOrEditReq"
-                        }
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "key",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "default": "id DESC",
+                        "name": "order",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20,
+                        "name": "page_size",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1391,7 +2468,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/sys_request.SwitchListRes"
+                                            "$ref": "#/definitions/sys_req.SwitchListRes"
                                         }
                                     }
                                 }
@@ -1401,7 +2478,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/sys/switch/set_status": {
+        "/admin/v1/sys/switch/set_status": {
             "post": {
                 "description": "设置状态",
                 "consumes": [
@@ -1416,12 +2493,19 @@ const docTemplate = `{
                 "summary": "设置状态",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "请求参数",
-                        "name": "raw",
+                        "name": "object",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/sys_request.SwitchDeleteReq"
+                            "$ref": "#/definitions/sys_req.SwitchDeleteReq"
                         }
                     }
                 ],
@@ -1435,7 +2519,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/upload/add_picture": {
+        "/admin/v1/upload/add_picture": {
             "post": {
                 "description": "新增图片",
                 "consumes": [
@@ -1448,6 +2532,24 @@ const docTemplate = `{
                     "上传管理"
                 ],
                 "summary": "新增图片",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/common_req.UploadAddPictureReq"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -1460,7 +2562,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/common_request.UploadAddPictureRes"
+                                            "$ref": "#/definitions/common_query.UploadPictureOut"
                                         }
                                     }
                                 }
@@ -1470,7 +2572,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/upload/edit_picture": {
+        "/admin/v1/upload/edit_picture": {
             "post": {
                 "description": "编辑图片",
                 "consumes": [
@@ -1483,6 +2585,24 @@ const docTemplate = `{
                     "上传管理"
                 ],
                 "summary": "编辑图片",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/common_req.UploadEditPictureReq"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -1495,7 +2615,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/common_request.UploadEditPictureRes"
+                                            "$ref": "#/definitions/common_query.UploadEditPictureOut"
                                         }
                                     }
                                 }
@@ -1505,7 +2625,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/upload/picture": {
+        "/admin/v1/upload/picture": {
             "post": {
                 "description": "上传图片",
                 "consumes": [
@@ -1518,6 +2638,24 @@ const docTemplate = `{
                     "上传管理"
                 ],
                 "summary": "上传图片",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/common_req.UploadPictureReq"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -1530,7 +2668,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/common_request.UploadPictureRes"
+                                            "$ref": "#/definitions/common_query.UploadPictureOut"
                                         }
                                     }
                                 }
@@ -1540,7 +2678,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/upload/picture_multi": {
+        "/admin/v1/upload/picture_multi": {
             "post": {
                 "description": "批量上传图片",
                 "consumes": [
@@ -1553,6 +2691,24 @@ const docTemplate = `{
                     "上传管理"
                 ],
                 "summary": "批量上传图片",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/common_req.UploadPictureMultiReq"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -1567,7 +2723,7 @@ const docTemplate = `{
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/common_request.UploadPictureMultiRes"
+                                                "$ref": "#/definitions/common_query.UploadPictureMultiOut"
                                             }
                                         }
                                     }
@@ -1578,7 +2734,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/upload/video": {
+        "/admin/v1/upload/video": {
             "post": {
                 "description": "上传视频",
                 "consumes": [
@@ -1591,6 +2747,24 @@ const docTemplate = `{
                     "上传管理"
                 ],
                 "summary": "上传视频",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/common_req.UploadVideoReq"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "code错误码 msg操作信息 data返回信息",
@@ -1603,7 +2777,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/common_request.UploadVideoRes"
+                                            "$ref": "#/definitions/common_query.UploadVideoOut"
                                         }
                                     }
                                 }
@@ -1613,7 +2787,231 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/vi/sys/common/get_captcha": {
+        "/admin/v1/user/add": {
+            "post": {
+                "description": "添加用户",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "添加用户",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_req.UserAddOrEditReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/user/list": {
+            "get": {
+                "description": "用户列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "用户列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_req.UserListReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/user_req.UserListRes"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/user/reset_pwd": {
+            "post": {
+                "description": "密码重置",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "密码重置",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_req.UserResetPwdReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/v1/user/set_status": {
+            "get": {
+                "description": "用户信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "用户信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/user_query.UserListItem"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "设置状态",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "设置状态",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_req.UserSetStatusReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code错误码 msg操作信息 data返回信息",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/vi/sys/common/get_captcha": {
             "get": {
                 "description": "获取验证码",
                 "consumes": [
@@ -1638,7 +3036,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/common_request.GetOneRes"
+                                            "$ref": "#/definitions/common_req.GetOneRes"
                                         }
                                     }
                                 }
@@ -1650,35 +3048,10 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "common_request.GetOneRes": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "path": {
-                    "type": "string"
-                }
-            }
-        },
-        "common_request.UploadAddPictureRes": {
-            "type": "object",
-            "properties": {
-                "filename": {
-                    "type": "string"
-                },
-                "md5_str": {
-                    "type": "string"
-                },
-                "path": {
-                    "type": "string"
-                }
-            }
-        },
-        "common_request.UploadEditPictureRes": {
+        "common_query.UploadEditPictureOut": {
             "type": "object"
         },
-        "common_request.UploadPictureMultiRes": {
+        "common_query.UploadPictureMultiOut": {
             "type": "object",
             "properties": {
                 "err_msg": {
@@ -1698,7 +3071,24 @@ const docTemplate = `{
                 }
             }
         },
-        "common_request.UploadPictureRes": {
+        "common_query.UploadPictureOut": {
+            "type": "object",
+            "properties": {
+                "filename": {
+                    "type": "string"
+                },
+                "md5": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "common_query.UploadVideoOut": {
             "type": "object",
             "properties": {
                 "filename": {
@@ -1715,154 +3105,43 @@ const docTemplate = `{
                 }
             }
         },
-        "common_request.UploadVideoRes": {
+        "common_req.GetOneRes": {
             "type": "object",
             "properties": {
-                "filename": {
-                    "type": "string"
-                },
-                "md5_str": {
+                "id": {
                     "type": "string"
                 },
                 "path": {
                     "type": "string"
-                },
-                "type": {
-                    "type": "string"
                 }
             }
         },
-        "live_request.BackdropListRes": {
-            "type": "object",
-            "properties": {
-                "list": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.LiveBackdrop"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
+        "common_req.UploadAddPictureReq": {
+            "type": "object"
         },
-        "live_request.VideoListRes": {
-            "type": "object",
-            "properties": {
-                "list": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.LiveVideo"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
+        "common_req.UploadEditPictureReq": {
+            "type": "object"
         },
-        "model.LiveBackdrop": {
+        "common_req.UploadPictureMultiReq": {
+            "type": "object"
+        },
+        "common_req.UploadPictureReq": {
+            "type": "object"
+        },
+        "common_req.UploadVideoReq": {
+            "type": "object"
+        },
+        "config_query.ConfigGetOneOut": {
             "type": "object",
             "properties": {
+                "config": {},
                 "created_at": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "name": {
-                    "type": "string"
-                },
-                "operator": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "integer"
-                },
-                "type": {
-                    "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.LiveVideo": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "operator": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "integer"
-                },
-                "type": {
-                    "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.SysApi": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "handle": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "method": {
-                    "type": "string"
-                },
-                "operator": {
-                    "type": "string"
-                },
-                "path": {
-                    "type": "string"
-                },
-                "tags": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.SysSwitch": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "id": {
+                "is_open": {
                     "type": "integer"
                 },
                 "key": {
@@ -1877,11 +3156,454 @@ const docTemplate = `{
                 "remark": {
                     "type": "string"
                 },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "config_query.ConfigListOut": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/config_query.ConfigGetOneOut"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "config_query.SwitchDeleteInput": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "live_query.BackdropListOut": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.LiveBackdrop"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "live_query.VideoListOut": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.LiveVideo"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "live_req.BackdropAddOrEditReq": {
+            "type": "object",
+            "required": [
+                "name",
+                "status",
+                "type",
+                "url"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
                 "status": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "live_req.VideoAddOrEditReq": {
+            "type": "object",
+            "required": [
+                "name",
+                "status",
+                "type",
+                "url"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "login_query.TokenInfoOut": {
+            "type": "object",
+            "properties": {
+                "expires_at": {
+                    "type": "integer"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.LiveBackdrop": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "名称",
+                    "type": "string"
+                },
+                "operator": {
+                    "description": "操作人",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "启用状态",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "图片分类",
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "description": "更新时间",
+                    "type": "string"
+                },
+                "url": {
+                    "description": "图片地址",
+                    "type": "string"
+                }
+            }
+        },
+        "model.LiveVideo": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "名称",
+                    "type": "string"
+                },
+                "operator": {
+                    "description": "操作人",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "启用状态",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "视频分类",
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "description": "更新时间",
+                    "type": "string"
+                },
+                "url": {
+                    "description": "图片地址",
+                    "type": "string"
+                }
+            }
+        },
+        "model.SysAPI": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "删除时间",
+                    "type": "string"
+                },
+                "handle": {
+                    "description": "handle",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID",
+                    "type": "integer"
+                },
+                "method": {
+                    "description": "请求类型",
+                    "type": "string"
+                },
+                "operator": {
+                    "description": "操作人",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "地址",
+                    "type": "string"
+                },
+                "tags": {
+                    "description": "标题",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "标题",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "model.SysDept": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "删除时间",
+                    "type": "string"
+                },
+                "email": {
+                    "description": "邮箱",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID",
+                    "type": "integer"
+                },
+                "leader": {
+                    "description": "负责人",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "部门名称",
+                    "type": "string"
+                },
+                "operator": {
+                    "description": "操作人",
+                    "type": "string"
+                },
+                "parent_id": {
+                    "description": "上级部门",
+                    "type": "integer"
+                },
+                "phone": {
+                    "description": "手机号码",
+                    "type": "string"
+                },
+                "sort": {
+                    "description": "排序",
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "状态",
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "description": "最后更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "model.SysSwitch": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "删除时间",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID",
+                    "type": "integer"
+                },
+                "key": {
+                    "description": "键名",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "名称",
+                    "type": "string"
+                },
+                "operator": {
+                    "description": "操作人",
+                    "type": "string"
+                },
+                "remark": {
+                    "description": "描述",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "状态",
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "product_query.CategoryListOut": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/product_query.CategoryTreeListItem"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "product_query.CategoryTreeListItem": {
+            "type": "object",
+            "properties": {
+                "big_pic": {
+                    "type": "string"
+                },
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/product_query.CategoryTreeListItem"
+                    }
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_show": {
+                    "type": "integer"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "operator": {
+                    "type": "string"
+                },
+                "pic": {
+                    "type": "string"
+                },
+                "pid": {
+                    "type": "integer"
+                },
+                "sort": {
                     "type": "integer"
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "value": {
+                    "type": "integer"
+                }
+            }
+        },
+        "product_req.CategoryAddOrEditReq": {
+            "type": "object",
+            "required": [
+                "name",
+                "sort"
+            ],
+            "properties": {
+                "big_pic": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_show": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pic": {
+                    "type": "string"
+                },
+                "pid": {
+                    "type": "integer"
+                },
+                "sort": {
+                    "type": "integer"
+                }
+            }
+        },
+        "product_req.CategoryDeleteBatchReq": {
+            "type": "object",
+            "required": [
+                "ids"
+            ],
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "product_req.RuleListRes": {
+            "type": "object",
+            "properties": {
+                "list": {},
+                "total": {
+                    "type": "integer"
                 }
             }
         },
@@ -1903,13 +3625,195 @@ const docTemplate = `{
                 }
             }
         },
-        "sys_model.DeptTreeListItem": {
+        "sys_query.AdminListItem": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "dept_id": {
+                    "description": "部门ID",
+                    "type": "integer"
+                },
+                "dept_info": {
+                    "$ref": "#/definitions/model.SysDept"
+                },
+                "email": {
+                    "description": "邮箱",
+                    "type": "string"
+                },
+                "head_pic": {
+                    "description": "头像",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID",
+                    "type": "integer"
+                },
+                "last_ip": {
+                    "description": "最后登录IP",
+                    "type": "string"
+                },
+                "last_time": {
+                    "description": "最后登录时间",
+                    "type": "integer"
+                },
+                "login_count": {
+                    "description": "登录次数",
+                    "type": "integer"
+                },
+                "operator": {
+                    "description": "操作人",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "密码",
+                    "type": "string"
+                },
+                "phone": {
+                    "description": "电话",
+                    "type": "string"
+                },
+                "realname": {
+                    "description": "真实姓名",
+                    "type": "string"
+                },
+                "remark": {
+                    "description": "备注",
+                    "type": "string"
+                },
+                "role_ids": {
+                    "description": "电话",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "role_ids_text": {
+                    "description": "电话",
+                    "type": "string"
+                },
+                "sex": {
+                    "description": "性别",
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "状态",
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "description": "更新时间",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "用户名",
+                    "type": "string"
+                }
+            }
+        },
+        "sys_query.AdminListOut": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/sys_query.AdminListItem"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "sys_query.ApiGetTagOut": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "sys_query.ApiListOut": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.SysAPI"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "sys_query.DeptGetOneOut": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "删除时间",
+                    "type": "string"
+                },
+                "email": {
+                    "description": "邮箱",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID",
+                    "type": "integer"
+                },
+                "leader": {
+                    "description": "负责人",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "部门名称",
+                    "type": "string"
+                },
+                "operator": {
+                    "description": "操作人",
+                    "type": "string"
+                },
+                "parent_id": {
+                    "description": "上级部门",
+                    "type": "integer"
+                },
+                "phone": {
+                    "description": "手机号码",
+                    "type": "string"
+                },
+                "sort": {
+                    "description": "排序",
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "状态",
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "description": "最后更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "sys_query.DeptTreeListItem": {
             "type": "object",
             "properties": {
                 "children": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/sys_model.DeptTreeListItem"
+                        "$ref": "#/definitions/sys_query.DeptTreeListItem"
                     }
                 },
                 "created_at": {
@@ -1920,6 +3824,9 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                },
+                "label": {
+                    "type": "string"
                 },
                 "leader": {
                     "type": "string"
@@ -1944,13 +3851,31 @@ const docTemplate = `{
                 }
             }
         },
-        "sys_model.MenuListItem": {
+        "sys_query.DeptTreeListOut": {
             "type": "object",
             "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/sys_query.DeptTreeListItem"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "sys_query.MenuListItem": {
+            "type": "object",
+            "properties": {
+                "apis_id": {
+                    "description": "组件",
+                    "type": "string"
+                },
                 "children": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/sys_model.MenuListItem"
+                        "$ref": "#/definitions/sys_query.MenuListItem"
                     }
                 },
                 "component": {
@@ -1974,7 +3899,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "is_frame": {
-                    "description": "是否框架，1",
+                    "description": "是否框架",
                     "type": "integer"
                 },
                 "menu_name": {
@@ -1982,7 +3907,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "menu_type": {
-                    "description": "菜单类型，M目录 C菜单，F按钮",
+                    "description": "菜单类型",
                     "type": "string"
                 },
                 "operator": {
@@ -2018,141 +3943,306 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "visible": {
-                    "description": "是否启用，1启用",
+                    "description": "是否启用",
                     "type": "integer"
                 }
             }
         },
-        "sys_model.TokenInfoOut": {
+        "sys_query.MenuListOut": {
             "type": "object",
             "properties": {
-                "expires_at": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/sys_query.SysMenuListItem"
+                    }
+                },
+                "total": {
                     "type": "integer"
-                },
-                "token": {
-                    "type": "string"
                 }
             }
         },
-        "sys_request.AdminAddReq": {
+        "sys_query.MenuTreeListOut": {
             "type": "object",
-            "required": [
-                "password",
-                "realname",
-                "username"
-            ],
             "properties": {
-                "email": {
-                    "type": "string"
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/sys_query.MenuListItem"
+                    }
                 },
-                "password": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "realname": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "sys_request.AdminEditReq": {
-            "type": "object",
-            "required": [
-                "id",
-                "password",
-                "realname",
-                "username"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "id": {
+                "total": {
                     "type": "integer"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "realname": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
                 }
             }
         },
-        "sys_request.AdminInfo": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "realname": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "sys_request.AdminListItem": {
+        "sys_query.RoleListItem": {
             "type": "object",
             "properties": {
                 "created_at": {
                     "type": "string"
                 },
-                "email": {
-                    "type": "string"
-                },
-                "head_pic": {
+                "deleted_at": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "last_ip": {
+                "key": {
                     "type": "string"
                 },
-                "last_time": {
+                "menu_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "remark": {
+                    "type": "string"
+                },
+                "sort": {
                     "type": "integer"
-                },
-                "login_count": {
-                    "type": "integer"
-                },
-                "operator": {
-                    "type": "string"
-                },
-                "phone": {
-                    "type": "string"
-                },
-                "realname": {
-                    "type": "string"
                 },
                 "status": {
                     "type": "integer"
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "sys_query.RoleListOut": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/sys_query.RoleListItem"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "sys_query.SysMenuListItem": {
+            "type": "object",
+            "properties": {
+                "apis_id": {
+                    "description": "组件",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/sys_query.SysMenuListItem"
+                    }
+                },
+                "component": {
+                    "description": "组件",
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "删除时间",
+                    "type": "string"
+                },
+                "icon": {
+                    "description": "图标",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID",
+                    "type": "integer"
+                },
+                "is_frame": {
+                    "description": "是否框架，1",
+                    "type": "integer"
+                },
+                "label": {
+                    "description": "菜单名称",
+                    "type": "string"
+                },
+                "menu_name": {
+                    "description": "菜单名称",
+                    "type": "string"
+                },
+                "menu_type": {
+                    "description": "菜单类型，M目录 C菜单，F按钮",
+                    "type": "string"
+                },
+                "operator": {
+                    "description": "操作人",
+                    "type": "string"
+                },
+                "parent_id": {
+                    "description": "父级",
+                    "type": "integer"
+                },
+                "parent_ids": {
+                    "description": "父级类型",
+                    "type": "string"
+                },
+                "path": {
+                    "description": "前端路径",
+                    "type": "string"
+                },
+                "permission": {
+                    "description": "权限标识",
+                    "type": "string"
+                },
+                "sort": {
+                    "description": "排序",
+                    "type": "integer"
+                },
+                "sys_apis": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.SysAPI"
+                    }
+                },
+                "title": {
+                    "description": "标题",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "最后更新时间",
+                    "type": "string"
+                },
+                "visible": {
+                    "description": "是否启用，1启用",
+                    "type": "integer"
+                }
+            }
+        },
+        "sys_req.AdminAddOrEditReq": {
+            "type": "object",
+            "required": [
+                "id",
+                "realname",
+                "role_ids",
+                "sex",
+                "status",
+                "username"
+            ],
+            "properties": {
+                "dept_id": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "realname": {
+                    "type": "string"
+                },
+                "remark": {
+                    "type": "string"
+                },
+                "role_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "sex": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "integer"
                 },
                 "username": {
                     "type": "string"
                 }
             }
         },
-        "sys_request.AdminListReq": {
+        "sys_req.AdminDeleteBatchReq": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "sys_req.AdminInfo": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "realname": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "sys_req.AdminInfoRes": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "introduction": {
+                    "type": "string"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "realname": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "sys_req.AdminListReq": {
             "type": "object",
             "properties": {
                 "email": {
@@ -2172,26 +4262,44 @@ const docTemplate = `{
                 "realname": {
                     "type": "string"
                 },
+                "status": {
+                    "type": "integer",
+                    "default": -1
+                },
                 "username": {
                     "type": "string"
                 }
             }
         },
-        "sys_request.AdminListRes": {
+        "sys_req.AdminResetPwdReq": {
             "type": "object",
             "properties": {
-                "list": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/sys_request.AdminListItem"
-                    }
-                },
-                "total": {
+                "id": {
                     "type": "integer"
                 }
             }
         },
-        "sys_request.AdminSetStatusReq": {
+        "sys_req.AdminSetRoleReq": {
+            "type": "object",
+            "required": [
+                "role_ids"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "remark": {
+                    "type": "string"
+                },
+                "role_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "sys_req.AdminSetStatusReq": {
             "type": "object",
             "required": [
                 "id",
@@ -2206,30 +4314,47 @@ const docTemplate = `{
                 }
             }
         },
-        "sys_request.ApiListRes": {
+        "sys_req.ApiEditReq": {
             "type": "object",
+            "required": [
+                "handle",
+                "method",
+                "paths",
+                "tags",
+                "title"
+            ],
             "properties": {
-                "list": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.SysApi"
-                    }
+                "handle": {
+                    "type": "string"
                 },
-                "total": {
+                "id": {
                     "type": "integer"
+                },
+                "method": {
+                    "type": "string"
+                },
+                "paths": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },
-        "sys_request.ConfigAddReq": {
+        "sys_req.ConfigAddReq": {
             "type": "object",
             "required": [
                 "config",
                 "key",
-                "name",
-                "type"
+                "name"
             ],
             "properties": {
-                "config": {},
+                "config": {
+                    "type": "string"
+                },
                 "is_open": {
                     "type": "integer"
                 },
@@ -2241,13 +4366,10 @@ const docTemplate = `{
                 },
                 "remark": {
                     "type": "string"
-                },
-                "type": {
-                    "type": "integer"
                 }
             }
         },
-        "sys_request.ConfigDeleteReq": {
+        "sys_req.ConfigDeleteReq": {
             "type": "object",
             "properties": {
                 "ids": {
@@ -2258,120 +4380,50 @@ const docTemplate = `{
                 }
             }
         },
-        "sys_request.ConfigEditReq": {
+        "sys_req.ConfigEditReq": {
             "type": "object",
             "required": [
                 "config",
                 "id",
-                "name",
-                "type"
+                "key",
+                "name"
             ],
             "properties": {
                 "config": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "is_open": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "remark": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "integer"
-                }
-            }
-        },
-        "sys_request.ConfigGetOneReq": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "key": {
-                    "type": "string"
-                }
-            }
-        },
-        "sys_request.ConfigGetOneRes": {
-            "type": "object",
-            "properties": {
-                "config": {},
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "is_open": {
-                    "type": "integer"
-                },
-                "key": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "operator": {
-                    "type": "string"
-                },
-                "remark": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "sys_request.ConfigListReq": {
-            "type": "object",
-            "properties": {
-                "key": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "order": {
-                    "type": "string",
-                    "default": "id ASC"
-                },
-                "page": {
-                    "type": "integer",
-                    "default": 1
-                },
-                "page_size": {
-                    "type": "integer",
-                    "default": 20
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
-        "sys_request.ConfigListRes": {
-            "type": "object",
-            "properties": {
-                "list": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/sys_request.ConfigGetOneRes"
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
                     }
                 },
-                "total": {
+                "id": {
+                    "type": "integer"
+                },
+                "is_open": {
+                    "type": "integer"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "remark": {
+                    "type": "string"
+                }
+            }
+        },
+        "sys_req.ConfigSetStatusReq": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "is_open": {
                     "type": "integer"
                 }
             }
         },
-        "sys_request.DeptAddOrEditReq": {
+        "sys_req.DeptAddOrEditReq": {
             "type": "object",
             "required": [
                 "leader",
@@ -2406,7 +4458,18 @@ const docTemplate = `{
                 }
             }
         },
-        "sys_request.DeptDeleteReq": {
+        "sys_req.DeptDeleteMultiReq": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "sys_req.DeptDeleteReq": {
             "type": "object",
             "properties": {
                 "id": {
@@ -2414,47 +4477,7 @@ const docTemplate = `{
                 }
             }
         },
-        "sys_request.DeptTreeListReq": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "order": {
-                    "type": "string",
-                    "default": "id ASC"
-                },
-                "page": {
-                    "type": "integer",
-                    "default": 1
-                },
-                "page_size": {
-                    "type": "integer",
-                    "default": 20
-                },
-                "parent_id": {
-                    "type": "integer"
-                },
-                "status": {
-                    "type": "integer"
-                }
-            }
-        },
-        "sys_request.DeptTreeListRes": {
-            "type": "object",
-            "properties": {
-                "list": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/sys_model.DeptTreeListItem"
-                    }
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "sys_request.LoginReq": {
+        "sys_req.LoginReq": {
             "type": "object",
             "required": [
                 "password",
@@ -2476,26 +4499,30 @@ const docTemplate = `{
                 }
             }
         },
-        "sys_request.LoginRes": {
+        "sys_req.LoginRes": {
             "type": "object",
             "properties": {
                 "token_info": {
-                    "$ref": "#/definitions/sys_model.TokenInfoOut"
+                    "$ref": "#/definitions/login_query.TokenInfoOut"
                 },
                 "userinfo": {
-                    "$ref": "#/definitions/sys_request.AdminInfo"
+                    "$ref": "#/definitions/sys_req.AdminInfo"
                 }
             }
         },
-        "sys_request.MenuAddOrEditReq": {
+        "sys_req.MenuAddOrEditReq": {
             "type": "object",
             "required": [
-                "menu_name",
                 "menu_type",
-                "parent_id",
                 "title"
             ],
             "properties": {
+                "apis_id": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "component": {
                     "type": "string"
                 },
@@ -2538,41 +4565,60 @@ const docTemplate = `{
                 }
             }
         },
-        "sys_request.MenuListReq": {
+        "sys_req.RoleAddOrEditReq": {
             "type": "object",
+            "required": [
+                "key",
+                "name",
+                "status"
+            ],
             "properties": {
-                "is_show": {
-                    "type": "integer",
-                    "default": -1
+                "id": {
+                    "type": "integer"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "menu_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 },
                 "name": {
                     "type": "string"
                 },
-                "page": {
-                    "type": "integer",
-                    "default": 1
+                "remark": {
+                    "type": "string"
                 },
-                "page_size": {
-                    "type": "integer",
-                    "default": 20
-                }
-            }
-        },
-        "sys_request.MenuListRes": {
-            "type": "object",
-            "properties": {
-                "list": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/sys_model.MenuListItem"
-                    }
+                "sort": {
+                    "type": "integer"
                 },
-                "total": {
+                "status": {
                     "type": "integer"
                 }
             }
         },
-        "sys_request.SwitchAddOrEditReq": {
+        "sys_req.RoleDeleteBatchReq": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "sys_req.RoleDeleteReq": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "sys_req.SwitchAddOrEditReq": {
             "type": "object",
             "required": [
                 "key",
@@ -2597,7 +4643,7 @@ const docTemplate = `{
                 }
             }
         },
-        "sys_request.SwitchDeleteReq": {
+        "sys_req.SwitchDeleteReq": {
             "type": "object",
             "properties": {
                 "ids": {
@@ -2608,7 +4654,7 @@ const docTemplate = `{
                 }
             }
         },
-        "sys_request.SwitchListRes": {
+        "sys_req.SwitchListRes": {
             "type": "object",
             "properties": {
                 "list": {
@@ -2618,6 +4664,163 @@ const docTemplate = `{
                     }
                 },
                 "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "user_query.UserListItem": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "创建时间",
+                    "type": "string"
+                },
+                "email": {
+                    "description": "邮箱",
+                    "type": "string"
+                },
+                "head_pic": {
+                    "description": "头像",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID",
+                    "type": "integer"
+                },
+                "last_ip": {
+                    "description": "最后登录IP",
+                    "type": "string"
+                },
+                "last_time": {
+                    "description": "最后登录时间",
+                    "type": "integer"
+                },
+                "login_count": {
+                    "description": "登录次数",
+                    "type": "integer"
+                },
+                "phone": {
+                    "description": "电话",
+                    "type": "string"
+                },
+                "realname": {
+                    "description": "真实姓名",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "状态",
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "description": "更新时间",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "用户名",
+                    "type": "string"
+                }
+            }
+        },
+        "user_req.UserAddOrEditReq": {
+            "type": "object",
+            "required": [
+                "password",
+                "realname",
+                "status",
+                "username"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "realname": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "user_req.UserListReq": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer",
+                    "default": 1
+                },
+                "page_size": {
+                    "type": "integer",
+                    "default": 20
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "realname": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer",
+                    "default": -1
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "user_req.UserListRes": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/user_query.UserListItem"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "user_req.UserResetPwdReq": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "user_req.UserSetStatusReq": {
+            "type": "object",
+            "required": [
+                "id",
+                "status"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "status": {
                     "type": "integer"
                 }
             }

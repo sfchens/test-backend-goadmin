@@ -1,23 +1,7 @@
 definitions:
-  common_request.GetOneRes:
-    properties:
-      id:
-        type: string
-      path:
-        type: string
+  common_query.UploadEditPictureOut:
     type: object
-  common_request.UploadAddPictureRes:
-    properties:
-      filename:
-        type: string
-      md5_str:
-        type: string
-      path:
-        type: string
-    type: object
-  common_request.UploadEditPictureRes:
-    type: object
-  common_request.UploadPictureMultiRes:
+  common_query.UploadPictureMultiOut:
     properties:
       err_msg:
         type: string
@@ -30,7 +14,18 @@ definitions:
       status:
         type: integer
     type: object
-  common_request.UploadPictureRes:
+  common_query.UploadPictureOut:
+    properties:
+      filename:
+        type: string
+      md5:
+        type: string
+      type:
+        type: string
+      url:
+        type: string
+    type: object
+  common_query.UploadVideoOut:
     properties:
       filename:
         type: string
@@ -41,103 +36,31 @@ definitions:
       type:
         type: string
     type: object
-  common_request.UploadVideoRes:
+  common_req.GetOneRes:
     properties:
-      filename:
-        type: string
-      md5_str:
+      id:
         type: string
       path:
         type: string
-      type:
-        type: string
     type: object
-  live_request.BackdropListRes:
-    properties:
-      list:
-        items:
-          $ref: '#/definitions/model.LiveBackdrop'
-        type: array
-      total:
-        type: integer
+  common_req.UploadAddPictureReq:
     type: object
-  live_request.VideoListRes:
-    properties:
-      list:
-        items:
-          $ref: '#/definitions/model.LiveVideo'
-        type: array
-      total:
-        type: integer
+  common_req.UploadEditPictureReq:
     type: object
-  model.LiveBackdrop:
+  common_req.UploadPictureMultiReq:
+    type: object
+  common_req.UploadPictureReq:
+    type: object
+  common_req.UploadVideoReq:
+    type: object
+  config_query.ConfigGetOneOut:
     properties:
+      config: {}
       created_at:
         type: string
       id:
         type: integer
-      name:
-        type: string
-      operator:
-        type: string
-      status:
-        type: integer
-      type:
-        type: integer
-      updated_at:
-        type: string
-      url:
-        type: string
-    type: object
-  model.LiveVideo:
-    properties:
-      created_at:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      operator:
-        type: string
-      status:
-        type: integer
-      type:
-        type: integer
-      updated_at:
-        type: string
-      url:
-        type: string
-    type: object
-  model.SysApi:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      handle:
-        type: string
-      id:
-        type: integer
-      method:
-        type: string
-      operator:
-        type: string
-      path:
-        type: string
-      tags:
-        type: string
-      title:
-        type: string
-      updated_at:
-        type: string
-    type: object
-  model.SysSwitch:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      id:
+      is_open:
         type: integer
       key:
         type: string
@@ -147,10 +70,318 @@ definitions:
         type: string
       remark:
         type: string
+      updated_at:
+        type: string
+    type: object
+  config_query.ConfigListOut:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/config_query.ConfigGetOneOut'
+        type: array
+      total:
+        type: integer
+    type: object
+  config_query.SwitchDeleteInput:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+    type: object
+  live_query.BackdropListOut:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/model.LiveBackdrop'
+        type: array
+      total:
+        type: integer
+    type: object
+  live_query.VideoListOut:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/model.LiveVideo'
+        type: array
+      total:
+        type: integer
+    type: object
+  live_req.BackdropAddOrEditReq:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
       status:
+        type: integer
+      type:
+        type: integer
+      url:
+        type: string
+    required:
+    - name
+    - status
+    - type
+    - url
+    type: object
+  live_req.VideoAddOrEditReq:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      status:
+        type: integer
+      type:
+        type: integer
+      url:
+        type: string
+    required:
+    - name
+    - status
+    - type
+    - url
+    type: object
+  login_query.TokenInfoOut:
+    properties:
+      expires_at:
+        type: integer
+      token:
+        type: string
+    type: object
+  model.LiveBackdrop:
+    properties:
+      created_at:
+        description: 创建时间
+        type: string
+      id:
+        description: ID
+        type: integer
+      name:
+        description: 名称
+        type: string
+      operator:
+        description: 操作人
+        type: string
+      status:
+        description: 启用状态
+        type: integer
+      type:
+        description: 图片分类
+        type: integer
+      updated_at:
+        description: 更新时间
+        type: string
+      url:
+        description: 图片地址
+        type: string
+    type: object
+  model.LiveVideo:
+    properties:
+      created_at:
+        description: 创建时间
+        type: string
+      id:
+        description: ID
+        type: integer
+      name:
+        description: 名称
+        type: string
+      operator:
+        description: 操作人
+        type: string
+      status:
+        description: 启用状态
+        type: integer
+      type:
+        description: 视频分类
+        type: integer
+      updated_at:
+        description: 更新时间
+        type: string
+      url:
+        description: 图片地址
+        type: string
+    type: object
+  model.SysAPI:
+    properties:
+      created_at:
+        description: 创建时间
+        type: string
+      deleted_at:
+        description: 删除时间
+        type: string
+      handle:
+        description: handle
+        type: string
+      id:
+        description: ID
+        type: integer
+      method:
+        description: 请求类型
+        type: string
+      operator:
+        description: 操作人
+        type: string
+      path:
+        description: 地址
+        type: string
+      tags:
+        description: 标题
+        type: string
+      title:
+        description: 标题
+        type: string
+      updated_at:
+        description: 更新时间
+        type: string
+    type: object
+  model.SysDept:
+    properties:
+      created_at:
+        description: 创建时间
+        type: string
+      deleted_at:
+        description: 删除时间
+        type: string
+      email:
+        description: 邮箱
+        type: string
+      id:
+        description: ID
+        type: integer
+      leader:
+        description: 负责人
+        type: string
+      name:
+        description: 部门名称
+        type: string
+      operator:
+        description: 操作人
+        type: string
+      parent_id:
+        description: 上级部门
+        type: integer
+      phone:
+        description: 手机号码
+        type: string
+      sort:
+        description: 排序
+        type: integer
+      status:
+        description: 状态
+        type: integer
+      updated_at:
+        description: 最后更新时间
+        type: string
+    type: object
+  model.SysSwitch:
+    properties:
+      created_at:
+        description: 创建时间
+        type: string
+      deleted_at:
+        description: 删除时间
+        type: string
+      id:
+        description: ID
+        type: integer
+      key:
+        description: 键名
+        type: string
+      name:
+        description: 名称
+        type: string
+      operator:
+        description: 操作人
+        type: string
+      remark:
+        description: 描述
+        type: string
+      status:
+        description: 状态
+        type: integer
+      updated_at:
+        description: 更新时间
+        type: string
+    type: object
+  product_query.CategoryListOut:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/product_query.CategoryTreeListItem'
+        type: array
+      total:
+        type: integer
+    type: object
+  product_query.CategoryTreeListItem:
+    properties:
+      big_pic:
+        type: string
+      children:
+        items:
+          $ref: '#/definitions/product_query.CategoryTreeListItem'
+        type: array
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      is_show:
+        type: integer
+      label:
+        type: string
+      name:
+        type: string
+      operator:
+        type: string
+      pic:
+        type: string
+      pid:
+        type: integer
+      sort:
         type: integer
       updated_at:
         type: string
+      value:
+        type: integer
+    type: object
+  product_req.CategoryAddOrEditReq:
+    properties:
+      big_pic:
+        type: string
+      id:
+        type: integer
+      is_show:
+        type: integer
+      name:
+        type: string
+      pic:
+        type: string
+      pid:
+        type: integer
+      sort:
+        type: integer
+    required:
+    - name
+    - sort
+    type: object
+  product_req.CategoryDeleteBatchReq:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+    required:
+    - ids
+    type: object
+  product_req.RuleListRes:
+    properties:
+      list: {}
+      total:
+        type: integer
     type: object
   response.Response:
     properties:
@@ -164,11 +395,141 @@ definitions:
       trace_id:
         type: string
     type: object
-  sys_model.DeptTreeListItem:
+  sys_query.AdminListItem:
+    properties:
+      created_at:
+        description: 创建时间
+        type: string
+      dept_id:
+        description: 部门ID
+        type: integer
+      dept_info:
+        $ref: '#/definitions/model.SysDept'
+      email:
+        description: 邮箱
+        type: string
+      head_pic:
+        description: 头像
+        type: string
+      id:
+        description: ID
+        type: integer
+      last_ip:
+        description: 最后登录IP
+        type: string
+      last_time:
+        description: 最后登录时间
+        type: integer
+      login_count:
+        description: 登录次数
+        type: integer
+      operator:
+        description: 操作人
+        type: string
+      password:
+        description: 密码
+        type: string
+      phone:
+        description: 电话
+        type: string
+      realname:
+        description: 真实姓名
+        type: string
+      remark:
+        description: 备注
+        type: string
+      role_ids:
+        description: 电话
+        items:
+          type: integer
+        type: array
+      role_ids_text:
+        description: 电话
+        type: string
+      sex:
+        description: 性别
+        type: integer
+      status:
+        description: 状态
+        type: integer
+      updated_at:
+        description: 更新时间
+        type: string
+      username:
+        description: 用户名
+        type: string
+    type: object
+  sys_query.AdminListOut:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/sys_query.AdminListItem'
+        type: array
+      total:
+        type: integer
+    type: object
+  sys_query.ApiGetTagOut:
+    properties:
+      list:
+        items:
+          type: string
+        type: array
+      total:
+        type: integer
+    type: object
+  sys_query.ApiListOut:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/model.SysAPI'
+        type: array
+      total:
+        type: integer
+    type: object
+  sys_query.DeptGetOneOut:
+    properties:
+      created_at:
+        description: 创建时间
+        type: string
+      deleted_at:
+        description: 删除时间
+        type: string
+      email:
+        description: 邮箱
+        type: string
+      id:
+        description: ID
+        type: integer
+      leader:
+        description: 负责人
+        type: string
+      name:
+        description: 部门名称
+        type: string
+      operator:
+        description: 操作人
+        type: string
+      parent_id:
+        description: 上级部门
+        type: integer
+      phone:
+        description: 手机号码
+        type: string
+      sort:
+        description: 排序
+        type: integer
+      status:
+        description: 状态
+        type: integer
+      updated_at:
+        description: 最后更新时间
+        type: string
+    type: object
+  sys_query.DeptTreeListItem:
     properties:
       children:
         items:
-          $ref: '#/definitions/sys_model.DeptTreeListItem'
+          $ref: '#/definitions/sys_query.DeptTreeListItem'
         type: array
       created_at:
         type: string
@@ -176,6 +537,8 @@ definitions:
         type: string
       id:
         type: integer
+      label:
+        type: string
       leader:
         type: string
       name:
@@ -191,11 +554,23 @@ definitions:
       updated_at:
         type: string
     type: object
-  sys_model.MenuListItem:
+  sys_query.DeptTreeListOut:
     properties:
+      list:
+        items:
+          $ref: '#/definitions/sys_query.DeptTreeListItem'
+        type: array
+      total:
+        type: integer
+    type: object
+  sys_query.MenuListItem:
+    properties:
+      apis_id:
+        description: 组件
+        type: string
       children:
         items:
-          $ref: '#/definitions/sys_model.MenuListItem'
+          $ref: '#/definitions/sys_query.MenuListItem'
         type: array
       component:
         description: 组件
@@ -213,13 +588,13 @@ definitions:
         description: ID
         type: integer
       is_frame:
-        description: 是否框架，1
+        description: 是否框架
         type: integer
       menu_name:
         description: 菜单名称
         type: string
       menu_type:
-        description: 菜单类型，M目录 C菜单，F按钮
+        description: 菜单类型
         type: string
       operator:
         description: 操作人
@@ -246,96 +621,211 @@ definitions:
         description: 最后更新时间
         type: string
       visible:
-        description: 是否启用，1启用
+        description: 是否启用
         type: integer
     type: object
-  sys_model.TokenInfoOut:
+  sys_query.MenuListOut:
     properties:
-      expires_at:
+      list:
+        items:
+          $ref: '#/definitions/sys_query.SysMenuListItem'
+        type: array
+      total:
         type: integer
-      token:
-        type: string
     type: object
-  sys_request.AdminAddReq:
+  sys_query.MenuTreeListOut:
     properties:
-      email:
-        type: string
-      password:
-        type: string
-      phone:
-        type: string
-      realname:
-        type: string
-      username:
-        type: string
-    required:
-    - password
-    - realname
-    - username
-    type: object
-  sys_request.AdminEditReq:
-    properties:
-      email:
-        type: string
-      id:
+      list:
+        items:
+          $ref: '#/definitions/sys_query.MenuListItem'
+        type: array
+      total:
         type: integer
-      password:
-        type: string
-      phone:
-        type: string
-      realname:
-        type: string
-      username:
-        type: string
-    required:
-    - id
-    - password
-    - realname
-    - username
     type: object
-  sys_request.AdminInfo:
-    properties:
-      email:
-        type: string
-      id:
-        type: integer
-      phone:
-        type: string
-      realname:
-        type: string
-      username:
-        type: string
-    type: object
-  sys_request.AdminListItem:
+  sys_query.RoleListItem:
     properties:
       created_at:
         type: string
-      email:
-        type: string
-      head_pic:
+      deleted_at:
         type: string
       id:
         type: integer
-      last_ip:
+      key:
         type: string
-      last_time:
+      menu_ids:
+        items:
+          type: integer
+        type: array
+      name:
+        type: string
+      remark:
+        type: string
+      sort:
         type: integer
-      login_count:
-        type: integer
-      operator:
-        type: string
-      phone:
-        type: string
-      realname:
-        type: string
       status:
         type: integer
       updated_at:
         type: string
+    type: object
+  sys_query.RoleListOut:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/sys_query.RoleListItem'
+        type: array
+      total:
+        type: integer
+    type: object
+  sys_query.SysMenuListItem:
+    properties:
+      apis_id:
+        description: 组件
+        items:
+          type: integer
+        type: array
+      children:
+        items:
+          $ref: '#/definitions/sys_query.SysMenuListItem'
+        type: array
+      component:
+        description: 组件
+        type: string
+      created_at:
+        description: 创建时间
+        type: string
+      deleted_at:
+        description: 删除时间
+        type: string
+      icon:
+        description: 图标
+        type: string
+      id:
+        description: ID
+        type: integer
+      is_frame:
+        description: 是否框架，1
+        type: integer
+      label:
+        description: 菜单名称
+        type: string
+      menu_name:
+        description: 菜单名称
+        type: string
+      menu_type:
+        description: 菜单类型，M目录 C菜单，F按钮
+        type: string
+      operator:
+        description: 操作人
+        type: string
+      parent_id:
+        description: 父级
+        type: integer
+      parent_ids:
+        description: 父级类型
+        type: string
+      path:
+        description: 前端路径
+        type: string
+      permission:
+        description: 权限标识
+        type: string
+      sort:
+        description: 排序
+        type: integer
+      sys_apis:
+        items:
+          $ref: '#/definitions/model.SysAPI'
+        type: array
+      title:
+        description: 标题
+        type: string
+      updated_at:
+        description: 最后更新时间
+        type: string
+      visible:
+        description: 是否启用，1启用
+        type: integer
+    type: object
+  sys_req.AdminAddOrEditReq:
+    properties:
+      dept_id:
+        type: integer
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      phone:
+        type: string
+      realname:
+        type: string
+      remark:
+        type: string
+      role_ids:
+        items:
+          type: integer
+        type: array
+      sex:
+        type: integer
+      status:
+        type: integer
+      username:
+        type: string
+    required:
+    - id
+    - realname
+    - role_ids
+    - sex
+    - status
+    - username
+    type: object
+  sys_req.AdminDeleteBatchReq:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+    type: object
+  sys_req.AdminInfo:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      phone:
+        type: string
+      realname:
+        type: string
       username:
         type: string
     type: object
-  sys_request.AdminListReq:
+  sys_req.AdminInfoRes:
+    properties:
+      avatar:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      introduction:
+        type: string
+      permissions:
+        items:
+          type: string
+        type: array
+      phone:
+        type: string
+      realname:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+      username:
+        type: string
+    type: object
+  sys_req.AdminListReq:
     properties:
       email:
         type: string
@@ -349,19 +839,31 @@ definitions:
         type: string
       realname:
         type: string
+      status:
+        default: -1
+        type: integer
       username:
         type: string
     type: object
-  sys_request.AdminListRes:
+  sys_req.AdminResetPwdReq:
     properties:
-      list:
-        items:
-          $ref: '#/definitions/sys_request.AdminListItem'
-        type: array
-      total:
+      id:
         type: integer
     type: object
-  sys_request.AdminSetStatusReq:
+  sys_req.AdminSetRoleReq:
+    properties:
+      id:
+        type: integer
+      remark:
+        type: string
+      role_ids:
+        items:
+          type: integer
+        type: array
+    required:
+    - role_ids
+    type: object
+  sys_req.AdminSetStatusReq:
     properties:
       id:
         type: integer
@@ -371,18 +873,31 @@ definitions:
     - id
     - status
     type: object
-  sys_request.ApiListRes:
+  sys_req.ApiEditReq:
     properties:
-      list:
-        items:
-          $ref: '#/definitions/model.SysApi'
-        type: array
-      total:
+      handle:
+        type: string
+      id:
         type: integer
+      method:
+        type: string
+      paths:
+        type: string
+      tags:
+        type: string
+      title:
+        type: string
+    required:
+    - handle
+    - method
+    - paths
+    - tags
+    - title
     type: object
-  sys_request.ConfigAddReq:
+  sys_req.ConfigAddReq:
     properties:
-      config: {}
+      config:
+        type: string
       is_open:
         type: integer
       key:
@@ -391,98 +906,48 @@ definitions:
         type: string
       remark:
         type: string
-      type:
-        type: integer
     required:
     - config
     - key
     - name
-    - type
     type: object
-  sys_request.ConfigDeleteReq:
+  sys_req.ConfigDeleteReq:
     properties:
       ids:
         items:
           type: integer
         type: array
     type: object
-  sys_request.ConfigEditReq:
+  sys_req.ConfigEditReq:
     properties:
       config:
-        type: string
+        additionalProperties:
+          type: string
+        type: object
       id:
         type: integer
       is_open:
         type: integer
+      key:
+        type: string
       name:
         type: string
       remark:
         type: string
-      type:
-        type: integer
     required:
     - config
     - id
+    - key
     - name
-    - type
     type: object
-  sys_request.ConfigGetOneReq:
+  sys_req.ConfigSetStatusReq:
     properties:
-      id:
-        type: integer
-      key:
-        type: string
-    type: object
-  sys_request.ConfigGetOneRes:
-    properties:
-      config: {}
-      created_at:
-        type: string
       id:
         type: integer
       is_open:
         type: integer
-      key:
-        type: string
-      name:
-        type: string
-      operator:
-        type: string
-      remark:
-        type: string
-      type:
-        type: integer
-      updated_at:
-        type: string
     type: object
-  sys_request.ConfigListReq:
-    properties:
-      key:
-        type: string
-      name:
-        type: string
-      order:
-        default: id ASC
-        type: string
-      page:
-        default: 1
-        type: integer
-      page_size:
-        default: 20
-        type: integer
-      type:
-        type: string
-    type: object
-  sys_request.ConfigListRes:
-    properties:
-      list:
-        items:
-          $ref: '#/definitions/sys_request.ConfigGetOneRes'
-        type: array
-      total:
-        type: integer
-    type: object
-  sys_request.DeptAddOrEditReq:
+  sys_req.DeptAddOrEditReq:
     properties:
       email:
         type: string
@@ -506,39 +971,19 @@ definitions:
     - name
     - status
     type: object
-  sys_request.DeptDeleteReq:
+  sys_req.DeptDeleteMultiReq:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+    type: object
+  sys_req.DeptDeleteReq:
     properties:
       id:
         type: integer
     type: object
-  sys_request.DeptTreeListReq:
-    properties:
-      name:
-        type: string
-      order:
-        default: id ASC
-        type: string
-      page:
-        default: 1
-        type: integer
-      page_size:
-        default: 20
-        type: integer
-      parent_id:
-        type: integer
-      status:
-        type: integer
-    type: object
-  sys_request.DeptTreeListRes:
-    properties:
-      list:
-        items:
-          $ref: '#/definitions/sys_model.DeptTreeListItem'
-        type: array
-      total:
-        type: integer
-    type: object
-  sys_request.LoginReq:
+  sys_req.LoginReq:
     properties:
       captcha:
         default: "123456"
@@ -553,15 +998,19 @@ definitions:
     - password
     - username
     type: object
-  sys_request.LoginRes:
+  sys_req.LoginRes:
     properties:
       token_info:
-        $ref: '#/definitions/sys_model.TokenInfoOut'
+        $ref: '#/definitions/login_query.TokenInfoOut'
       userinfo:
-        $ref: '#/definitions/sys_request.AdminInfo'
+        $ref: '#/definitions/sys_req.AdminInfo'
     type: object
-  sys_request.MenuAddOrEditReq:
+  sys_req.MenuAddOrEditReq:
     properties:
+      apis_id:
+        items:
+          type: integer
+        type: array
       component:
         type: string
       icon:
@@ -590,35 +1039,45 @@ definitions:
       visible:
         type: integer
     required:
-    - menu_name
     - menu_type
-    - parent_id
     - title
     type: object
-  sys_request.MenuListReq:
+  sys_req.RoleAddOrEditReq:
     properties:
-      is_show:
-        default: -1
+      id:
         type: integer
+      key:
+        type: string
+      menu_ids:
+        items:
+          type: integer
+        type: array
       name:
         type: string
-      page:
-        default: 1
+      remark:
+        type: string
+      sort:
         type: integer
-      page_size:
-        default: 20
+      status:
         type: integer
+    required:
+    - key
+    - name
+    - status
     type: object
-  sys_request.MenuListRes:
+  sys_req.RoleDeleteBatchReq:
     properties:
-      list:
+      ids:
         items:
-          $ref: '#/definitions/sys_model.MenuListItem'
+          type: integer
         type: array
-      total:
+    type: object
+  sys_req.RoleDeleteReq:
+    properties:
+      id:
         type: integer
     type: object
-  sys_request.SwitchAddOrEditReq:
+  sys_req.SwitchAddOrEditReq:
     properties:
       id:
         type: integer
@@ -635,14 +1094,14 @@ definitions:
     - name
     - status
     type: object
-  sys_request.SwitchDeleteReq:
+  sys_req.SwitchDeleteReq:
     properties:
       ids:
         items:
           type: integer
         type: array
     type: object
-  sys_request.SwitchListRes:
+  sys_req.SwitchListRes:
     properties:
       list:
         items:
@@ -651,14 +1110,135 @@ definitions:
       total:
         type: integer
     type: object
+  user_query.UserListItem:
+    properties:
+      created_at:
+        description: 创建时间
+        type: string
+      email:
+        description: 邮箱
+        type: string
+      head_pic:
+        description: 头像
+        type: string
+      id:
+        description: ID
+        type: integer
+      last_ip:
+        description: 最后登录IP
+        type: string
+      last_time:
+        description: 最后登录时间
+        type: integer
+      login_count:
+        description: 登录次数
+        type: integer
+      phone:
+        description: 电话
+        type: string
+      realname:
+        description: 真实姓名
+        type: string
+      status:
+        description: 状态
+        type: integer
+      updated_at:
+        description: 更新时间
+        type: string
+      username:
+        description: 用户名
+        type: string
+    type: object
+  user_req.UserAddOrEditReq:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      phone:
+        type: string
+      realname:
+        type: string
+      status:
+        type: integer
+      username:
+        type: string
+    required:
+    - password
+    - realname
+    - status
+    - username
+    type: object
+  user_req.UserListReq:
+    properties:
+      email:
+        type: string
+      page:
+        default: 1
+        type: integer
+      page_size:
+        default: 20
+        type: integer
+      phone:
+        type: string
+      realname:
+        type: string
+      status:
+        default: -1
+        type: integer
+      username:
+        type: string
+    type: object
+  user_req.UserListRes:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/user_query.UserListItem'
+        type: array
+      total:
+        type: integer
+    type: object
+  user_req.UserResetPwdReq:
+    properties:
+      id:
+        type: integer
+      password:
+        type: string
+    required:
+    - id
+    type: object
+  user_req.UserSetStatusReq:
+    properties:
+      id:
+        type: integer
+      status:
+        type: integer
+    required:
+    - id
+    - status
+    type: object
 info:
   contact: {}
 paths:
-  /api/v1/live/backdrop/add:
+  /admin/v1/live/backdrop/add:
     post:
       consumes:
       - application/json
       description: 添加背景
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/live_req.BackdropAddOrEditReq'
       produces:
       - application/json
       responses:
@@ -669,11 +1249,23 @@ paths:
       summary: 添加背景
       tags:
       - 直播背景
-  /api/v1/live/backdrop/edit:
+  /admin/v1/live/backdrop/edit:
     post:
       consumes:
       - application/json
       description: 编辑背景
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/live_req.BackdropAddOrEditReq'
       produces:
       - application/json
       responses:
@@ -684,11 +1276,34 @@ paths:
       summary: 编辑背景
       tags:
       - 直播背景
-  /api/v1/live/backdrop/list:
+  /admin/v1/live/backdrop/list:
     get:
       consumes:
       - application/json
       description: 背景列表
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: name
+        type: string
+      - default: 1
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        in: query
+        name: page_size
+        type: integer
+      - in: query
+        name: status
+        type: string
+      - in: query
+        name: type
+        type: string
       produces:
       - application/json
       responses:
@@ -699,16 +1314,28 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/live_request.BackdropListRes'
+                  $ref: '#/definitions/live_query.BackdropListOut'
               type: object
       summary: 背景列表
       tags:
       - 直播背景
-  /api/v1/live/video/add:
+  /admin/v1/live/video/add:
     post:
       consumes:
       - application/json
       description: 新增视频
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/live_req.VideoAddOrEditReq'
       produces:
       - application/json
       responses:
@@ -719,11 +1346,23 @@ paths:
       summary: 新增视频
       tags:
       - 直播视频管理
-  /api/v1/live/video/edit:
+  /admin/v1/live/video/edit:
     post:
       consumes:
       - application/json
       description: 编辑视频
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/live_req.VideoAddOrEditReq'
       produces:
       - application/json
       responses:
@@ -734,11 +1373,34 @@ paths:
       summary: 编辑视频
       tags:
       - 直播视频管理
-  /api/v1/live/video/list:
+  /admin/v1/live/video/list:
     get:
       consumes:
       - application/json
       description: 视频列表
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: name
+        type: string
+      - default: 1
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        in: query
+        name: page_size
+        type: integer
+      - in: query
+        name: status
+        type: string
+      - in: query
+        name: type
+        type: string
       produces:
       - application/json
       responses:
@@ -749,23 +1411,217 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/live_request.VideoListRes'
+                  $ref: '#/definitions/live_query.VideoListOut'
               type: object
       summary: 视频列表
       tags:
-      - 视频管理
-  /api/v1/sys/admin/add:
+      - 直播视频管理
+  /admin/v1/product/category/add:
+    post:
+      consumes:
+      - application/json
+      description: 添加分类
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/product_req.CategoryAddOrEditReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 添加分类
+      tags:
+      - 分类管理
+  /admin/v1/product/category/delete_multi:
+    post:
+      consumes:
+      - application/json
+      description: 批量删除
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/product_req.CategoryDeleteBatchReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 批量删除
+      tags:
+      - 分类管理
+  /admin/v1/product/category/edit:
+    post:
+      consumes:
+      - application/json
+      description: 编辑分类
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/product_req.CategoryAddOrEditReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 编辑分类
+      tags:
+      - 分类管理
+  /admin/v1/product/category/list:
+    get:
+      consumes:
+      - application/json
+      description: 分类列表
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: is_show
+        type: integer
+      - default: 1
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        in: query
+        name: page_size
+        type: integer
+      - collectionFormat: csv
+        in: query
+        items:
+          type: integer
+        name: pids[]
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/product_query.CategoryListOut'
+              type: object
+      summary: 分类列表
+      tags:
+      - 分类管理
+  /admin/v1/product/rule/add:
+    post:
+      consumes:
+      - application/json
+      description: 添加商品规格
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: id
+        type: integer
+      - in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 添加商品规格
+      tags:
+      - 商品规格管理
+  /admin/v1/product/rule/list:
+    get:
+      consumes:
+      - application/json
+      description: 商品规格列表
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: name
+        type: string
+      - default: 1
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/product_req.RuleListRes'
+              type: object
+      summary: 商品规格列表
+      tags:
+      - 商品规格管理
+  /admin/v1/sys/admin/add:
     post:
       consumes:
       - application/json
       description: 添加管理员
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.AdminAddReq'
+          $ref: '#/definitions/sys_req.AdminAddOrEditReq'
       produces:
       - application/json
       responses:
@@ -776,18 +1632,23 @@ paths:
       summary: 添加管理员
       tags:
       - 管理员管理
-  /api/v1/sys/admin/edit:
+  /admin/v1/sys/admin/delete_batch:
     post:
       consumes:
       - application/json
-      description: 编辑管理员
+      description: 批量删除
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.AdminEditReq'
+          $ref: '#/definitions/sys_req.AdminDeleteBatchReq'
       produces:
       - application/json
       responses:
@@ -795,14 +1656,20 @@ paths:
           description: code错误码 msg操作信息 data返回信息
           schema:
             $ref: '#/definitions/response.Response'
-      summary: 编辑管理员
+      summary: 批量删除
       tags:
       - 管理员管理
-  /api/v1/sys/admin/get_admin_info:
+  /admin/v1/sys/admin/get_admin_info:
     get:
       consumes:
       - application/json
       description: 管理员信息
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -813,23 +1680,28 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/sys_request.AdminListItem'
+                  $ref: '#/definitions/sys_req.AdminInfoRes'
               type: object
       summary: 管理员信息
       tags:
       - 管理员管理
-  /api/v1/sys/admin/list:
+  /admin/v1/sys/admin/list:
     get:
       consumes:
       - application/json
       description: 管理员列表
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.AdminListReq'
+          $ref: '#/definitions/sys_req.AdminListReq'
       produces:
       - application/json
       responses:
@@ -840,23 +1712,82 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/sys_request.AdminListRes'
+                  $ref: '#/definitions/sys_query.AdminListOut'
               type: object
       summary: 管理员列表
       tags:
       - 管理员管理
-  /api/v1/sys/admin/set_status:
+  /admin/v1/sys/admin/reset_pwd:
+    post:
+      consumes:
+      - application/json
+      description: 重置密码
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/sys_req.AdminResetPwdReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 重置密码
+      tags:
+      - 管理员管理
+  /admin/v1/sys/admin/set_role:
+    post:
+      consumes:
+      - application/json
+      description: 设置规则
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/sys_req.AdminSetRoleReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 设置规则
+      tags:
+      - 管理员管理
+  /admin/v1/sys/admin/set_status:
     post:
       consumes:
       - application/json
       description: 设置状态
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.AdminSetStatusReq'
+          $ref: '#/definitions/sys_req.AdminSetStatusReq'
       produces:
       - application/json
       responses:
@@ -867,11 +1798,23 @@ paths:
       summary: 设置状态
       tags:
       - 管理员管理
-  /api/v1/sys/api/delete_multi:
+  /admin/v1/sys/api/delete_multi:
     get:
       consumes:
       - application/json
       description: 接口分类
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - collectionFormat: csv
+        in: query
+        items:
+          type: integer
+        name: ids
+        type: array
       produces:
       - application/json
       responses:
@@ -882,11 +1825,23 @@ paths:
       summary: 接口分类
       tags:
       - 接口管理
-  /api/v1/sys/api/edit:
+  /admin/v1/sys/api/edit:
     post:
       consumes:
       - application/json
       description: 编辑接口
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/sys_req.ApiEditReq'
       produces:
       - application/json
       responses:
@@ -897,33 +1852,28 @@ paths:
       summary: 编辑接口
       tags:
       - 接口管理
-  /api/v1/sys/api/get_tag:
+  /admin/v1/sys/api/get_tag:
     get:
       consumes:
       - application/json
       description: 接口分类
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: code错误码 msg操作信息 data返回信息
-          schema:
-            $ref: '#/definitions/response.Response'
-      summary: 接口分类
-      tags:
-      - 接口管理
-  /api/v1/sys/api/list:
-    get:
-      consumes:
-      - application/json
-      description: 接口列表
       parameters:
-      - description: 请求参数
-        in: body
-        name: raw
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
         required: true
-        schema:
-          $ref: '#/definitions/sys_request.AdminSetStatusReq'
+        type: string
+      - default: 1
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        in: query
+        name: page_size
+        type: integer
+      - in: query
+        name: tag
+        type: string
       produces:
       - application/json
       responses:
@@ -934,16 +1884,68 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/sys_request.ApiListRes'
+                  $ref: '#/definitions/sys_query.ApiGetTagOut'
+              type: object
+      summary: 接口分类
+      tags:
+      - 接口管理
+  /admin/v1/sys/api/list:
+    get:
+      consumes:
+      - application/json
+      description: 接口列表
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: method
+        type: string
+      - default: 1
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        in: query
+        name: page_size
+        type: integer
+      - in: query
+        name: path
+        type: string
+      - in: query
+        name: tag
+        type: string
+      - in: query
+        name: title
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/sys_query.ApiListOut'
               type: object
       summary: 接口列表
       tags:
       - 接口管理
-  /api/v1/sys/api/refresh:
-    get:
+  /admin/v1/sys/api/refresh:
+    post:
       consumes:
       - application/json
       description: 刷新接口
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -954,18 +1956,23 @@ paths:
       summary: 刷新接口
       tags:
       - 接口管理
-  /api/v1/sys/config/add:
+  /admin/v1/sys/config/add:
     post:
       consumes:
       - application/json
       description: 添加配置
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.ConfigAddReq'
+          $ref: '#/definitions/sys_req.ConfigAddReq'
       produces:
       - application/json
       responses:
@@ -976,18 +1983,23 @@ paths:
       summary: 添加配置
       tags:
       - 配置管理
-  /api/v1/sys/config/delete:
+  /admin/v1/sys/config/delete:
     post:
       consumes:
       - application/json
       description: 设置状态
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.ConfigEditReq'
+          $ref: '#/definitions/sys_req.ConfigSetStatusReq'
       produces:
       - application/json
       responses:
@@ -998,18 +2010,23 @@ paths:
       summary: 设置状态
       tags:
       - 配置管理
-  /api/v1/sys/config/edit:
+  /admin/v1/sys/config/edit:
     post:
       consumes:
       - application/json
       description: 编辑配置
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.ConfigEditReq'
+          $ref: '#/definitions/sys_req.ConfigEditReq'
       produces:
       - application/json
       responses:
@@ -1020,18 +2037,24 @@ paths:
       summary: 编辑配置
       tags:
       - 配置管理
-  /api/v1/sys/config/get_one:
+  /admin/v1/sys/config/get_one:
     get:
       consumes:
       - application/json
       description: 获取一条配置
       parameters:
-      - description: 请求参数
-        in: body
-        name: raw
-        required: true
-        schema:
-          $ref: '#/definitions/sys_request.ConfigGetOneReq'
+      - in: query
+        name: id
+        type: integer
+      - in: query
+        name: key
+        type: string
+      - collectionFormat: csv
+        in: query
+        items:
+          type: string
+        name: key2
+        type: array
       produces:
       - application/json
       responses:
@@ -1042,23 +2065,43 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/sys_request.ConfigGetOneRes'
+                  $ref: '#/definitions/config_query.ConfigGetOneOut'
               type: object
       summary: 获取一条配置
       tags:
       - 配置管理
-  /api/v1/sys/config/list:
+  /admin/v1/sys/config/list:
     get:
       consumes:
       - application/json
       description: 配置列表
       parameters:
-      - description: 请求参数
-        in: body
-        name: raw
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
         required: true
-        schema:
-          $ref: '#/definitions/sys_request.ConfigListReq'
+        type: string
+      - in: query
+        name: key
+        type: string
+      - in: query
+        name: key_name
+        type: string
+      - in: query
+        name: name
+        type: string
+      - default: id ASC
+        in: query
+        name: order
+        type: string
+      - default: 1
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        in: query
+        name: page_size
+        type: integer
       produces:
       - application/json
       responses:
@@ -1069,23 +2112,28 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/sys_request.ConfigListRes'
+                  $ref: '#/definitions/config_query.ConfigListOut'
               type: object
       summary: 配置列表
       tags:
       - 配置管理
-  /api/v1/sys/dept/add:
+  /admin/v1/sys/dept/add:
     post:
       consumes:
       - application/json
       description: 添加部门
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.DeptAddOrEditReq'
+          $ref: '#/definitions/sys_req.DeptAddOrEditReq'
       produces:
       - application/json
       responses:
@@ -1096,18 +2144,23 @@ paths:
       summary: 添加部门
       tags:
       - 部门管理
-  /api/v1/sys/dept/delete:
+  /admin/v1/sys/dept/delete:
     post:
       consumes:
       - application/json
       description: 删除部门
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.DeptDeleteReq'
+          $ref: '#/definitions/sys_req.DeptDeleteReq'
       produces:
       - application/json
       responses:
@@ -1118,45 +2171,50 @@ paths:
       summary: 删除部门
       tags:
       - 部门管理
-  /api/v1/sys/dept/delete_multi:
+  /admin/v1/sys/dept/delete_multi:
     post:
       consumes:
       - application/json
       description: 批量删除
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.DeptTreeListReq'
+          $ref: '#/definitions/sys_req.DeptDeleteMultiReq'
       produces:
       - application/json
       responses:
         "200":
           description: code错误码 msg操作信息 data返回信息
           schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/sys_request.DeptTreeListRes'
-              type: object
+            $ref: '#/definitions/response.Response'
       summary: 批量删除
       tags:
       - 部门管理
-  /api/v1/sys/dept/edit:
+  /admin/v1/sys/dept/edit:
     post:
       consumes:
       - application/json
       description: 编辑部门
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.DeptAddOrEditReq'
+          $ref: '#/definitions/sys_req.DeptAddOrEditReq'
       produces:
       - application/json
       responses:
@@ -1167,18 +2225,20 @@ paths:
       summary: 编辑部门
       tags:
       - 部门管理
-  /api/v1/sys/dept/get_one:
+  /admin/v1/sys/dept/get_one:
     get:
       consumes:
       - application/json
       description: 一条部门信息
       parameters:
-      - description: 请求参数
-        in: body
-        name: raw
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
         required: true
-        schema:
-          $ref: '#/definitions/sys_request.DeptTreeListReq'
+        type: string
+      - in: query
+        name: id
+        type: integer
       produces:
       - application/json
       responses:
@@ -1189,23 +2249,43 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/sys_request.DeptTreeListRes'
+                  $ref: '#/definitions/sys_query.DeptGetOneOut'
               type: object
       summary: 一条部门信息
       tags:
       - 部门管理
-  /api/v1/sys/dept/list:
+  /admin/v1/sys/dept/list:
     get:
       consumes:
       - application/json
       description: 部门tree列表
       parameters:
-      - description: 请求参数
-        in: body
-        name: raw
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
         required: true
-        schema:
-          $ref: '#/definitions/sys_request.DeptTreeListReq'
+        type: string
+      - in: query
+        name: name
+        type: string
+      - default: id ASC
+        in: query
+        name: order
+        type: string
+      - default: 1
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        in: query
+        name: page_size
+        type: integer
+      - in: query
+        name: parent_id
+        type: integer
+      - in: query
+        name: status
+        type: integer
       produces:
       - application/json
       responses:
@@ -1216,12 +2296,12 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/sys_request.DeptTreeListRes'
+                  $ref: '#/definitions/sys_query.DeptTreeListOut'
               type: object
       summary: 部门tree列表
       tags:
       - 部门管理
-  /api/v1/sys/login:
+  /admin/v1/sys/login:
     post:
       consumes:
       - application/json
@@ -1229,10 +2309,10 @@ paths:
       parameters:
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.LoginReq'
+          $ref: '#/definitions/sys_req.LoginReq'
       produces:
       - application/json
       responses:
@@ -1243,34 +2323,50 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/sys_request.LoginRes'
+                  $ref: '#/definitions/sys_req.LoginRes'
               type: object
       summary: 登录
       tags:
       - 管理员登录管理
-  /api/v1/sys/login_info:
+  /admin/v1/sys/login_info:
     get:
       consumes:
       - application/json
       description: 登录信息
       parameters:
-      - description: 请求参数
-        in: body
-        name: raw
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
         required: true
-        schema:
-          $ref: '#/definitions/sys_request.LoginReq'
+        type: string
+      - in: query
+        name: id
+        type: integer
+      - in: query
+        name: key
+        type: string
+      - collectionFormat: csv
+        in: query
+        items:
+          type: string
+        name: key2
+        type: array
       produces:
       - application/json
       responses:
         "200":
           description: code错误码 msg操作信息 data返回信息
           schema:
-            $ref: '#/definitions/response.Response'
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/config_query.ConfigGetOneOut'
+              type: object
       summary: 登录信息
       tags:
       - 管理员登录管理
-  /api/v1/sys/logout:
+  /admin/v1/sys/logout:
     post:
       consumes:
       - application/json
@@ -1281,7 +2377,7 @@ paths:
         name: raw
         required: true
         schema:
-          $ref: '#/definitions/sys_request.LoginReq'
+          $ref: '#/definitions/sys_req.LoginReq'
       produces:
       - application/json
       responses:
@@ -1292,18 +2388,23 @@ paths:
       summary: 退出
       tags:
       - 管理员登录管理
-  /api/v1/sys/menu/add:
+  /admin/v1/sys/menu/add:
     post:
       consumes:
       - application/json
       description: 添加菜单
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.MenuAddOrEditReq'
+          $ref: '#/definitions/sys_req.MenuAddOrEditReq'
       produces:
       - application/json
       responses:
@@ -1314,18 +2415,23 @@ paths:
       summary: 添加菜单
       tags:
       - 菜单管理
-  /api/v1/sys/menu/edit:
+  /admin/v1/sys/menu/edit:
     post:
       consumes:
       - application/json
       description: 编辑菜单
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.MenuAddOrEditReq'
+          $ref: '#/definitions/sys_req.MenuAddOrEditReq'
       produces:
       - application/json
       responses:
@@ -1336,18 +2442,36 @@ paths:
       summary: 编辑菜单
       tags:
       - 菜单管理
-  /api/v1/sys/menu/tree_list:
+  /admin/v1/sys/menu/list:
     get:
       consumes:
       - application/json
       description: 菜单列表
       parameters:
-      - description: 请求参数
-        in: body
-        name: raw
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
         required: true
-        schema:
-          $ref: '#/definitions/sys_request.MenuListReq'
+        type: string
+      - in: query
+        name: key
+        type: string
+      - default: M
+        in: query
+        name: menu_type
+        type: string
+      - default: 1
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        in: query
+        name: page_size
+        type: integer
+      - default: -1
+        in: query
+        name: visible
+        type: integer
       produces:
       - application/json
       responses:
@@ -1358,23 +2482,41 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/sys_request.MenuListRes'
+                  $ref: '#/definitions/sys_query.MenuListOut'
               type: object
       summary: 菜单列表
       tags:
       - 菜单管理
-  /api/v1/sys/menu/tree_list_all:
+  /admin/v1/sys/menu/tree_list:
     get:
       consumes:
       - application/json
       description: 菜单列表
       parameters:
-      - description: 请求参数
-        in: body
-        name: raw
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
         required: true
-        schema:
-          $ref: '#/definitions/sys_request.MenuListReq'
+        type: string
+      - in: query
+        name: key
+        type: string
+      - default: M
+        in: query
+        name: menu_type
+        type: string
+      - default: 1
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        in: query
+        name: page_size
+        type: integer
+      - default: 1
+        in: query
+        name: visible
+        type: integer
       produces:
       - application/json
       responses:
@@ -1385,23 +2527,120 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/sys_request.MenuListRes'
+                  $ref: '#/definitions/sys_query.MenuTreeListOut'
               type: object
       summary: 菜单列表
       tags:
       - 菜单管理
-  /api/v1/sys/menu/tree_role_list:
+  /admin/v1/sys/role/add:
+    post:
+      consumes:
+      - application/json
+      description: 添加角色
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/sys_req.RoleAddOrEditReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 添加角色
+      tags:
+      - 角色管理
+  /admin/v1/sys/role/delete:
+    post:
+      consumes:
+      - application/json
+      description: 删除角色
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/sys_req.RoleDeleteReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 删除角色
+      tags:
+      - 角色管理
+  /admin/v1/sys/role/delete_batch:
+    post:
+      consumes:
+      - application/json
+      description: 批量删除角色
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/sys_req.RoleDeleteBatchReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 批量删除角色
+      tags:
+      - 角色管理
+  /admin/v1/sys/role/list:
     get:
       consumes:
       - application/json
-      description: 权限菜单
+      description: 角色列表
       parameters:
-      - description: 请求参数
-        in: body
-        name: raw
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
         required: true
-        schema:
-          $ref: '#/definitions/sys_request.MenuListReq'
+        type: string
+      - in: query
+        name: key
+        type: string
+      - in: query
+        name: name
+        type: string
+      - default: 1
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        in: query
+        name: page_size
+        type: integer
+      - in: query
+        name: status
+        type: integer
       produces:
       - application/json
       responses:
@@ -1412,23 +2651,28 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/sys_request.MenuListRes'
+                  $ref: '#/definitions/sys_query.RoleListOut'
               type: object
-      summary: 权限菜单
+      summary: 角色列表
       tags:
-      - 菜单管理
-  /api/v1/sys/switch/add:
+      - 角色管理
+  /admin/v1/sys/switch/add:
     post:
       consumes:
       - application/json
       description: 添加开关配置
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.SwitchAddOrEditReq'
+          $ref: '#/definitions/sys_req.SwitchAddOrEditReq'
       produces:
       - application/json
       responses:
@@ -1439,18 +2683,23 @@ paths:
       summary: 添加开关配置
       tags:
       - 开关管理
-  /api/v1/sys/switch/delete:
+  /admin/v1/sys/switch/delete:
     post:
       consumes:
       - application/json
       description: 删除开关
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.SwitchDeleteReq'
+          $ref: '#/definitions/config_query.SwitchDeleteInput'
       produces:
       - application/json
       responses:
@@ -1461,18 +2710,23 @@ paths:
       summary: 删除开关
       tags:
       - 开关管理
-  /api/v1/sys/switch/edit:
+  /admin/v1/sys/switch/edit:
     post:
       consumes:
       - application/json
       description: 编辑开关配置
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.SwitchAddOrEditReq'
+          $ref: '#/definitions/sys_req.SwitchAddOrEditReq'
       produces:
       - application/json
       responses:
@@ -1483,18 +2737,35 @@ paths:
       summary: 编辑开关配置
       tags:
       - 开关管理
-  /api/v1/sys/switch/list:
+  /admin/v1/sys/switch/list:
     get:
       consumes:
       - application/json
       description: 开关配置列表
       parameters:
-      - description: 请求参数
-        in: body
-        name: raw
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
         required: true
-        schema:
-          $ref: '#/definitions/sys_request.SwitchAddOrEditReq'
+        type: string
+      - in: query
+        name: key
+        type: string
+      - in: query
+        name: name
+        type: string
+      - default: id DESC
+        in: query
+        name: order
+        type: string
+      - default: 1
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        in: query
+        name: page_size
+        type: integer
       produces:
       - application/json
       responses:
@@ -1505,23 +2776,28 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/sys_request.SwitchListRes'
+                  $ref: '#/definitions/sys_req.SwitchListRes'
               type: object
       summary: 开关配置列表
       tags:
       - 开关管理
-  /api/v1/sys/switch/set_status:
+  /admin/v1/sys/switch/set_status:
     post:
       consumes:
       - application/json
       description: 设置状态
       parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: 请求参数
         in: body
-        name: raw
+        name: object
         required: true
         schema:
-          $ref: '#/definitions/sys_request.SwitchDeleteReq'
+          $ref: '#/definitions/sys_req.SwitchDeleteReq'
       produces:
       - application/json
       responses:
@@ -1532,11 +2808,23 @@ paths:
       summary: 设置状态
       tags:
       - 开关管理
-  /api/v1/upload/add_picture:
+  /admin/v1/upload/add_picture:
     post:
       consumes:
       - application/json
       description: 新增图片
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/common_req.UploadAddPictureReq'
       produces:
       - application/json
       responses:
@@ -1547,16 +2835,28 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/common_request.UploadAddPictureRes'
+                  $ref: '#/definitions/common_query.UploadPictureOut'
               type: object
       summary: 新增图片
       tags:
       - 上传管理
-  /api/v1/upload/edit_picture:
+  /admin/v1/upload/edit_picture:
     post:
       consumes:
       - application/json
       description: 编辑图片
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/common_req.UploadEditPictureReq'
       produces:
       - application/json
       responses:
@@ -1567,16 +2867,28 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/common_request.UploadEditPictureRes'
+                  $ref: '#/definitions/common_query.UploadEditPictureOut'
               type: object
       summary: 编辑图片
       tags:
       - 上传管理
-  /api/v1/upload/picture:
+  /admin/v1/upload/picture:
     post:
       consumes:
       - application/json
       description: 上传图片
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/common_req.UploadPictureReq'
       produces:
       - application/json
       responses:
@@ -1587,16 +2899,28 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/common_request.UploadPictureRes'
+                  $ref: '#/definitions/common_query.UploadPictureOut'
               type: object
       summary: 上传图片
       tags:
       - 上传管理
-  /api/v1/upload/picture_multi:
+  /admin/v1/upload/picture_multi:
     post:
       consumes:
       - application/json
       description: 批量上传图片
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/common_req.UploadPictureMultiReq'
       produces:
       - application/json
       responses:
@@ -1608,17 +2932,29 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/common_request.UploadPictureMultiRes'
+                    $ref: '#/definitions/common_query.UploadPictureMultiOut'
                   type: array
               type: object
       summary: 批量上传图片
       tags:
       - 上传管理
-  /api/v1/upload/video:
+  /admin/v1/upload/video:
     post:
       consumes:
       - application/json
       description: 上传视频
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/common_req.UploadVideoReq'
       produces:
       - application/json
       responses:
@@ -1629,12 +2965,154 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/common_request.UploadVideoRes'
+                  $ref: '#/definitions/common_query.UploadVideoOut'
               type: object
       summary: 上传视频
       tags:
       - 上传管理
-  /api/vi/sys/common/get_captcha:
+  /admin/v1/user/add:
+    post:
+      consumes:
+      - application/json
+      description: 添加用户
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/user_req.UserAddOrEditReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 添加用户
+      tags:
+      - 用户管理
+  /admin/v1/user/list:
+    get:
+      consumes:
+      - application/json
+      description: 用户列表
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/user_req.UserListReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user_req.UserListRes'
+              type: object
+      summary: 用户列表
+      tags:
+      - 用户管理
+  /admin/v1/user/reset_pwd:
+    post:
+      consumes:
+      - application/json
+      description: 密码重置
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/user_req.UserResetPwdReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 密码重置
+      tags:
+      - 用户管理
+  /admin/v1/user/set_status:
+    get:
+      consumes:
+      - application/json
+      description: 用户信息
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user_query.UserListItem'
+              type: object
+      summary: 用户信息
+      tags:
+      - 用户管理
+    post:
+      consumes:
+      - application/json
+      description: 设置状态
+      parameters:
+      - description: Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请求参数
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/user_req.UserSetStatusReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: code错误码 msg操作信息 data返回信息
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: 设置状态
+      tags:
+      - 用户管理
+  /admin/vi/sys/common/get_captcha:
     get:
       consumes:
       - application/json
@@ -1649,7 +3127,7 @@ paths:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/common_request.GetOneRes'
+                  $ref: '#/definitions/common_req.GetOneRes'
               type: object
       summary: 获取验证码
       tags:

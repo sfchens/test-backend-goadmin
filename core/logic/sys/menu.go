@@ -63,7 +63,6 @@ func (s *sSysMenuService) List(ctx *gin.Context, input sys_query.MenuListInput) 
 	)
 
 	model := s.getQuery(input)
-
 	err = model.Count(&out.Total).Error
 	if err != nil {
 		return

@@ -8,9 +8,9 @@ type UploadPictureInput struct {
 	Path     string                `json:"path" form:"path" description:"保存路径"`
 }
 type UploadPictureOut struct {
-	Md5Str   string `json:"md5_str" form:"md5_str" description:"md5"`
+	Md5Str   string `json:"md5" form:"md5" description:"md5"`
 	Filename string `json:"filename" form:"filename" description:"名称"`
-	Path     string `json:"path" form:"path" description:"保存路径"`
+	Url      string `json:"url" form:"url" description:"保存路径"`
 	Type     string `json:"type" form:"type" description:"图片类型"`
 }
 

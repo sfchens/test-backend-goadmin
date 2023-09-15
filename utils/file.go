@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"os"
+	"strings"
 )
 
 func FileExists(path string) (bool, error) {
@@ -17,4 +18,17 @@ func FileExists(path string) (bool, error) {
 		return false, nil
 	}
 	return false, err
+}
+
+type FileName struct {
+	Name    string
+	ExtName string
+}
+
+func GetFileName(filename string) (nameTmp FileName) {
+	strArr := strings.Split(filename, ".")
+	name := strings.Join(strArr[:len(strArr)-1], ".")
+	nameTmp.Name = name
+	nameTmp.ExtName = strArr[len(strArr)-1]
+	return
 }

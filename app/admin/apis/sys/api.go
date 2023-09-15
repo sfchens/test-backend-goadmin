@@ -21,8 +21,9 @@ func NewSysApi() *cSysApi {
 // @Tags 接口管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.AdminSetStatusReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys.ApiListRes} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query  sys_req.ApiListReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_query.ApiListOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/api/list [get]
 func (c *cSysApi) List(ctx *gin.Context) {
 	var (
@@ -33,12 +34,13 @@ func (c *cSysApi) List(ctx *gin.Context) {
 		input sys_query.ApiListInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
+	utils.StructToStruct(req, &input)
 	res, err = service.NewSysServiceGroup().ApiService.List(ctx, input)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
@@ -53,8 +55,9 @@ func (c *cSysApi) List(ctx *gin.Context) {
 // @Tags 接口管理
 // @Accept application/json
 // @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /admin/v1/sys/api/refresh [get]
+// @Router /admin/v1/sys/api/refresh [post]
 func (c *cSysApi) Refresh(ctx *gin.Context) {
 	var (
 		err error
@@ -73,6 +76,8 @@ func (c *cSysApi) Refresh(ctx *gin.Context) {
 // @Tags 接口管理
 // @Accept application/json
 // @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body  sys_req.ApiEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/api/edit [post]
 func (c *cSysApi) Edit(ctx *gin.Context) {
@@ -83,12 +88,12 @@ func (c *cSysApi) Edit(ctx *gin.Context) {
 		input sys_query.ApiEditInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().ApiService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
@@ -103,7 +108,9 @@ func (c *cSysApi) Edit(ctx *gin.Context) {
 // @Tags 接口管理
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query  sys_req.ApiGetTagReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_query.ApiGetTagOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/api/get_tag [get]
 func (c *cSysApi) GetTag(ctx *gin.Context) {
 	var (
@@ -120,6 +127,7 @@ func (c *cSysApi) GetTag(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	res, err = service.NewSysServiceGroup().ApiService.GetTag(ctx, input)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
@@ -134,6 +142,8 @@ func (c *cSysApi) GetTag(ctx *gin.Context) {
 // @Tags 接口管理
 // @Accept application/json
 // @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query  sys_query.ApiDeleteMultiInput true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/api/delete_multi [get]
 func (c *cSysApi) DeleteMulti(ctx *gin.Context) {

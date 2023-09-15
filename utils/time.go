@@ -12,6 +12,10 @@ func NowDate() string {
 	return time.Now().Format(tpl)
 }
 
+func TimeNow() string {
+	return time.Now().Format(TIME_FORMAT)
+}
+
 func SplitTimeStr(timeStr string, typ string) (timeStrTmp string) {
 	var timeArr []string
 	switch typ {

@@ -26,8 +26,9 @@ func NewSysAdminApi() *cSysAdminApi {
 // @Tags 管理员管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.AdminListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys.AdminListRes}  "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.AdminListReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_query.AdminListOut}  "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/admin/list [get]
 func (c *cSysAdminApi) List(ctx *gin.Context) {
 	var (
@@ -37,11 +38,12 @@ func (c *cSysAdminApi) List(ctx *gin.Context) {
 		input sys_query.AdminListInput
 		res   sys_query.AdminListOut
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	res, err = service.NewSysServiceGroup().AdminService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -56,7 +58,8 @@ func (c *cSysAdminApi) List(ctx *gin.Context) {
 // @Tags 管理员管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.AdminAddOrEditReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.AdminAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/admin/add [post]
 func (c *cSysAdminApi) Add(ctx *gin.Context) {
@@ -66,11 +69,12 @@ func (c *cSysAdminApi) Add(ctx *gin.Context) {
 
 		input sys_query.AdminAddOrEditInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().AdminService.Add(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -85,7 +89,8 @@ func (c *cSysAdminApi) Add(ctx *gin.Context) {
 // @Tags 管理员管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.AdminSetStatusReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.AdminSetStatusReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/admin/set_status [post]
 func (c *cSysAdminApi) SetStatus(ctx *gin.Context) {
@@ -95,11 +100,12 @@ func (c *cSysAdminApi) SetStatus(ctx *gin.Context) {
 
 		input sys_query.AdminSetStatusInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().AdminService.SetStatus(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -114,7 +120,8 @@ func (c *cSysAdminApi) SetStatus(ctx *gin.Context) {
 // @Tags 管理员管理
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} response.Response{data=sys.AdminListItem} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Success 200 {object} response.Response{data=sys_req.AdminInfoRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/admin/get_admin_info [get]
 func (c *cSysAdminApi) GetAdminInfo(ctx *gin.Context) {
 	var (
@@ -153,7 +160,8 @@ func (c *cSysAdminApi) GetAdminInfo(ctx *gin.Context) {
 // @Tags 管理员管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys_request.AdminResetPwd true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.AdminResetPwdReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/admin/reset_pwd [post]
 func (c *cSysAdminApi) ResetPwd(ctx *gin.Context) {
@@ -164,11 +172,12 @@ func (c *cSysAdminApi) ResetPwd(ctx *gin.Context) {
 		input sys_query.AdminResetPwdInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().AdminService.ResetPwd(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -183,7 +192,8 @@ func (c *cSysAdminApi) ResetPwd(ctx *gin.Context) {
 // @Tags 管理员管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.AdminDeleteBatchReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body sys_req.AdminDeleteBatchReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/admin/delete_batch [post]
 func (c *cSysAdminApi) DeleteBatch(ctx *gin.Context) {
@@ -194,11 +204,12 @@ func (c *cSysAdminApi) DeleteBatch(ctx *gin.Context) {
 		input sys_query.AdminDeleteBatchInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().AdminService.DeleteBatch(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -207,6 +218,16 @@ func (c *cSysAdminApi) DeleteBatch(ctx *gin.Context) {
 	response.Success(ctx)
 }
 
+// SetRole  设置规则
+// @Summary 设置规则
+// @Description 设置规则
+// @Tags 管理员管理
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body sys_req.AdminSetRoleReq true "请求参数"
+// @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
+// @Router /admin/v1/sys/admin/set_role [post]
 func (c *cSysAdminApi) SetRole(ctx *gin.Context) {
 	var (
 		err error
@@ -215,12 +236,12 @@ func (c *cSysAdminApi) SetRole(ctx *gin.Context) {
 		input sys_query.AdminSetRoleInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().AdminService.SetRole(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())

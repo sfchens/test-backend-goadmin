@@ -16,6 +16,16 @@ func NewUserApi() *cUserApi {
 	return &cUserApi{}
 }
 
+// Add  添加用户
+// @Summary 添加用户
+// @Description 添加用户
+// @Tags 用户管理
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body  user_req.UserAddOrEditReq true "请求参数"
+// @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
+// @Router /admin/v1/user/add [post]
 func (c *cUserApi) Add(ctx *gin.Context) {
 	var (
 		err error
@@ -24,12 +34,12 @@ func (c *cUserApi) Add(ctx *gin.Context) {
 		input user_query.UserAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
+	utils.StructToStruct(req, &input)
 	err = service.NewUserServiceGroup().UserService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -38,6 +48,16 @@ func (c *cUserApi) Add(ctx *gin.Context) {
 	response.Success(ctx)
 }
 
+// List  用户列表
+// @Summary 用户列表
+// @Description 用户列表
+// @Tags 用户管理
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body  user_req.UserListReq true "请求参数"
+// @Success 200 {object} response.Response{data=user_req.UserListRes} "code错误码 msg操作信息 data返回信息"
+// @Router /admin/v1/user/list [get]
 func (c *cUserApi) List(ctx *gin.Context) {
 
 	var (
@@ -48,11 +68,12 @@ func (c *cUserApi) List(ctx *gin.Context) {
 
 		input user_query.UserListInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	res.Total, res.List, err = service.NewUserServiceGroup().UserService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -62,6 +83,16 @@ func (c *cUserApi) List(ctx *gin.Context) {
 	response.SuccessWithData(ctx, res)
 }
 
+// ResetPwd  密码重置
+// @Summary 密码重置
+// @Description 密码重置
+// @Tags 用户管理
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body  user_req.UserResetPwdReq true "请求参数"
+// @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
+// @Router /admin/v1/user/reset_pwd [post]
 func (c *cUserApi) ResetPwd(ctx *gin.Context) {
 	var (
 		err error
@@ -70,12 +101,13 @@ func (c *cUserApi) ResetPwd(ctx *gin.Context) {
 		input user_query.UserResetPwdInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
+	utils.StructToStruct(req, &input)
 	if req.Password == "" {
 		input.Password = "123456"
 	}
@@ -87,6 +119,16 @@ func (c *cUserApi) ResetPwd(ctx *gin.Context) {
 	response.Success(ctx)
 }
 
+// SetStatus  设置状态
+// @Summary 设置状态
+// @Description 设置状态
+// @Tags 用户管理
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body  user_req.UserSetStatusReq true "请求参数"
+// @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
+// @Router /admin/v1/user/set_status [post]
 func (c *cUserApi) SetStatus(ctx *gin.Context) {
 	var (
 		err error
@@ -94,11 +136,12 @@ func (c *cUserApi) SetStatus(ctx *gin.Context) {
 
 		input user_query.UserSetStatusInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewUserServiceGroup().UserService.SetStatus(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -107,6 +150,16 @@ func (c *cUserApi) SetStatus(ctx *gin.Context) {
 	response.Success(ctx)
 }
 
+// GetInfo  用户信息
+// @Summary 用户信息
+// @Description 用户信息
+// @Tags 用户管理
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query  user_req.UserGetInfoReq true "请求参数"
+// @Success 200 {object} response.Response{data=user_query.UserListItem} "code错误码 msg操作信息 data返回信息"
+// @Router /admin/v1/user/set_status [get]
 func (c *cUserApi) GetInfo(ctx *gin.Context) {
 	var (
 		err error

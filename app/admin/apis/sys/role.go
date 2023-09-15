@@ -21,7 +21,8 @@ func NewSysRoleApi() *cSysRoleApi {
 // @Tags 角色管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.RoleAddOrEditReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.RoleAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/role/add [post]
 func (c *cSysRoleApi) Add(ctx *gin.Context) {
@@ -32,11 +33,12 @@ func (c *cSysRoleApi) Add(ctx *gin.Context) {
 		input sys_query.RoleAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().RoleService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -52,8 +54,9 @@ func (c *cSysRoleApi) Add(ctx *gin.Context) {
 // @Tags 角色管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.RoleListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys.RoleListRes} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query     sys_req.RoleListReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_query.RoleListOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/role/list [get]
 func (c *cSysRoleApi) List(ctx *gin.Context) {
 	var (
@@ -64,11 +67,12 @@ func (c *cSysRoleApi) List(ctx *gin.Context) {
 		res   sys_query.RoleListOut
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	res, err = service.NewSysServiceGroup().RoleService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -83,7 +87,8 @@ func (c *cSysRoleApi) List(ctx *gin.Context) {
 // @Tags 角色管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.RoleDeleteBatchReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.RoleDeleteBatchReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/role/delete_batch [post]
 func (c *cSysRoleApi) DeleteBatch(ctx *gin.Context) {
@@ -93,11 +98,12 @@ func (c *cSysRoleApi) DeleteBatch(ctx *gin.Context) {
 		req   sys_req.RoleDeleteBatchReq
 		input sys_query.RoleDeleteBatchInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().RoleService.DeleteBatch(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -113,9 +119,10 @@ func (c *cSysRoleApi) DeleteBatch(ctx *gin.Context) {
 // @Tags 角色管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.RoleDeleteReq true "请求参数"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     sys_req.RoleDeleteReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
-// @Router /admin/v1/sys/role/delete[post]
+// @Router /admin/v1/sys/role/delete [post]
 func (c *cSysRoleApi) Delete(ctx *gin.Context) {
 	var (
 		err error
@@ -128,6 +135,7 @@ func (c *cSysRoleApi) Delete(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().RoleService.Delete(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())

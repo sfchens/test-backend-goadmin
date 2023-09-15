@@ -40,3 +40,8 @@ func ToJson(data interface{}) string {
 	bytes, _ := json.Marshal(data)
 	return string(bytes)
 }
+
+func JsonToInterface(data interface{}, res interface{}) {
+	t, _ := json.Marshal(data)
+	json.Unmarshal(t, &res)
+}

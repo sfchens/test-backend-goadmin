@@ -21,6 +21,8 @@ func NewVideoApi() *cVideoApi {
 // @Tags 直播视频管理
 // @Accept application/json
 // @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     live_req.VideoAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/live/video/add [post]
 func (c *cVideoApi) Add(ctx *gin.Context) {
@@ -30,11 +32,12 @@ func (c *cVideoApi) Add(ctx *gin.Context) {
 
 		input live_query.VideoAddOrEditInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewLiveServiceGroup().VideoService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -50,6 +53,8 @@ func (c *cVideoApi) Add(ctx *gin.Context) {
 // @Tags 直播视频管理
 // @Accept application/json
 // @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     live_req.VideoAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/live/video/edit [post]
 func (c *cVideoApi) Edit(ctx *gin.Context) {
@@ -59,11 +64,12 @@ func (c *cVideoApi) Edit(ctx *gin.Context) {
 
 		input live_query.VideoAddOrEditInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewLiveServiceGroup().VideoService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -76,10 +82,12 @@ func (c *cVideoApi) Edit(ctx *gin.Context) {
 // List  视频列表
 // @Summary 视频列表
 // @Description 视频列表
-// @Tags 视频管理
+// @Tags 直播视频管理
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} response.Response{data=live.VideoListRes} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query     live_req.VideoListReq true "请求参数"
+// @Success 200 {object} response.Response{data=live_query.VideoListOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/live/video/list [get]
 func (c *cVideoApi) List(ctx *gin.Context) {
 	var (
@@ -89,12 +97,13 @@ func (c *cVideoApi) List(ctx *gin.Context) {
 		input live_query.VideoListInput
 		res   live_query.VideoListOut
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
+	utils.StructToStruct(req, &input)
 	res, err = service.NewLiveServiceGroup().VideoService.List(ctx, input)
 
 	if err != nil {

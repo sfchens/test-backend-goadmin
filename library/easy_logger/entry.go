@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -36,7 +37,7 @@ func ZapLog(fileNames ...string) (loggerT *zap.Logger) {
 			loggerT = log[fileNames[0]]
 		}
 	} else {
-		loggerT = log[LogFileAppKey]
+		loggerT = log[LogFileApp]
 	}
 	// 显示抛出异常行数
 	if easy_config.Config.Zap.ShowLine {
@@ -48,23 +49,15 @@ func ZapLog(fileNames ...string) (loggerT *zap.Logger) {
 
 // OperateLogger 操作日志
 func OperateLogger(ctx *gin.Context, logObjKey string) {
-	logDataObj := getRequestData(ctx)
 	msg := GetLogTemplate(ctx, nil)
 
 	zapLog := ZapLog(logObjKey)
 	// 记录操作信息
+	logDataObj := getRequestData(ctx)
 	if logDataObj.Status != http.StatusOK {
 		zapLog.Error(msg)
 	}
 	zapLog.Info(msg)
-}
-
-// getDefaultLog 获取默认日志名
-func getDefaultLog() []string {
-	logArr := []string{
-		LogFileAppKey,
-	}
-	return logArr
 }
 
 // getRequestData 获取请求参数
@@ -109,7 +102,27 @@ func GetLogTemplate(ctx *gin.Context, msg interface{}) string {
 	}
 	return tmp
 }
+func GetLogModulesName(ctx *gin.Context) (module string) {
 
+	path := ctx.Request.URL.Path
+	strArr := strings.Split(path, "/")
+
+	if len(strArr) > 0 {
+		module = strArr[1]
+	}
+	// 判断模块是否存在日志文件
+	var flag bool
+	for _, v := range LogArr {
+		if v == module {
+			flag = true
+			break
+		}
+	}
+	if !flag {
+		module = LogFileApp
+	}
+	return
+}
 func (s *logger) Info(ctx *gin.Context, msg interface{}) {
 	tmpMsg := GetLogTemplate(ctx, msg)
 	s.CurrentZap.Info(tmpMsg)

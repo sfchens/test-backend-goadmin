@@ -22,6 +22,8 @@ func NewCategoryApi() *cCategoryApi {
 // @Tags 分类管理
 // @Accept application/json
 // @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body  product_req.CategoryAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/product/category/add [post]
 func (c *cCategoryApi) Add(ctx *gin.Context) {
@@ -54,6 +56,8 @@ func (c *cCategoryApi) Add(ctx *gin.Context) {
 // @Tags 分类管理
 // @Accept application/json
 // @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body  product_req.CategoryAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/product/category/edit [post]
 func (c *cCategoryApi) Edit(ctx *gin.Context) {
@@ -65,12 +69,13 @@ func (c *cCategoryApi) Edit(ctx *gin.Context) {
 		input product_query.CategoryAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewProductServiceGroup().CategoryService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -86,6 +91,8 @@ func (c *cCategoryApi) Edit(ctx *gin.Context) {
 // @Tags 分类管理
 // @Accept application/json
 // @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query  product_req.CategoryListReq true "请求参数"
 // @Success 200 {object} response.Response{data=product_query.CategoryListOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/product/category/list [get]
 func (c *cCategoryApi) List(ctx *gin.Context) {
@@ -120,6 +127,8 @@ func (c *cCategoryApi) List(ctx *gin.Context) {
 // @Tags 分类管理
 // @Accept application/json
 // @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body  product_req.CategoryDeleteBatchReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/product/category/delete_multi [post]
 func (c *cCategoryApi) DeleteBatch(ctx *gin.Context) {

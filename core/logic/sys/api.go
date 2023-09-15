@@ -33,18 +33,17 @@ func (s *sSysApiService) List(ctx *gin.Context, input sys_query.ApiListInput) (o
 		pageSize = input.PageSize
 	)
 
-	model1 := s.getQuery(ctx, input)
+	m := s.getQuery(ctx, input)
 
-	err = model1.Count(&out.Total).Error
+	err = m.Count(&out.Total).Error
 	if err != nil {
 		return
 	}
 
-	err = model1.Offset((page - 1) * pageSize).Limit(pageSize).Order("id DESC").Scan(&out.List).Error
+	err = m.Offset((page - 1) * pageSize).Limit(pageSize).Order("id DESC").Scan(&out.List).Error
 	if err != nil {
 		return
 	}
-
 	return
 }
 
@@ -99,7 +98,6 @@ func (s *sSysApiService) Refresh() (err error) {
 		sysApiModel.Title = title
 		sysApiModel.Tags = strings.Join(tags, ",")
 		sysApiModel.Operator = global.OperatorSystem
-
 		err = easy_db.GetDb().Clauses(clause.OnConflict{
 			UpdateAll: true,
 		}).Create(&sysApiModel).Error

@@ -23,8 +23,8 @@ func NewSysLogin() *cSysLoginApi {
 // @Tags 管理员登录管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.LoginReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys.LoginRes} "code错误码 msg操作信息 data返回信息"
+// @Param object body     sys_req.LoginReq true "请求参数"
+// @Success 200 {object} response.Response{data=sys_req.LoginRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/login [post]
 func (c cSysLoginApi) Login(ctx *gin.Context) {
 	var (
@@ -63,8 +63,9 @@ func (c cSysLoginApi) Login(ctx *gin.Context) {
 // @Tags 管理员登录管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.LoginReq true "请求参数"
-// @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query     sys_req.ConfigGetOneReq true "请求参数"
+// @Success 200 {object} response.Response{data=config_query.ConfigGetOneOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/login_info [get]
 func (c cSysLoginApi) LoginInfo(ctx *gin.Context) {
 	var (
@@ -75,11 +76,12 @@ func (c cSysLoginApi) LoginInfo(ctx *gin.Context) {
 		input config_query.ConfigGetOneInput
 		res   config_query.ConfigGetOneOut
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	var out config_query.SysConfig
 	out, err = service.NewConfigServiceGroup().ConfigService.GetOne(ctx, input)
 	if err != nil {
@@ -95,7 +97,7 @@ func (c cSysLoginApi) LoginInfo(ctx *gin.Context) {
 // @Tags 管理员登录管理
 // @Accept application/json
 // @Produce application/json
-// @Param raw body     sys.LoginReq true "请求参数"
+// @Param raw body     sys_req.LoginReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/logout [post]
 func (c cSysLoginApi) Logout(ctx *gin.Context) {

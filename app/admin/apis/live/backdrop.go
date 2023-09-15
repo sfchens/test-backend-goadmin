@@ -21,6 +21,8 @@ func NewBackdropApi() *cBackdropApi {
 // @Tags 直播背景
 // @Accept application/json
 // @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body live_req.BackdropAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/live/backdrop/add [post]
 func (c *cBackdropApi) Add(ctx *gin.Context) {
@@ -31,11 +33,12 @@ func (c *cBackdropApi) Add(ctx *gin.Context) {
 		input live_query.BackdropAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewLiveServiceGroup().BackdropService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -51,6 +54,8 @@ func (c *cBackdropApi) Add(ctx *gin.Context) {
 // @Tags 直播背景
 // @Accept application/json
 // @Produce application/json
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body     live_req.BackdropAddOrEditReq true "请求参数"
 // @Success 200 {object} response.Response "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/live/backdrop/edit [post]
 func (c *cBackdropApi) Edit(ctx *gin.Context) {
@@ -61,11 +66,12 @@ func (c *cBackdropApi) Edit(ctx *gin.Context) {
 		input live_query.BackdropAddOrEditInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	err = service.NewLiveServiceGroup().BackdropService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -81,7 +87,9 @@ func (c *cBackdropApi) Edit(ctx *gin.Context) {
 // @Tags 直播背景
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} response.Response{data=live.BackdropListRes} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object query     live_req.BackdropListReq true "请求参数"
+// @Success 200 {object} response.Response{data=live_query.BackdropListOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/live/backdrop/list [get]
 func (c *cBackdropApi) List(ctx *gin.Context) {
 	var (
@@ -91,11 +99,12 @@ func (c *cBackdropApi) List(ctx *gin.Context) {
 		input live_query.BackdropListInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	res, err = service.NewLiveServiceGroup().BackdropService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())

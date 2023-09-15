@@ -67,22 +67,27 @@ func (s *sUploadService) UploadPicture(ctx *gin.Context, input common_query.Uplo
 		filename = file.Filename
 	}
 
+	nameInfo := utils.GetFileName(filename)
+
+	fmt.Printf("filename: %v； %+v\n", filename, nameInfo)
+	filenameMd5 := utils.Md5(nameInfo.Name)
 	var dir string
 	dir, err = utils.GetPicTureDir(paths)
 	if err != nil {
 		return
 	}
 
-	saveDir := path.Join(dir, filename)
+	newFileName := fmt.Sprintf("%v.%v", filenameMd5, nameInfo.ExtName)
+	saveDir := path.Join(dir, newFileName)
 	err = s.ctx.SaveUploadedFile(file, saveDir)
 	if err != nil {
 		return
 	}
 
 	out = common_query.UploadPictureOut{
-		Md5Str:   utils.Md5(filename),
+		Md5Str:   filenameMd5,
 		Filename: filename,
-		Path:     saveDir,
+		Url:      utils.GetBaseUrl(saveDir),
 		Type:     picType,
 	}
 	return
@@ -126,7 +131,7 @@ func (s *sUploadService) UploadPictureMulti(ctx *gin.Context, input common_query
 		} else {
 			res.Status = 1
 			res.Filename = out1.Filename
-			res.Path = out1.Path
+			res.Path = out1.Url
 			res.Md5Str = out1.Md5Str
 		}
 		out = append(out, res)

@@ -21,7 +21,9 @@ func NewUploadApi() *cUploadApi {
 // @Tags 上传管理
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} response.Response{data=common.UploadAddPictureRes} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body  common_req.UploadAddPictureReq true "请求参数"
+// @Success 200 {object} response.Response{data=common_query.UploadPictureOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/upload/add_picture [post]
 func (c *cUploadApi) AddPicture(ctx *gin.Context) {
 	var (
@@ -35,6 +37,7 @@ func (c *cUploadApi) AddPicture(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	res, err = service.NewCommonServiceGroup().UploadService.AddPicture(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -49,7 +52,9 @@ func (c *cUploadApi) AddPicture(ctx *gin.Context) {
 // @Tags 上传管理
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} response.Response{data=common.UploadEditPictureRes} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body  common_req.UploadEditPictureReq true "请求参数"
+// @Success 200 {object} response.Response{data=common_query.UploadEditPictureOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/upload/edit_picture [post]
 func (c *cUploadApi) EditPicture(ctx *gin.Context) {
 	var (
@@ -58,11 +63,12 @@ func (c *cUploadApi) EditPicture(ctx *gin.Context) {
 		res   common_query.UploadEditPictureOut
 		input common_query.UploadEditPictureInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	res, err = service.NewCommonServiceGroup().UploadService.EditPicture(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -77,7 +83,9 @@ func (c *cUploadApi) EditPicture(ctx *gin.Context) {
 // @Tags 上传管理
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} response.Response{data=common.UploadPictureRes} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body  common_req.UploadPictureReq true "请求参数"
+// @Success 200 {object} response.Response{data=common_query.UploadPictureOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/upload/picture [post]
 func (c *cUploadApi) UploadPicture(ctx *gin.Context) {
 	var (
@@ -88,11 +96,13 @@ func (c *cUploadApi) UploadPicture(ctx *gin.Context) {
 		res   common_query.UploadPictureOut
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+
+	utils.StructToStruct(req, &input)
 	res, err = service.NewCommonServiceGroup().UploadService.UploadPicture(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -108,7 +118,9 @@ func (c *cUploadApi) UploadPicture(ctx *gin.Context) {
 // @Tags 上传管理
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} response.Response{data=[]common.UploadPictureMultiRes} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body  common_req.UploadPictureMultiReq true "请求参数"
+// @Success 200 {object} response.Response{data=[]common_query.UploadPictureMultiOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/upload/picture_multi [post]
 func (c *cUploadApi) UploadPictureMulti(ctx *gin.Context) {
 	var (
@@ -120,11 +132,12 @@ func (c *cUploadApi) UploadPictureMulti(ctx *gin.Context) {
 		input common_query.UploadPictureMultiInput
 	)
 
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	res = service.NewCommonServiceGroup().UploadService.UploadPictureMulti(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -140,7 +153,9 @@ func (c *cUploadApi) UploadPictureMulti(ctx *gin.Context) {
 // @Tags 上传管理
 // @Accept application/json
 // @Produce application/json
-// @Success 200 {object} response.Response{data=common.UploadVideoRes} "code错误码 msg操作信息 data返回信息"
+// @Param Authorization header string true "Bearer 用户令牌"
+// @Param object body  common_req.UploadVideoReq true "请求参数"
+// @Success 200 {object} response.Response{data=common_query.UploadVideoOut} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/upload/video [post]
 func (c *cUploadApi) UploadVideo(ctx *gin.Context) {
 	var (
@@ -150,11 +165,12 @@ func (c *cUploadApi) UploadVideo(ctx *gin.Context) {
 
 		input common_query.UploadVideoInput
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	utils.StructToStruct(req, &input)
 	res, err = service.NewCommonServiceGroup().UploadService.UploadVideo(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
