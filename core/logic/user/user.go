@@ -179,14 +179,14 @@ func (s *sUser) SetStatus(ctx *gin.Context, input user_query.UserSetStatusInput)
 	return
 }
 
-func (s *sUser) List(ctx *gin.Context, input user_query.UserListInput) (total int64, out []user_query.UserListItem, err error) {
+func (s *sUser) List(ctx *gin.Context, input user_query.UserListInput) (out user_query.UserListOut, err error) {
 	var (
 		page     = input.Page
 		pageSize = input.PageSize
 	)
 
 	m := s.getQuery(input)
-	err = m.Count(&total).Error
+	err = m.Count(&out.Total).Error
 	if err != nil {
 		return
 	}
@@ -200,8 +200,7 @@ func (s *sUser) List(ctx *gin.Context, input user_query.UserListInput) (total in
 	for _, item := range userList {
 		var tmp user_query.UserListItem
 		utils.StructToStruct(item, &tmp)
-
-		out = append(out, tmp)
+		out.List = append(out.List, tmp)
 	}
 	return
 }

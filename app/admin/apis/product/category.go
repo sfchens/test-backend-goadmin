@@ -70,7 +70,6 @@ func (c *cCategoryApi) Edit(ctx *gin.Context) {
 	)
 
 	err = utils.BindParams(ctx, &req)
-
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
@@ -93,17 +92,15 @@ func (c *cCategoryApi) Edit(ctx *gin.Context) {
 // @Produce application/json
 // @Param Authorization header string true "Bearer 用户令牌"
 // @Param object query  product_req.CategoryListReq true "请求参数"
-// @Success 200 {object} response.Response{data=product_query.CategoryListOut} "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=product_req.CategoryListRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/product/category/list [get]
 func (c *cCategoryApi) List(ctx *gin.Context) {
 
 	var (
 		err error
 
-		req   product_req.CategoryListReq
-		input product_query.CategoryListInput
-
-		res product_query.CategoryListOut
+		req product_req.CategoryListReq
+		res product_req.CategoryListRes
 	)
 
 	err = utils.BindParams(ctx, &req)
@@ -111,14 +108,18 @@ func (c *cCategoryApi) List(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	var (
+		input product_query.CategoryListInput
+		out   product_query.CategoryListOut
+	)
 	utils.StructToStruct(req, &input)
-	res, err = service.NewProductServiceGroup().CategoryService.List(ctx, input)
+	out, err = service.NewProductServiceGroup().CategoryService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // DeleteBatch  批量删除
@@ -144,6 +145,7 @@ func (c *cCategoryApi) DeleteBatch(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+
 	utils.StructToStruct(req, &input)
 	err = service.NewProductServiceGroup().CategoryService.DeleteBatch(ctx, input)
 	if err != nil {

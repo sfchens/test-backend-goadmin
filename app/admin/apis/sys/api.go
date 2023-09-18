@@ -23,15 +23,13 @@ func NewSysApi() *cSysApi {
 // @Produce application/json
 // @Param Authorization header string true "Bearer 用户令牌"
 // @Param object query  sys_req.ApiListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys_query.ApiListOut} "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=sys_req.ApiListRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/api/list [get]
 func (c *cSysApi) List(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.ApiListReq
-		res sys_query.ApiListOut
-
-		input sys_query.ApiListInput
+		res sys_req.ApiListRes
 	)
 
 	err = utils.BindParams(ctx, &req)
@@ -40,13 +38,17 @@ func (c *cSysApi) List(ctx *gin.Context) {
 		return
 	}
 
-	utils.StructToStruct(req, &input)
-	res, err = service.NewSysServiceGroup().ApiService.List(ctx, input)
+	var (
+		input sys_query.ApiListInput
+		out   sys_query.ApiListOut
+	)
+	 utils.StructToStruct(req, &input)
+	out, err = service.NewSysServiceGroup().ApiService.List(ctx, input)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
 		return
 	}
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // Refresh  刷新接口
@@ -110,16 +112,13 @@ func (c *cSysApi) Edit(ctx *gin.Context) {
 // @Produce application/json
 // @Param Authorization header string true "Bearer 用户令牌"
 // @Param object query  sys_req.ApiGetTagReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys_query.ApiGetTagOut} "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=sys_req.ApiGetTagRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/api/get_tag [get]
 func (c *cSysApi) GetTag(ctx *gin.Context) {
 	var (
 		err error
-
 		req sys_req.ApiGetTagReq
-		res sys_query.ApiGetTagOut
-
-		input sys_query.ApiGetTagInput
+		res sys_req.ApiGetTagRes
 	)
 
 	err = utils.BindParams(ctx, &req)
@@ -127,13 +126,17 @@ func (c *cSysApi) GetTag(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	var (
+		input sys_query.ApiGetTagInput
+		out   sys_query.ApiGetTagOut
+	)
 	utils.StructToStruct(req, &input)
-	res, err = service.NewSysServiceGroup().ApiService.GetTag(ctx, input)
+	out, err = service.NewSysServiceGroup().ApiService.GetTag(ctx, input)
 	if err != nil {
 		response.SuccessWithData(ctx, err.Error())
 		return
 	}
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // DeleteMulti  接口分类

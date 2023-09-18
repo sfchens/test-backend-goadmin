@@ -3,7 +3,6 @@ package service
 import (
 	"csf/core/mysql/model"
 	"csf/core/query/sys_query"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -78,7 +77,6 @@ type (
 
 func RegisterNewAdmin(i iAdmin) {
 	localSysService.AdminService = i
-	fmt.Printf("AdminService:  %+v\n", localSysService.AdminService)
 }
 
 func RegisterNewApi(i iApi) {

@@ -45,3 +45,20 @@ func JsonToInterface(data interface{}, res interface{}) {
 	t, _ := json.Marshal(data)
 	json.Unmarshal(t, &res)
 }
+
+func IsTypeDefaultValue(typeT interface{}) bool {
+
+	switch typeT.(type) {
+	case int:
+		val, _ := typeT.(int)
+		return val == 0
+	case int32:
+		val, _ := typeT.(int)
+		return val == 0
+	case int64:
+		val, _ := typeT.(int)
+		return val == 0
+	default:
+		return false
+	}
+}

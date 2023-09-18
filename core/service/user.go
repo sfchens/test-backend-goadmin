@@ -20,7 +20,7 @@ type (
 		AddOrEdit(ctx *gin.Context, input user_query.UserAddOrEditInput) (err error)
 		ResetPwd(ctx *gin.Context, input user_query.UserResetPwdInput) (err error)
 		SetStatus(ctx *gin.Context, input user_query.UserSetStatusInput) (err error)
-		List(ctx *gin.Context, input user_query.UserListInput) (total int64, out []user_query.UserListItem, err error)
+		List(ctx *gin.Context, input user_query.UserListInput) (out user_query.UserListOut, err error)
 		GetInfo(ctx *gin.Context, id int) (out user_query.UserListItem, err error)
 	}
 )

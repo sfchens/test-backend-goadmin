@@ -21,8 +21,7 @@ type (
 		List(ctx *gin.Context, input config_query.ConfigListInput) (out config_query.ConfigListOut, err error)
 		Add(ctx *gin.Context, input config_query.ConfigAddInput) (err error)
 		Edit(ctx *gin.Context, input config_query.ConfigEditInput) (err error)
-		GetOne(ctx *gin.Context, input config_query.ConfigGetOneInput) (out config_query.SysConfig, err error)
-		DealJson(key string, dataJson string) (data interface{}, err error)
+		GetOne(ctx *gin.Context, input config_query.ConfigGetOneInput) (out config_query.ConfigGetOneOut, err error)
 		Delete(ctx *gin.Context, input config_query.ConfigDeleteInput) (err error)
 		SetStatus(ctx *gin.Context, input config_query.ConfigSetStatusInput) (err error)
 	}

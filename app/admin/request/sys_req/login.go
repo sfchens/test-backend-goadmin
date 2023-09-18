@@ -12,14 +12,6 @@ type LoginReq struct {
 }
 
 type LoginRes struct {
-	AdminInfo AdminInfo                `json:"userinfo" description:"用户信息"`
+	AdminInfo login_query.AdminInfo                `json:"userinfo" description:"用户信息"`
 	TokenInfo login_query.TokenInfoOut `json:"token_info" description:"token信息"`
-}
-
-type AdminInfo struct {
-	Id       int    `json:"id" description:"ID"`
-	Username string `json:"username" description:"账号"`
-	Realname string `json:"realname"`
-	Email    string `json:"email" description:"邮箱"`
-	Phone    string `json:"phone" description:"手机号码"`
 }

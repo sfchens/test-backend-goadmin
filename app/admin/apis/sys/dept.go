@@ -116,15 +116,13 @@ func (c *cSysDeptApi) Delete(ctx *gin.Context) {
 // @Produce application/json
 // @Param Authorization header string true "Bearer 用户令牌"
 // @Param object query     sys_req.DeptTreeListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys_query.DeptTreeListOut}  "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=sys_req.DeptTreeListRes}  "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/dept/list [get]
 func (c *cSysDeptApi) TreeList(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.DeptTreeListReq
-
-		input sys_query.DeptTreeListInput
-		res   sys_query.DeptTreeListOut
+		res sys_req.DeptTreeListRes
 	)
 
 	err = utils.BindParams(ctx, &req)
@@ -132,13 +130,18 @@ func (c *cSysDeptApi) TreeList(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+
+	var (
+		input sys_query.DeptTreeListInput
+		out   sys_query.DeptTreeListOut
+	)
 	utils.StructToStruct(req, &input)
-	res, err = service.NewSysServiceGroup().DeptService.TreeList(ctx, input)
+	out, err = service.NewSysServiceGroup().DeptService.TreeList(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // GetOne  一条部门信息
@@ -149,15 +152,13 @@ func (c *cSysDeptApi) TreeList(ctx *gin.Context) {
 // @Produce application/json
 // @Param Authorization header string true "Bearer 用户令牌"
 // @Param object query     sys_req.DeptGetOneReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys_query.DeptGetOneOut}  "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=sys_req.DeptGetOneRes}  "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/dept/get_one [get]
 func (c *cSysDeptApi) GetOne(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.DeptGetOneReq
-
-		input sys_query.DeptGetOneInput
-		res   sys_query.DeptGetOneOut
+		res sys_req.DeptGetOneRes
 	)
 
 	err = utils.BindParams(ctx, &req)
@@ -165,13 +166,18 @@ func (c *cSysDeptApi) GetOne(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+
+	var (
+		input sys_query.DeptGetOneInput
+		out   sys_query.DeptGetOneOut
+	)
 	utils.StructToStruct(req, &input)
-	res, err = service.NewSysServiceGroup().DeptService.GetOne(ctx, input)
+	out, err = service.NewSysServiceGroup().DeptService.GetOne(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // DeleteMulti  批量删除

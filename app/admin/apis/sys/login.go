@@ -30,6 +30,7 @@ func (c cSysLoginApi) Login(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.LoginReq
+		res sys_req.LoginRes
 	)
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
@@ -47,14 +48,14 @@ func (c cSysLoginApi) Login(ctx *gin.Context) {
 			Password: req.Password,
 		}
 
-		loginRes login_query.AdminLoginOut
+		outLogin login_query.AdminLoginOut
 	)
-	loginRes, err = service.NewLoginServiceGroup().AdminLoginService.Login(ctx, inputLogin)
+	outLogin, err = service.NewLoginServiceGroup().AdminLoginService.Login(ctx, inputLogin)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	response.SuccessWithData(ctx, loginRes)
+	response.SuccessWithStruct(ctx,outLogin, &res)
 }
 
 // LoginInfo  登录信息
@@ -65,30 +66,31 @@ func (c cSysLoginApi) Login(ctx *gin.Context) {
 // @Produce application/json
 // @Param Authorization header string true "Bearer 用户令牌"
 // @Param object query     sys_req.ConfigGetOneReq true "请求参数"
-// @Success 200 {object} response.Response{data=config_query.ConfigGetOneOut} "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=sys_req.ConfigGetOneRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/login_info [get]
 func (c cSysLoginApi) LoginInfo(ctx *gin.Context) {
 	var (
 		err error
 
 		req sys_req.ConfigGetOneReq
-
-		input config_query.ConfigGetOneInput
-		res   config_query.ConfigGetOneOut
+		res sys_req.ConfigGetOneRes
 	)
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+
+	var (
+		input config_query.ConfigGetOneInput
+		out   config_query.ConfigGetOneOut
+	)
 	utils.StructToStruct(req, &input)
-	var out config_query.SysConfig
 	out, err = service.NewConfigServiceGroup().ConfigService.GetOne(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 	}
-	utils.StructToStruct(out, &res)
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // Logout  退出

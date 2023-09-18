@@ -2,6 +2,7 @@ package response
 
 import (
 	"csf/library/global"
+	"csf/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -38,6 +39,11 @@ func Success(ctx *gin.Context) {
 
 func SuccessWithMessage(ctx *gin.Context, message string) {
 	Result(ctx, SUCCESS, map[string]interface{}{}, message, "")
+}
+
+func SuccessWithStruct(ctx *gin.Context, res1, res2 interface{}) {
+	utils.StructToStruct(res1, res2)
+	Result(ctx, SUCCESS, res2, "操作成功", "")
 }
 
 func SuccessWithData(ctx *gin.Context, data interface{}) {

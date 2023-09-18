@@ -28,28 +28,31 @@ func NewSysAdminApi() *cSysAdminApi {
 // @Produce application/json
 // @Param Authorization header string true "Bearer 用户令牌"
 // @Param object body     sys_req.AdminListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys_query.AdminListOut}  "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=sys_req.AdminListRes}  "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/admin/list [get]
 func (c *cSysAdminApi) List(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.AdminListReq
-
-		input sys_query.AdminListInput
-		res   sys_query.AdminListOut
+		res sys_req.AdminListRes
 	)
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+
+	var (
+		input sys_query.AdminListInput
+		out   sys_query.AdminListOut
+	)
 	utils.StructToStruct(req, &input)
-	res, err = service.NewSysServiceGroup().AdminService.List(ctx, input)
+	out, err = service.NewSysServiceGroup().AdminService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // Add  添加管理员
@@ -135,7 +138,6 @@ func (c *cSysAdminApi) GetAdminInfo(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-
 	utils.StructToStruct(adminModel, &adminInfo)
 	adminInfo.Roles = []string{"admin"}
 	adminInfo.Permissions = global.Permissions
@@ -209,7 +211,7 @@ func (c *cSysAdminApi) DeleteBatch(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	utils.StructToStruct(req, &input)
+utils.StructToStruct(req, &input)
 	err = service.NewSysServiceGroup().AdminService.DeleteBatch(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())

@@ -133,3 +133,12 @@ func GetCurl(ctx *gin.Context) (reqUrl string) {
 
 	return
 }
+
+func isSliceOrArray(ptr interface{}) bool {
+	rv := reflect.ValueOf(ptr)
+	if rv.Kind() != reflect.Ptr {
+		return false
+	}
+	elemKind := rv.Elem().Kind()
+	return elemKind == reflect.Slice || elemKind == reflect.Array
+}

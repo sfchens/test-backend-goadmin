@@ -80,9 +80,5 @@ func (c *cRuleApi) List(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	res = product_req.RuleListRes{
-		Total: int(out.Total),
-		List:  out.List,
-	}
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }

@@ -24,15 +24,15 @@ type ConfigGetOneReq struct {
 }
 
 type ConfigGetOneRes struct {
-	ID        uint        `json:"id" form:"id" comment:"ID"`
-	Name      string      `json:"name" form:"name" comment:"名称"`
-	Key       string      `json:"key" form:"key" comment:"0json配置1基础配置2商城配置3用户配置"`
-	Config    interface{} `json:"config" form:"配置" comment:"配置"`
-	IsOpen    uint        `json:"is_open" form:"is_open" comment:"是否开启"`
-	Remark    string      `json:"remark" form:"remark" comment:"备注"`
-	Operator  string      ` json:"operator"  form:"operator" comment:"操作人"`
-	CreatedAt string      `json:"created_at" form:"created_at" comment:"创建时间"`
-	UpdatedAt string      `json:"updated_at" form:"updated_at" comment:"更新时间"`
+	ID        uint                   `json:"id" form:"id" comment:"ID"`
+	Name      string                 `json:"name" form:"name" comment:"名称"`
+	Key       string                 `json:"key" form:"key" comment:"0json配置1基础配置2商城配置3用户配置"`
+	Config    map[string]interface{} `json:"config" form:"配置" comment:"配置"`
+	IsOpen    uint                   `json:"is_open" form:"is_open" comment:"是否开启"`
+	Remark    string                 `json:"remark" form:"remark" comment:"备注"`
+	Operator  string                 ` json:"operator"  form:"operator" comment:"操作人"`
+	CreatedAt string                 `json:"created_at" form:"created_at" comment:"创建时间"`
+	UpdatedAt string                 `json:"updated_at" form:"updated_at" comment:"更新时间"`
 }
 
 type ConfigListReq struct {

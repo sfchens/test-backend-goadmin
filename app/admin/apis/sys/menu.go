@@ -23,29 +23,32 @@ func NewSysMenuApi() *cSysMenuApi {
 // @Produce application/json
 // @Param Authorization header string true "Bearer 用户令牌"
 // @Param object query     sys_req.MenuTreeListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys_query.MenuTreeListOut} "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=sys_req.MenuTreeListRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/menu/tree_list [get]
 func (c *cSysMenuApi) TreeList(ctx *gin.Context) {
 
 	var (
 		err error
 		req sys_req.MenuTreeListReq
-
-		input sys_query.MenuTreeListInput
-		res   sys_query.MenuTreeListOut
+		res sys_req.MenuTreeListRes
 	)
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+
+	var (
+		input sys_query.MenuTreeListInput
+		out   sys_query.MenuTreeListOut
+	)
 	utils.StructToStruct(req, &input)
-	res, err = service.NewSysServiceGroup().MenuService.TreeList(ctx, input)
+	out, err = service.NewSysServiceGroup().MenuService.TreeList(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // List  菜单列表
@@ -56,30 +59,32 @@ func (c *cSysMenuApi) TreeList(ctx *gin.Context) {
 // @Produce application/json
 // @Param Authorization header string true "Bearer 用户令牌"
 // @Param object query     sys_req.MenuListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys_query.MenuListOut} "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=sys_req.MenuListRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/menu/list [get]
 func (c *cSysMenuApi) List(ctx *gin.Context) {
 
 	var (
 		err error
 		req sys_req.MenuListReq
-
-		input sys_query.MenuListInput
-		res   sys_query.MenuListOut
+		res sys_req.MenuListRes
 	)
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	utils.StructToStruct(req, &input)
 
-	res, err = service.NewSysServiceGroup().MenuService.List(ctx, input)
+	var (
+		input sys_query.MenuListInput
+		out   sys_query.MenuListOut
+	)
+	utils.StructToStruct(req, &input)
+	out, err = service.NewSysServiceGroup().MenuService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // Add  添加菜单

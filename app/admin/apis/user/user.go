@@ -65,22 +65,25 @@ func (c *cUserApi) List(ctx *gin.Context) {
 
 		req user_req.UserListReq
 		res user_req.UserListRes
-
-		input user_query.UserListInput
 	)
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+
+	var (
+		input user_query.UserListInput
+		out   user_query.UserListOut
+	)
 	utils.StructToStruct(req, &input)
-	res.Total, res.List, err = service.NewUserServiceGroup().UserService.List(ctx, input)
+	out, err = service.NewUserServiceGroup().UserService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // ResetPwd  密码重置
@@ -108,6 +111,7 @@ func (c *cUserApi) ResetPwd(ctx *gin.Context) {
 	}
 
 	utils.StructToStruct(req, &input)
+
 	if req.Password == "" {
 		input.Password = "123456"
 	}

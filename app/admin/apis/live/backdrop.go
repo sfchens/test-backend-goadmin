@@ -38,7 +38,7 @@ func (c *cBackdropApi) Add(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	utils.StructToStruct(req, &input)
+	 utils.StructToStruct(req, &input)
 	err = service.NewLiveServiceGroup().BackdropService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -71,7 +71,7 @@ func (c *cBackdropApi) Edit(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	utils.StructToStruct(req, &input)
+	 utils.StructToStruct(req, &input)
 	err = service.NewLiveServiceGroup().BackdropService.AddOrEdit(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
@@ -89,14 +89,13 @@ func (c *cBackdropApi) Edit(ctx *gin.Context) {
 // @Produce application/json
 // @Param Authorization header string true "Bearer 用户令牌"
 // @Param object query     live_req.BackdropListReq true "请求参数"
-// @Success 200 {object} response.Response{data=live_query.BackdropListOut} "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=live_req.BackdropListRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/live/backdrop/list [get]
 func (c *cBackdropApi) List(ctx *gin.Context) {
 	var (
-		err   error
-		req   live_req.BackdropListReq
-		res   live_query.BackdropListOut
-		input live_query.BackdropListInput
+		err error
+		req live_req.BackdropListReq
+		res live_req.BackdropListRes
 	)
 
 	err = utils.BindParams(ctx, &req)
@@ -104,12 +103,16 @@ func (c *cBackdropApi) List(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	utils.StructToStruct(req, &input)
-	res, err = service.NewLiveServiceGroup().BackdropService.List(ctx, input)
+	var (
+		input live_query.BackdropListInput
+		out   live_query.BackdropListOut
+	)
+	 utils.StructToStruct(req, &input)
+	out, err = service.NewLiveServiceGroup().BackdropService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
 
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }

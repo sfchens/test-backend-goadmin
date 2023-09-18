@@ -56,15 +56,13 @@ func (c *cSysRoleApi) Add(ctx *gin.Context) {
 // @Produce application/json
 // @Param Authorization header string true "Bearer 用户令牌"
 // @Param object query     sys_req.RoleListReq true "请求参数"
-// @Success 200 {object} response.Response{data=sys_query.RoleListOut} "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=sys_req.RoleListRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/role/list [get]
 func (c *cSysRoleApi) List(ctx *gin.Context) {
 	var (
 		err error
-
-		req   sys_req.RoleListReq
-		input sys_query.RoleListInput
-		res   sys_query.RoleListOut
+		req sys_req.RoleListReq
+		res sys_req.RoleListRes
 	)
 
 	err = utils.BindParams(ctx, &req)
@@ -72,13 +70,18 @@ func (c *cSysRoleApi) List(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+
+	var (
+		input sys_query.RoleListInput
+		out   sys_query.RoleListOut
+	)
 	utils.StructToStruct(req, &input)
-	res, err = service.NewSysServiceGroup().RoleService.List(ctx, input)
+	out, err = service.NewSysServiceGroup().RoleService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // DeleteBatch  批量删除角色
@@ -93,8 +96,7 @@ func (c *cSysRoleApi) List(ctx *gin.Context) {
 // @Router /admin/v1/sys/role/delete_batch [post]
 func (c *cSysRoleApi) DeleteBatch(ctx *gin.Context) {
 	var (
-		err error
-
+		err   error
 		req   sys_req.RoleDeleteBatchReq
 		input sys_query.RoleDeleteBatchInput
 	)

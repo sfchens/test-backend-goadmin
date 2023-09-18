@@ -89,22 +89,27 @@ func (c *cSwitchApi) Edit(ctx *gin.Context) {
 // @Router /admin/v1/sys/switch/list [get]
 func (c *cSwitchApi) List(ctx *gin.Context) {
 	var (
-		err   error
-		req   sys_req.SwitchListReq
-		input config_query.SwitchListInput
-		res   config_query.SwitchListOut
+		err error
+		req sys_req.SwitchListReq
+		res sys_req.SwitchListRes
 	)
-	err = utils.BindParams(ctx, &req, &input)
+	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	res, err = service.NewConfigServiceGroup().SwitchService.List(ctx, input)
+
+	var (
+		input config_query.SwitchListInput
+		out   config_query.SwitchListOut
+	)
+	utils.StructToStruct(req, &input)
+	out, err = service.NewConfigServiceGroup().SwitchService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // Delete  删除开关
@@ -157,7 +162,7 @@ func (c *cSwitchApi) SetStatus(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	utils.StructToStruct(req, &input)
+	 utils.StructToStruct(req, &input)
 	err = service.NewConfigServiceGroup().SwitchService.SetStatus(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())

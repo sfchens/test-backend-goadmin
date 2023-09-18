@@ -30,6 +30,10 @@ type UserListInput struct {
 	Phone    string `json:"phone" form:"phone" description:"手机号码"`
 	Status   int    `json:"status" form:"status" default:"-1" validate:"required" msg:"required:状态不能为空" description:"状态"`
 }
+type UserListOut struct {
+	Total int64          `json:"total" form:"total" description:"总数"`
+	List  []UserListItem `json:"list" form:"list" description:"列表"`
+}
 type UserListItem struct {
 	ID         uint      `json:"id"`          // ID
 	Username   string    `json:"username"`    // 用户名

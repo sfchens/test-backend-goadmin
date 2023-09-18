@@ -1,5 +1,7 @@
 package product_req
 
+import "csf/core/query/product_query"
+
 type RuleAddOrEditReq struct {
 	Id    int                   `json:"id" form:"id" description:"id"`
 	Name  string                `json:"name" form:"name"  validate:"required" msg:"名称不为空" description:"名称"`
@@ -12,6 +14,6 @@ type RuleListReq struct {
 	Name     string `json:"name" form:"name" description:"名称"`
 }
 type RuleListRes struct {
-	Total int         `json:"total" form:"total"   description:"总数"`
-	List  interface{} `json:"list" form:"list"   description:"数组"`
+	Total int                          `json:"total" form:"total"   description:"总数"`
+	List  []product_query.RuleModelOut `json:"list" form:"list"   description:"数组"`
 }

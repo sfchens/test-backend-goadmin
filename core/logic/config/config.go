@@ -45,8 +45,8 @@ func (s *sSysConfig) List(ctx *gin.Context, input config_query.ConfigListInput) 
 	for _, item := range sysConfigList {
 		var itemTmp config_query.ConfigGetOneOut
 		utils.StructToStruct(item, &itemTmp)
-		var config interface{}
-		config, _ = s.DealJson(item.Key, item.Config)
+		var config map[string]interface{}
+		config, _ = s.dealJson(item.Key, item.Config)
 		itemTmp.Config = config
 		out.List = append(out.List, itemTmp)
 	}
@@ -169,7 +169,7 @@ func (s *sSysConfig) checkConfig(key string, config map[string]string) (err erro
 	return
 }
 
-func (s *sSysConfig) GetOne(ctx *gin.Context, input config_query.ConfigGetOneInput) (out config_query.SysConfig, err error) {
+func (s *sSysConfig) GetOne(ctx *gin.Context, input config_query.ConfigGetOneInput) (out config_query.ConfigGetOneOut, err error) {
 	var (
 		sysConfigModel model.SysConfig
 	)
@@ -189,8 +189,8 @@ func (s *sSysConfig) GetOne(ctx *gin.Context, input config_query.ConfigGetOneInp
 		return
 	}
 	utils.StructToStruct(sysConfigModel, &out)
-	var configJson interface{}
-	configJson, err = s.DealJson(sysConfigModel.Key, sysConfigModel.Config)
+	var configJson map[string]interface{}
+	configJson, err = s.dealJson(sysConfigModel.Key, sysConfigModel.Config)
 	if err != nil {
 		return
 	}
@@ -198,7 +198,7 @@ func (s *sSysConfig) GetOne(ctx *gin.Context, input config_query.ConfigGetOneInp
 	return
 }
 
-func (s *sSysConfig) DealJson(key string, dataJson string) (data interface{}, err error) {
+func (s *sSysConfig) dealJson(key string, dataJson string) (data map[string]interface{}, err error) {
 	switch key {
 	case "BASE_CONFIG": // 基础配置
 		err = json.Unmarshal([]byte(dataJson), &data)

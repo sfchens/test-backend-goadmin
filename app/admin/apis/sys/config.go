@@ -24,28 +24,31 @@ func NewSysConfigApi() *cSysConfigApi {
 // @Produce application/json
 // @Param Authorization header string true "Bearer 用户令牌"
 // @Param object query     sys_req.ConfigListReq true "请求参数"
-// @Success 200 {object} response.Response{data=config_query.ConfigListOut} "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=sys_req.ConfigListRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/config/list [get]
 func (c cSysConfigApi) List(ctx *gin.Context) {
 	var (
 		err error
 		req sys_req.ConfigListReq
-
-		input config_query.ConfigListInput
-		res   config_query.ConfigListOut
+		res sys_req.ConfigListRes
 	)
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+
+	var (
+		input config_query.ConfigListInput
+		out   config_query.ConfigListOut
+	)
 	utils.StructToStruct(req, &input)
-	res, err = service.NewConfigServiceGroup().ConfigService.List(ctx, input)
+	out, err = service.NewConfigServiceGroup().ConfigService.List(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // Add  添加配置
@@ -86,29 +89,30 @@ func (c cSysConfigApi) Add(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param object query     sys_req.ConfigGetOneReq true "请求参数"
-// @Success 200 {object} response.Response{data=config_query.ConfigGetOneOut} "code错误码 msg操作信息 data返回信息"
+// @Success 200 {object} response.Response{data=sys_req.ConfigGetOneRes} "code错误码 msg操作信息 data返回信息"
 // @Router /admin/v1/sys/config/get_one [get]
 func (c cSysConfigApi) GetOne(ctx *gin.Context) {
 	var (
-		err   error
-		req   sys_req.ConfigGetOneReq
-		input config_query.ConfigGetOneInput
-		res   config_query.ConfigGetOneOut
+		err error
+		req sys_req.ConfigGetOneReq
+		res sys_req.ConfigGetOneRes
 	)
 	err = utils.BindParams(ctx, &req)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
+	var (
+		input config_query.ConfigGetOneInput
+		out   config_query.ConfigGetOneOut
+	)
 	utils.StructToStruct(req, &input)
-	var out config_query.SysConfig
 	out, err = service.NewConfigServiceGroup().ConfigService.GetOne(ctx, input)
 	if err != nil {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	utils.StructToStruct(out, &res)
-	response.SuccessWithData(ctx, res)
+	response.SuccessWithStruct(ctx, out, &res)
 }
 
 // Edit  编辑配置
