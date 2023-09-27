@@ -1,11 +1,13 @@
 package middleware
 
 import (
+	"bytes"
 	"csf/library/easy_logger"
 	"csf/library/response"
 	"csf/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"io/ioutil"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -17,13 +19,16 @@ import (
 // OperateLogger 记录日志
 func OperateLogger(config *easy_logger.LoggerConfig) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		body, _ := ioutil.ReadAll(ctx.Request.Body)
 
 		// 设置响应数据
 		responseWriter := utils.NewResponseWriter(ctx)
 		ctx.Writer = responseWriter
-
+		ctx.Request.Body = ioutil.NopCloser(bytes.NewReader(body))
 		// 处理请求
 		ctx.Next()
+
+		ctx.Request.Body = ioutil.NopCloser(bytes.NewReader(body))
 		logObjKey := config.LogObjKey
 		if logObjKey == "" {
 			logObjKey = easy_logger.GetLogModulesName(ctx)

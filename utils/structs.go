@@ -6,64 +6,119 @@ import (
 )
 
 func StructToStruct(sourceStruct interface{}, targetStruct interface{}) {
-	source := structToMap(sourceStruct)
-	sourceValue := reflect.ValueOf(sourceStruct)
+	structToStructSetDefault(sourceStruct, targetStruct, false)
+}
 
-	targetV := reflect.ValueOf(targetStruct)
-	targetT := reflect.TypeOf(targetStruct)
-	if targetV.Kind() != reflect.Ptr {
-		return
-	}
-	targetV = targetV.Elem()
-	targetT = targetT.Elem()
-	for i := 0; i < targetV.NumField(); i++ {
-		targetValue := targetV.Field(i)
-		targetType := targetT.Field(i)
+func StructToStructDefault(sourceStruct interface{}, targetStruct interface{}) {
+	structToStructSetDefault(sourceStruct, targetStruct, true)
+}
 
-		fieldName := targetType.Name
-		sourceRV := source[fieldName]
+// structToStructSetDefault 结构体转结构体
+func structToStructSetDefault(sourceStruct interface{}, targetStruct interface{}, isSetDefault bool) {
+	srcValue := reflect.ValueOf(sourceStruct)
+	srcType := srcValue.Type()
+	dstValue := reflect.ValueOf(targetStruct)
 
-		if targetValue.Kind() == reflect.Struct {
-			reflectStructValue(sourceRV, targetValue)
+	dstValueE := dstValue.Elem()
+	dstType := dstValueE.Type()
+
+	for i := 0; i < srcValue.NumField(); i++ {
+		sourceVF := srcValue.Field(i)
+		sourceTF := srcType.Field(i)
+
+		name := sourceTF.Name
+		targetTF, ok := dstType.FieldByName(name)
+		if !ok {
 			continue
-		} else if targetValue.Kind() == reflect.Slice {
-			reflectSliceValue(sourceValue, targetType, targetV)
+		}
+		targetVF := dstValueE.FieldByName(name)
+		if sourceVF.Type() != targetVF.Type() {
 			continue
-		} else {
-			reflectValue(sourceRV, targetType, targetValue)
+		}
+		switch targetTF.Type.Kind() {
+		case reflect.Struct:
+			if targetTF.Type.Name() != "Time" {
+				structToStructSetDefault(sourceVF.Interface(), targetVF.Addr().Interface(), isSetDefault)
+			} else {
+				reflectValue(sourceVF, targetTF, targetVF, isSetDefault)
+			}
+		case reflect.Slice:
+			targetTE := targetTF.Type.Elem()
+			elemDst := reflect.New(targetTE).Elem()
+			sliceType := reflect.SliceOf(targetTE)
+			fieldSlice := reflectSliceValue(sliceType, elemDst, sourceVF, isSetDefault)
+			reflectValue(fieldSlice, targetTF, targetVF, isSetDefault)
+		case reflect.Map:
+			mapType := sourceTF.Type
+			mapValue := reflect.MakeMap(mapType)
+			reflectMapValue(sourceTF, sourceVF, targetTF, mapValue, isSetDefault)
+			reflectValue(mapValue, targetTF, targetVF, isSetDefault)
+		default:
+			reflectValue(sourceVF, targetTF, targetVF, isSetDefault)
 		}
 	}
-	return
 }
 
 // reflectValue 设置字段值
-func reflectValue(source interface{}, targetT reflect.StructField, targetV reflect.Value) {
-
-	var (
-		sourceVal reflect.Value
-		ok        bool
-	)
-	sourceVal, ok = source.(reflect.Value)
-	if !ok || !sourceVal.IsValid() || targetV.Type() != sourceVal.Type() {
+func reflectValue(sourceV reflect.Value, targetT reflect.StructField, targetV reflect.Value, isSetDefault bool) {
+	if sourceV.Type() != targetV.Type() || !sourceV.IsValid() {
 		return
 	}
-
-	//if targetVal.Type() != sourceVal.Type() {
-	//	if sourceVal.Type().String() != "time.Time" {
-	//		return false
-	//	}
-	//	if sourceVal.Type() == reflect.TypeOf(time.Time{}) {
-	//		timeValue := sourceVal.Interface().(time.Time)
-	//		sourceVal = reflect.ValueOf(timeValue.Format(TIME_FORMAT))
-	//	}
-	//}
-	targetV.Set(sourceVal)
-	SetStructDefaultValue(targetT, targetV)
+	targetV.Set(sourceV)
+	if isSetDefault {
+		setStructDefaultValue(targetT, targetV)
+	}
 	return
 }
 
+// reflectSliceValue 设置切片默认值
+func reflectSliceValue(sliceType reflect.Type, elemDst, sourceVF reflect.Value, isSetDefault bool) reflect.Value {
+	fieldSlice := reflect.MakeSlice(sliceType, sourceVF.Len(), sourceVF.Len())
+	for j := 0; j < sourceVF.Len(); j++ {
+		elem := sourceVF.Index(j)
+		switch elem.Kind() {
+		case reflect.Struct:
+			structToStructSetDefault(elem.Interface(), elemDst.Addr().Interface(), isSetDefault)
+		case reflect.Slice:
+			// 多维切片
+			elemDst = elem
+		default:
+			elemDst = elem
+		}
+		fieldSlice.Index(j).Set(elemDst)
+	}
+	return fieldSlice
+}
+
+// reflectMapValue 设置map默认值
+func reflectMapValue(sourceTF reflect.StructField, sourceVF reflect.Value, targetTF reflect.StructField, targetVF reflect.Value, isSetDefault bool) {
+	for _, key := range sourceVF.MapKeys() {
+		keyValue := key.Interface()
+		valueK := sourceVF.MapIndex(key)
+		switch valueK.Kind() {
+		case reflect.Struct:
+			elemDst := reflect.New(targetTF.Type.Elem()).Elem()
+			structToStructSetDefault(valueK.Interface(), elemDst.Addr().Interface(), isSetDefault)
+			targetVF.SetMapIndex(reflect.ValueOf(keyValue), elemDst)
+
+		case reflect.Slice:
+			elemDst := reflect.New(valueK.Type().Elem()).Elem()
+			sliceType := targetTF.Type.Elem()
+			sliceValue := sourceVF.MapIndex(key)
+			fieldSlice := reflectSliceValue(sliceType, elemDst, sliceValue, isSetDefault)
+			targetVF.SetMapIndex(reflect.ValueOf(keyValue), fieldSlice)
+
+		case reflect.Map:
+			// 多维map
+			targetVF.SetMapIndex(reflect.ValueOf(keyValue), valueK)
+		default:
+			targetVF.SetMapIndex(reflect.ValueOf(keyValue), valueK)
+		}
+	}
+}
+
 // SetStructDefaultValue 设置default字段
-func SetStructDefaultValue(targetT reflect.StructField, targetV reflect.Value) {
+func setStructDefaultValue(targetT reflect.StructField, targetV reflect.Value) {
 	defaultValue := targetT.Tag.Get("default")
 	if defaultValue == "" {
 		return
@@ -87,32 +142,41 @@ func SetStructDefaultValue(targetT reflect.StructField, targetV reflect.Value) {
 	}
 }
 
-func reflectSliceValue(sourceValue reflect.Value, targetType reflect.StructField, targetVal reflect.Value) {
-	fieldName := targetType.Name
-	sourceFieldValue := sourceValue.FieldByName(fieldName)
-	dataFieldValue := targetVal.FieldByName(fieldName)
-	if dataFieldValue.CanSet() {
-		// Copy the value from source field to data field
-		dataFieldValue.Set(sourceFieldValue)
+// setReflectDefaultInt 设置int的default
+func setReflectDefaultInt(currentValue interface{}, defaultValue int, targetV reflect.Value) {
+	currentInt, ok := currentValue.(int)
+	if !ok || currentInt != 0 {
+		return
 	}
+	targetV.SetInt(int64(defaultValue))
 }
 
-// reflectStructValue 设置结构体的字段值
-func reflectStructValue(source interface{}, targetVal reflect.Value) {
-	sourceV := source.(map[string]interface{})
-	targetT := targetVal.Type()
-	for j := 0; j < targetVal.NumField(); j++ {
-		targetValue := targetVal.Field(j)
-		targetType := targetT.Field(j)
-		sourceVal := sourceV[targetType.Name]
-		if targetValue.Kind() == reflect.Struct {
-			reflectStructValue(sourceVal, targetValue)
-		} else if targetValue.Kind() == reflect.Slice {
-
-		} else {
-			reflectValue(sourceVal, targetType, targetValue)
-		}
+// setReflectDefaultFloat 设置float的default
+func setReflectDefaultFloat(currentValue interface{}, defaultValue float64, targetV reflect.Value) {
+	currentInt, ok := currentValue.(float64)
+	if !ok || currentInt != 0 {
+		return
 	}
+	targetV.SetFloat(defaultValue)
+}
+
+// setReflectDefaultString 设置string的default
+func setReflectDefaultString(currentValue interface{}, defaultValue string, targetV reflect.Value) {
+	currentInt, ok := currentValue.(string)
+	if !ok || currentInt != "" {
+		return
+	}
+	targetV.SetString(defaultValue)
+
+}
+
+// setReflectDefaultBool 设置bool的default
+func setReflectDefaultBool(currentValue interface{}, defaultValue bool, targetV reflect.Value) {
+	currentVal, ok := currentValue.(bool)
+	if !ok || !currentVal {
+		return
+	}
+	targetV.SetBool(defaultValue)
 }
 
 // structToMap 结构体转map
@@ -142,40 +206,4 @@ func structToMap(req interface{}) map[string]interface{} {
 		}
 	}
 	return reqMap
-}
-
-// setReflectDefaultInt 设置int的default
-func setReflectDefaultInt(currentValue interface{}, defaultValue int, targetV reflect.Value) {
-	currentInt, ok := currentValue.(int)
-	if !ok || currentInt != 0 {
-		return
-	}
-	targetV.SetInt(int64(defaultValue))
-}
-
-// setReflectDefaultFloat 设置float的default
-func setReflectDefaultFloat(currentValue interface{}, defaultValue float64, targetV reflect.Value) {
-	currentInt, ok := currentValue.(float64)
-	if !ok || currentInt != 0 {
-		return
-	}
-	targetV.SetFloat(defaultValue)
-}
-
-// setReflectDefaultString 设置string的default
-func setReflectDefaultString(currentValue interface{}, defaultValue string, targetV reflect.Value) {
-	currentInt, ok := currentValue.(string)
-	if !ok || currentInt != "" {
-		return
-	}
-	targetV.SetString(defaultValue)
-}
-
-// setReflectDefaultBool 设置bool的default
-func setReflectDefaultBool(currentValue interface{}, defaultValue bool, targetV reflect.Value) {
-	currentVal, ok := currentValue.(bool)
-	if !ok || !currentVal {
-		return
-	}
-	targetV.SetBool(defaultValue)
 }

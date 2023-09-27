@@ -72,50 +72,10 @@ func SetDefault(i interface{}) (err error) {
 	return
 }
 
-func GetRequestParams(ctx *gin.Context) (params map[string]interface{}, err error) {
-	params = make(map[string]interface{})
-	method := ctx.Request.Method
-	switch method {
-	case "POST":
-		contentType := ctx.Request.Header.Get("Content-Type")
-		if regexp.MustCompile("application/json").MatchString(contentType) {
-
-		} else {
-			err = ctx.Request.ParseMultipartForm(32 << 20)
-			if err != nil {
-				return
-			}
-			// 获取所有formdata的数据
-			for key, values := range ctx.Request.Form {
-				if len(values) == 1 {
-					params[key] = values[0]
-				} else {
-					params[key] = values
-				}
-			}
-		}
-
-	default:
-
-		// 获取请求参数
-		for key, values := range ctx.Request.URL.Query() {
-			if len(values) == 1 {
-				params[key] = values[0]
-			} else {
-				params[key] = values
-			}
-		}
-	}
-
-	return
-}
-
-func GetCurl(ctx *gin.Context) (reqUrl string) {
+func GetRequestCurl(ctx *gin.Context, params interface{}) (reqUrl string) {
 	path := ctx.Request.URL.Path
 	query := ctx.Request.URL.RawQuery
 	method := ctx.Request.Method
-
-	params, _ := GetRequestParams(ctx)
 
 	url := fmt.Sprintf("%v:%d%v",
 		easy_config.Config.App.BaseUrl,

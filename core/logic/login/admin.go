@@ -10,6 +10,7 @@ import (
 	"csf/library/global"
 	"csf/utils"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -52,6 +53,7 @@ func (s *sAdminLogin) Login(ctx *gin.Context, input login_query.AdminLoginInput)
 	tokenInfo, err = s.CreateToken(ctx, adminInfoModel)
 
 	var adminInfo login_query.AdminInfo
+	fmt.Printf("adminInfoModel:  %+v\n", adminInfoModel)
 	utils.StructToStruct(adminInfoModel, &adminInfo)
 	out = login_query.AdminLoginOut{
 		AdminInfo: adminInfo,

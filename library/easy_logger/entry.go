@@ -1,6 +1,7 @@
 package easy_logger
 
 import (
+	"bytes"
 	"csf/library/easy_config"
 	"csf/library/global"
 	"csf/utils"
@@ -8,6 +9,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
@@ -64,7 +66,11 @@ func OperateLogger(ctx *gin.Context, logObjKey string) {
 func getRequestData(ctx *gin.Context) logData {
 	traceId := ctx.GetString(global.TraceIdKey)
 	// 请求参数
-	params, _ := utils.GetRequestParams(ctx)
+	var bodyParams map[string]interface{}
+	bodyByte, err := ioutil.ReadAll(ctx.Request.Body)
+	if err == nil {
+		json.Unmarshal(bodyByte, &bodyParams)
+	}
 
 	// 结果信息
 	responseWriter := utils.ResponseWriter
@@ -76,11 +82,12 @@ func getRequestData(ctx *gin.Context) logData {
 		Ip:           ctx.ClientIP(),
 		Status:       ctx.Writer.Status(),
 		UserAgent:    ctx.Request.UserAgent(),
-		RequestUrl:   utils.GetCurl(ctx),
-		Params:       params,
+		RequestUrl:   utils.GetRequestCurl(ctx, bodyParams),
+		Params:       bodyParams,
 		Duration:     duration,
 		ResponseData: resp,
 	}
+	ctx.Request.Body = ioutil.NopCloser(bytes.NewReader(bodyByte))
 	return tmpData
 }
 
@@ -98,10 +105,11 @@ func GetLogTemplate(ctx *gin.Context, msg interface{}) string {
 		}
 		tmp = fmt.Sprintf("%v %v", tmp, msgT)
 	} else {
-		tmp = fmt.Sprintf("%v %v response: '%v'", tmp, utils.GetCurl(ctx), utils.ToJson(logDataObj.ResponseData))
+		tmp = fmt.Sprintf("%v %v response: '%v'", tmp, logDataObj.RequestUrl, utils.ToJson(logDataObj.ResponseData))
 	}
 	return tmp
 }
+
 func GetLogModulesName(ctx *gin.Context) (module string) {
 
 	path := ctx.Request.URL.Path

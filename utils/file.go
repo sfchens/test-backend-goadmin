@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func FileExists(path string) (bool, error) {
+func PathExists(path string) (bool, error) {
 	fi, err := os.Stat(path)
 	if err == nil {
 		if fi.IsDir() {

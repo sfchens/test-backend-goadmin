@@ -55,7 +55,7 @@ func (c cSysLoginApi) Login(ctx *gin.Context) {
 		response.FailWithMessage(ctx, err.Error())
 		return
 	}
-	response.SuccessWithStruct(ctx,outLogin, &res)
+	response.SuccessWithStruct(ctx, outLogin, &res)
 }
 
 // LoginInfo  登录信息

@@ -25,7 +25,7 @@ type _customZap struct {
 // InitCustomZap 初始化zap
 func initCustomZap() _customZap {
 	paths := easy_config.Config.Zap.Path
-	if ok, _ := utils.FileExists(paths); !ok {
+	if ok, _ := utils.PathExists(paths); !ok {
 		_ = os.Mkdir(paths, os.ModePerm)
 	}
 

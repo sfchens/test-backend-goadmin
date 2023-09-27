@@ -44,7 +44,6 @@ func (s *sSysMenuService) TreeList(ctx *gin.Context, input sys_query.MenuTreeLis
 	if err != nil {
 		return
 	}
-
 	err = model.Offset((page - 1) * pageSize).Preload("Children").Limit(pageSize).Scan(&sysMenuListTmp).Error
 	if err != nil {
 		return
